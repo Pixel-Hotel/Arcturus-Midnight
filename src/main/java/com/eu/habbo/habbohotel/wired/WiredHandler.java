@@ -10,6 +10,7 @@ import com.eu.habbo.habbohotel.items.interactions.InteractionWiredTrigger;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredTriggerReset;
 import com.eu.habbo.habbohotel.items.interactions.wired.effects.WiredEffectGiveReward;
 import com.eu.habbo.habbohotel.items.interactions.wired.effects.WiredEffectTriggerStacks;
+import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraOrEval;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraRandom;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraUnseen;
 import com.eu.habbo.habbohotel.rooms.Room;
@@ -166,10 +167,23 @@ public class WiredHandler {
 
             THashSet<InteractionWiredCondition> conditions = room.getRoomSpecialTypes().getConditions(trigger.getX(), trigger.getY());
             THashSet<InteractionWiredEffect> effects = room.getRoomSpecialTypes().getEffects(trigger.getX(), trigger.getY());
-            if (Emulator.getPluginManager().fireEvent(new WiredStackTriggeredEvent(room, roomUnit, trigger, effects, conditions)).isCancelled())
-                return false;
 
-            if (!conditions.isEmpty()) {
+            boolean hasExtraOrEval = room.getRoomSpecialTypes().hasExtraType(trigger.getX(), trigger.getY(), WiredExtraOrEval.class);
+
+            if (!conditions.isEmpty() && hasExtraOrEval) {
+                ArrayList<WiredConditionType> matchedConditions = new ArrayList<>(conditions.size());
+                for (InteractionWiredCondition searchMatched : conditions) {
+                    if (!matchedConditions.contains(searchMatched.getType()) && searchMatched.execute(roomUnit, room, stuff)) {
+                        matchedConditions.add(searchMatched.getType());
+                    }
+                }
+
+                if(matchedConditions.size() == 0) {
+                    return false;
+                }
+            }
+
+            if (!conditions.isEmpty() && !hasExtraOrEval) {
                 ArrayList<WiredConditionType> matchedConditions = new ArrayList<>(conditions.size());
                 for (InteractionWiredCondition searchMatched : conditions) {
                     if (!matchedConditions.contains(searchMatched.getType()) && searchMatched.operator() == WiredConditionOperator.OR && searchMatched.execute(roomUnit, room, stuff)) {
@@ -186,6 +200,9 @@ public class WiredHandler {
                     }
                 }
             }
+
+            if (Emulator.getPluginManager().fireEvent(new WiredStackTriggeredEvent(room, roomUnit, trigger, effects, conditions)).isCancelled())
+                return false;
 
             trigger.setCooldown(millis);
 
