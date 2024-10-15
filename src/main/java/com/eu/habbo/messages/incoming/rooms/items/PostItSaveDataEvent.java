@@ -51,7 +51,8 @@ public class PostItSaveDataEvent extends MessageHandler {
         if (color.isEmpty())
             color = PostItColor.YELLOW.hexColor;
 
-        item.setUserId(room.getOwnerId());
+        // Removed on Oct 15th, 2024: The owner of this item should not be altered when editing the text of a post-it. The original owner must always remain unchanged.
+        // item.setUserId(room.getOwnerId());
         item.setExtradata(color + " " + text);
         item.needsUpdate(true);
         room.updateItem(item);
