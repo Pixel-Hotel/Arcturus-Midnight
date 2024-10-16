@@ -50,4 +50,12 @@ public class RoomFloorItemsComposer extends MessageComposer {
         }
         return this.response;
     }
+
+    public TIntObjectMap<String> getFurniOwnerNames() {
+        return furniOwnerNames;
+    }
+
+    public THashSet<? extends HabboItem> getItems() {
+        return items;
+    }
 }

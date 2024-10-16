@@ -4795,14 +4795,26 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             }
         }
 
-        if(height > MAXIMUM_FURNI_HEIGHT) return FurnitureMovementError.CANT_STACK;
-        if(height < this.getLayout().getHeightAtSquare(tile.x, tile.y)) return FurnitureMovementError.CANT_STACK; //prevent furni going under the floor
+        boolean cantStack = false;
+        boolean pluginHeight = false;
+
+        if(height > MAXIMUM_FURNI_HEIGHT) {
+            cantStack = true;
+        }
+        if(height < this.getLayout().getHeightAtSquare(tile.x, tile.y)) {
+            cantStack = true;
+        }
 
         if (Emulator.getPluginManager().isRegistered(FurnitureBuildheightEvent.class, true)) {
             FurnitureBuildheightEvent event = Emulator.getPluginManager().fireEvent(new FurnitureBuildheightEvent(item, actor, 0.00, height));
             if (event.hasChangedHeight()) {
                 height = event.getUpdatedHeight();
+                pluginHeight = true;
             }
+        }
+
+        if(!pluginHeight && cantStack) {
+            return FurnitureMovementError.CANT_STACK;
         }
 
         item.setX(tile.x);
