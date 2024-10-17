@@ -3636,7 +3636,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         HabboItem item = this.getTopItemAt(x, y);
 
         if (item != null)
-            return (item.getZ() + Item.getCurrentHeight(item));
+            return (item.getZ() + Item.getCurrentHeight(item) - (item.getBaseItem().allowSit() ? 1 : 0));
         else
             return this.layout.getHeightAtSquare(x, y);
     }
