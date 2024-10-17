@@ -3850,6 +3850,37 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         return null;
     }
 
+    public RoomTile getRandomWalkableTilesAround(RoomUnit roomUnit, RoomTile tile, int radius) {
+        if (!layout.tileExists(tile.x, tile.y)) {
+            tile = layout.getTile(roomUnit.getX(), roomUnit.getY());
+            this.getBot(roomUnit).needsUpdate(true);
+        }
+
+        List<RoomTile> walkableTiles = new ArrayList<>();
+
+        int minX = Math.max(0, tile.x - radius);
+        int minY = Math.max(0, tile.y - radius);
+        int maxX = Math.min(this.getLayout().getMapSizeX() - 1, tile.x + radius);
+        int maxY = Math.min(this.getLayout().getMapSizeY() - 1, tile.y + radius);
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                RoomTile candidateTile = this.getLayout().getTile((short) x, (short) y);
+
+                if (candidateTile != null && candidateTile.getState() != RoomTileState.BLOCKED && candidateTile.getState() != RoomTileState.INVALID) {
+                    walkableTiles.add(candidateTile);
+                }
+            }
+        }
+
+        if (walkableTiles.isEmpty()) {
+            return tile;
+        }
+
+        Collections.shuffle(walkableTiles);
+        return walkableTiles.get(0);
+    }
+
     public Habbo getHabbo(String username) {
         for (Habbo habbo : this.getHabbos()) {
             if (habbo.getHabboInfo().getUsername().equalsIgnoreCase(username))
