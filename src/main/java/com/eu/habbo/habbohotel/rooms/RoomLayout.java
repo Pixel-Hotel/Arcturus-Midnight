@@ -617,7 +617,7 @@ public class RoomLayout {
                     for (short j = tile.y; j <= (tile.y + (length - 1)); j++) {
                         RoomTile t = this.getTile(i, j);
 
-                        if (t == null || t.state == RoomTileState.INVALID) {
+                        if (t == null || t.getState() == RoomTileState.INVALID) {
                             return false;
                         }
                     }
@@ -627,10 +627,15 @@ public class RoomLayout {
                     for (short j = tile.y; j <= (tile.y + (width - 1)); j++) {
                         RoomTile t = this.getTile(i, j);
 
-                        if (t == null || t.state == RoomTileState.INVALID) {
+                        if (t == null || t.getState() == RoomTileState.INVALID) {
                             return false;
                         }
                     }
+                }
+            } else if (rotation == 1 || rotation == 3 || rotation == 5 || rotation == 7) {
+                RoomTile t = this.getTile(tile.x, tile.y);
+                if (t == null || t.getState() == RoomTileState.INVALID) {
+                    return false;
                 }
             }
         }
@@ -662,9 +667,14 @@ public class RoomLayout {
                         }
                     }
                 }
+            } else if (rotation == 1 || rotation == 3 || rotation == 5 || rotation == 7) {
+                RoomTile t = this.getTile(tile.x, tile.y);
+                if (t != null) {
+                    pointList.add(t);
+                }
             }
         }
-
         return pointList;
     }
+
 }
