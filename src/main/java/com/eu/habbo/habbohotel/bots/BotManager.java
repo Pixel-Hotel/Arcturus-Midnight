@@ -127,7 +127,7 @@ public class BotManager {
                 roomUnit.setRotation(RoomUserRotation.SOUTH);
                 roomUnit.setLocation(location);
 
-                double stackHeight = location.getStackHeight();
+                double stackHeight = room.getTopHeightAt(location.x, location.y);
                 roomUnit.setPreviousLocationZ(stackHeight);
                 roomUnit.setZ(stackHeight);
 
@@ -136,7 +136,7 @@ public class BotManager {
                 roomUnit.setCanWalk(room.isAllowBotsWalk());
                 bot.setRoomUnit(roomUnit);
                 bot.setRoom(room);
-                bot.needsUpdate(true);
+                bot.onPlaceUpdate();
                 room.addBot(bot);
                 Emulator.getThreading().run(bot);
                 room.sendComposer(new RoomUsersComposer(bot).compose());

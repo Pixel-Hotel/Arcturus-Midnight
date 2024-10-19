@@ -130,10 +130,6 @@ public class CatalogBuyItemEvent extends MessageHandler {
                         }
                     });
 
-                    if (badgeFound[0]) {
-                        this.client.getHabbo().getClient().sendResponse(new AlertPurchaseFailedComposer(AlertPurchaseFailedComposer.ALREADY_HAVE_BADGE));
-                    }
-
                     return;
                 }
             }
