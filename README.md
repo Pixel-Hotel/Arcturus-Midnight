@@ -26,13 +26,13 @@ Arcturus Morningstar is as a fork of Arcturus Emulator by TheGeneral. Arcturus M
 
 
 ### Branches ###
-There are two main branches in use on the Arcturus Morningstar git. Developers should target the 4.x branch for merge requests.
+There are two main branches in use on the Arcturus Morningstar git. Developers should target the dev branch for merge requests.
 
 | master * | The stable 3.x branch of Arcturus Morningstar. |
 |----------|------------------------------------------------|
 ###### * Note: This branch is no longer being maintained except for Security Patches #######
 
-| dev* | The 4.x branch of Arcturus Morningstar. |
+| dev* | The dev branch of Arcturus Morningstar. |
 |------|-----------------------------------------|
 ###### * Note: This version is currently untested on a production hotel and is not recommended for daily use until a release has been made. #######
 
