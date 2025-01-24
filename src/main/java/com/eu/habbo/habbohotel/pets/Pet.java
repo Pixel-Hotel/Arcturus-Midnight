@@ -65,7 +65,7 @@ public class Pet implements ISerialize, Runnable {
         this.name = set.getString("name");
         this.petData = Emulator.getGameEnvironment().getPetManager().getPetData(set.getInt("type"));
         if (this.petData == null) {
-            LOGGER.error("WARNING! Missing pet data for type: " + set.getInt("type") + "! Insert a new entry into the pet_actions table for this type!");
+            LOGGER.error("WARNING! Missing pet data for type: {}! Insert a new entry into the pet_actions table for this type!", set.getInt("type"));
             this.petData = Emulator.getGameEnvironment().getPetManager().getPetData(0);
         }
         this.race = set.getInt("race");
@@ -88,7 +88,7 @@ public class Pet implements ISerialize, Runnable {
         this.petData = Emulator.getGameEnvironment().getPetManager().getPetData(type);
 
         if (this.petData == null) {
-            LOGGER.warn("Missing pet data for type: " + type + "! Insert a new entry into the pet_actions table for this type!");
+            LOGGER.warn("Missing pet data for type: {}! Insert a new entry into the pet_actions table for this type!", type);
         }
 
         this.race = race;
