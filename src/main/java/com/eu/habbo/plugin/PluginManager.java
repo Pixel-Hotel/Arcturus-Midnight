@@ -128,7 +128,7 @@ public class PluginManager {
         RoomChatMessage.BANNED_BUBBLES = new int[bannedBubbles.length];
         for (int i = 0; i < RoomChatMessage.BANNED_BUBBLES.length; i++) {
             try {
-                RoomChatMessage.BANNED_BUBBLES[i] = Integer.valueOf(bannedBubbles[i]);
+                RoomChatMessage.BANNED_BUBBLES[i] = Integer.parseInt(bannedBubbles[i]);
             } catch (Exception e) {
                 LOGGER.error("Caught exception", e);
             }
@@ -408,7 +408,7 @@ public class PluginManager {
 
         this.loadPlugins();
 
-        LOGGER.info("Plugin Manager -> Loaded! " + this.plugins.size() + " plugins! (" + (System.currentTimeMillis() - millis) + " MS)");
+        LOGGER.info("Plugin Manager -> Loaded! {} plugins! ({} MS)", this.plugins.size(), System.currentTimeMillis() - millis);
 
         this.registerDefaultEvents();
     }

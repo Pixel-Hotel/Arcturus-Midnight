@@ -94,7 +94,7 @@ public class RoomManager {
         registerGameType(IceTagGame.class);
         registerGameType(RollerskateGame.class);
 
-        LOGGER.info("Room Manager -> Loaded! (" + (System.currentTimeMillis() - millis) + " MS)");
+        LOGGER.info("Room Manager -> Loaded! ({} MS)", System.currentTimeMillis() - millis);
     }
 
     public void loadRoomModels() {
@@ -1128,7 +1128,7 @@ public class RoomManager {
 
         for (Room room : this.activeRooms.values()) {
             for (String s : room.getTags().split(";")) {
-                if (s.toLowerCase().equals(tag.toLowerCase())) {
+                if (s.equalsIgnoreCase(tag)) {
                     rooms.add(room);
                     break;
                 }
