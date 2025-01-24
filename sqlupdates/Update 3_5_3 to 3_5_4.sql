@@ -19,3 +19,7 @@ CREATE TABLE chat_bubbles (
 INSERT INTO `emulator_texts` (`key`, `value`) VALUES ('commands.keys.cmd_update_chat_bubbles', 'update_chat_bubbles');
 INSERT INTO `emulator_texts` (`key`, `value`) VALUES ('commands.success.cmd_update_chat_bubbles', 'Successfully updated chat bubbles');
 INSERT INTO `emulator_texts` (`key`, `value`) VALUES ('commands.description.cmd_update_chat_bubbles', ':update_chat_bubbles');
+UPDATE `emulator_texts` SET `key` = 'generic.pet.happiness', `value` = 'Happiness' WHERE `key` = 'generic.pet.happyness';
+
+ALTER TABLE `pet_commands_data` CHANGE `cost_happyness` `cost_happiness` int(11) NOT NULL DEFAULT '0';
+ALTER TABLE `users_pets` CHANGE `happyness` `happiness` int(11) NOT NULL DEFAULT '100';
