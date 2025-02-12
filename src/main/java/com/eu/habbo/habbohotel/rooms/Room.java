@@ -215,8 +215,10 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     private boolean cycleOdd;
     private long cycleTimestamp;
     public Map<String, Long> repeatersLastTick = new HashMap<>();
+    public final THashMap<String, Object> cache;
 
     public Room(ResultSet set) throws SQLException {
+        this.cache = new THashMap<>(1000);
         this.id = set.getInt("id");
         this.ownerId = set.getInt("owner_id");
         this.ownerName = set.getString("owner_name");
@@ -2707,6 +2709,10 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     }
 
     public void removeHabbo(Habbo habbo, boolean sendRemovePacket) {
+        if(habbo == null) {
+            return;
+        }
+
         if (habbo.getRoomUnit() != null && habbo.getRoomUnit().getCurrentLocation() != null) {
             habbo.getRoomUnit().getCurrentLocation().removeUnit(habbo.getRoomUnit());
         }
