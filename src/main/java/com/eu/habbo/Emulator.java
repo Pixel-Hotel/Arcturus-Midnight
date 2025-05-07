@@ -96,7 +96,7 @@ public final class Emulator {
         scanner.nextLine();
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         try {
             // Check if running on Windows and not in IntelliJ.
             // If so, we need to reconfigure the console appender and enable Jansi for colors.
@@ -122,10 +122,6 @@ public final class Emulator {
                 System.out.println("Warning, this is a beta build, this means that there may be unintended consequences so make sure you take regular backups while using this build. If you notice any issues you should make an issue on the Krews Git.");
                 promptEnterKey();
             }
-            
-            //System.out.println("");
-            //LOGGER.info("Version: {}", version);
-            //LOGGER.info("Build: {}", build);
 
             long startTime = System.nanoTime();
 
@@ -183,7 +179,7 @@ public final class Emulator {
             Emulator.getThreading().run(() -> {
             }, 1500);
 
-            // Check if console mode is true or false, default is true
+            // Check if the console mode is true or false, default is true
             if (Emulator.getConfig().getBoolean("console.mode", true)) {
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -205,7 +201,7 @@ public final class Emulator {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Error while starting Arcturus Midnight", e);
         }
     }
 
@@ -216,17 +212,20 @@ public final class Emulator {
         }
 
         StringBuilder sb = new StringBuilder();
-        try {
-            String filepath = new File(Emulator.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+        String filepath = new File(Emulator.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getAbsolutePath();
+        try (FileInputStream fis = new FileInputStream(filepath)) {
             MessageDigest md = MessageDigest.getInstance("MD5");// MD5
-            FileInputStream fis = new FileInputStream(filepath);
             byte[] dataBytes = new byte[1024];
-            int nread = 0;
-            while ((nread = fis.read(dataBytes)) != -1)
-                md.update(dataBytes, 0, nread);
-            byte[] mdbytes = md.digest();
-            for (int i = 0; i < mdbytes.length; i++)
-                sb.append(Integer.toString((mdbytes[i] & 0xff) + 0x100, 16).substring(1));
+            while (true) {
+                int bytesRead = fis.read(dataBytes);
+                if (bytesRead == -1) break;
+                md.update(dataBytes, 0, bytesRead);
+            }
+
+            byte[] mdBytes = md.digest();
+            for (byte mdByte : mdBytes){
+                sb.append(Integer.toString((mdByte & 0xff) + 0x100, 16).substring(1));
+            }
         } catch (Exception e) {
             build = "UNKNOWN";
             return;
@@ -245,51 +244,43 @@ public final class Emulator {
         try {
             if (Emulator.getPluginManager() != null)
                 Emulator.getPluginManager().fireEvent(new EmulatorStartShutdownEvent());
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             if (Emulator.cameraClient != null)
                 Emulator.cameraClient.disconnect();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             if (Emulator.rconServer != null)
                 Emulator.rconServer.stop();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             if (Emulator.gameEnvironment != null)
                 Emulator.gameEnvironment.dispose();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             if (Emulator.getPluginManager() != null)
                 Emulator.getPluginManager().fireEvent(new EmulatorStoppedEvent());
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             if (Emulator.pluginManager != null)
                 Emulator.pluginManager.dispose();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             if (Emulator.config != null) {
                 Emulator.config.saveToDatabase();
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         try {
             if (Emulator.gameServer != null)
                 Emulator.gameServer.stop();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         LOGGER.info("Stopped Arcturus Morningstar {}", version);
 
@@ -298,15 +289,11 @@ public final class Emulator {
         }
         Emulator.stopped = true;
 
-        // if (osName.startsWith("Windows") && (!classPath.contains("idea_rt.jar"))) {
-        //     AnsiConsole.systemUninstall();
-        // }
         try {
             if (Emulator.threading != null)
 
                 Emulator.threading.shutDown();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
 
     public static ConfigurationManager getConfig() {
@@ -418,7 +405,6 @@ public final class Emulator {
     }
 
     public static Date modifyDate(Date date, String timeString) {
-        int totalSeconds = 0;
 
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -488,7 +474,7 @@ public final class Emulator {
     public static boolean isNumeric(String string)
             throws IllegalArgumentException {
         boolean isnumeric = false;
-        if ((string != null) && (!string.equals(""))) {
+        if ((string != null) && (!string.isEmpty())) {
             isnumeric = true;
             char[] chars = string.toCharArray();
             for (char aChar : chars) {
