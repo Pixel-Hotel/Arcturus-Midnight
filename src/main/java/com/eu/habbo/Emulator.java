@@ -41,7 +41,8 @@ public final class Emulator {
     public final static String PREVIEW = "";
 
     public static final String version = "Arcturus Morningstar" + " " + MAJOR + "." + MINOR + "." + BUILD + " " + PREVIEW;
-private static final String logo =
+		
+    private static final String logo =
         "\n" +
         "█████╗ ██████╗  ██████╗████████╗██╗   ██╗██████╗ ██╗   ██╗███████╗\n" +
         "██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██║   ██║██╔══██╗██║   ██║██╔════╝\n" +
@@ -55,9 +56,8 @@ private static final String logo =
         "██║╚██╔╝██║██║██║  ██║██║╚██╗██║██║██║   ██║██╔══██║   ██║\n" +
         "██║ ╚═╝ ██║██║██████╔╝██║ ╚████║██║╚██████╔╝██║  ██║   ██║\n" +
         "╚═╝     ╚═╝╚═╝╚═════╝ ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝\n" +
-        "Pixel‑Hotel.de\n" +
+        "Pixel-Hotel.de\n" +
         "\n";
-
 
     public static String build = "";
     public static boolean isReady = false;
