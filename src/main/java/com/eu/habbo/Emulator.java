@@ -158,7 +158,7 @@ public final class Emulator {
             Emulator.rconServer.connect();
             Emulator.badgeImager = new BadgeImager();
 
-            LOGGER.info("Arcturus Morningstar has successfully loaded.");
+            LOGGER.info("Arcturus Midnight has successfully loaded. GG");
             LOGGER.info("System launched in: {}ms. Using {} threads!", (System.nanoTime() - startTime) / 1e6, Runtime.getRuntime().availableProcessors() * 2);
             LOGGER.info("Memory: {}/{}MB", (runtime.totalMemory() - runtime.freeMemory()) / (1024 * 1024), (runtime.freeMemory()) / (1024 * 1024));
 
@@ -240,7 +240,7 @@ public final class Emulator {
         Emulator.isShuttingDown = true;
         Emulator.isReady = false;
 
-        LOGGER.info("Stopping Arcturus Morningstar {}", version);
+        LOGGER.info("Stopping Arcturus Midnight {}", version);
 
         try {
             if (Emulator.getPluginManager() != null)
