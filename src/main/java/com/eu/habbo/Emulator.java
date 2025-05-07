@@ -40,7 +40,7 @@ public final class Emulator {
     public final static int BUILD = 0;
     public final static String PREVIEW = "";
 
-    public static final String version = "Arcturus Morningstar" + " " + MAJOR + "." + MINOR + "." + BUILD + " " + PREVIEW;
+    public static final String version = "Arcturus Midnight" + " " + MAJOR + "." + MINOR + "." + BUILD + " " + PREVIEW;
 		
     private static final String logo =
         "\n" +
