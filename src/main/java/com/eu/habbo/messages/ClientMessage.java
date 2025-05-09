@@ -3,14 +3,19 @@ package com.eu.habbo.messages;
 import com.eu.habbo.util.PacketUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ClientMessage {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientMessage.class);
     private final int header;
     private final ByteBuf buffer;
 
     public ClientMessage(int messageId, ByteBuf buffer) {
         this.header = messageId;
         this.buffer = ((buffer == null) || (buffer.readableBytes() == 0) ? Unpooled.EMPTY_BUFFER : buffer);
+        if(buffer != null) LOGGER.debug("ClientMessage: {} {} bytes", header, buffer.readableBytes());
+        else LOGGER.debug("ClientMessage: {} EMPTY BUFFER", header);
     }
 
     public ByteBuf getBuffer() {
@@ -20,13 +25,8 @@ public class ClientMessage {
     public int getMessageId() {
         return this.header;
     }
-    
-    
-    /**
-     *
-     * @return
-     * @throws CloneNotSupportedException
-     */
+
+
     @Override
     public ClientMessage clone() throws CloneNotSupportedException {
         return new ClientMessage(this.header, this.buffer.duplicate());
@@ -35,8 +35,7 @@ public class ClientMessage {
     public int readShort() {
         try {
             return this.buffer.readShort();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         return 0;
     }
@@ -44,17 +43,14 @@ public class ClientMessage {
     public Integer readInt() {
         try {
             return this.buffer.readInt();
-        } catch (Exception e) {
-        }
-
+        } catch (Exception ignored) {}
         return 0;
     }
 
     public boolean readBoolean() {
         try {
             return this.buffer.readByte() == 1;
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
         return false;
     }
@@ -78,8 +74,8 @@ public class ClientMessage {
         return this.buffer.readableBytes();
     }
 
-    public boolean release() {
-        return this.buffer.release();
+    public void release() {
+        this.buffer.release();
     }
 
 }
