@@ -93,7 +93,7 @@ public class RoomSpecialTypes {
 
     public void setInvisibleItemController(InteractionInvisibleItemController item, Room room) {
         if(invisibleItemController == null) invisibleItemController = item;
-        else item.onPickUp(room);
+        else room.ejectUserItem(item);
     }
     public void removeInvisibleItemController() {
         invisibleItemController = null;
@@ -104,7 +104,7 @@ public class RoomSpecialTypes {
 
     public void setWiredDisabler(InteractionWiredDisabler item, Room room) {
         if(wiredDisabler == null) wiredDisabler = item;
-        else item.onPickUp(room);
+        else room.ejectUserItem(item);
     }
     public void removeWiredDisabler() {
         wiredDisabler = null;
