@@ -158,6 +158,11 @@ public abstract class HabboItem implements Runnable, IEventTriggers {
         return this.roomId;
     }
 
+    public Room getRoom(){
+        if(roomId <= 0) return null;
+        return Emulator.getGameEnvironment().getRoomManager().getRoom(roomId);
+    }
+
     public void setRoomId(int roomId) {
         this.roomId = roomId;
     }

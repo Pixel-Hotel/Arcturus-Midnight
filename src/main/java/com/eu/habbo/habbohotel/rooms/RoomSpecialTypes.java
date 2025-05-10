@@ -5,6 +5,7 @@ import com.eu.habbo.habbohotel.games.GameTeamColors;
 import com.eu.habbo.habbohotel.items.ICycleable;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameScoreboard;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameTimer;
@@ -15,10 +16,12 @@ import com.eu.habbo.habbohotel.items.interactions.games.football.scoreboards.Int
 import com.eu.habbo.habbohotel.items.interactions.games.freeze.InteractionFreezeExitTile;
 import com.eu.habbo.habbohotel.items.interactions.games.freeze.gates.InteractionFreezeGate;
 import com.eu.habbo.habbohotel.items.interactions.games.freeze.scoreboards.InteractionFreezeScoreboard;
+import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleItem;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionNest;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetDrink;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetFood;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetToy;
+import com.eu.habbo.habbohotel.rooms.utils.SpecialItemSet;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredConditionType;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 
 public class RoomSpecialTypes {
     private final THashMap<Integer, InteractionBattleBanzaiTeleporter> banzaiTeleporters;
@@ -53,27 +57,50 @@ public class RoomSpecialTypes {
     private final THashMap<Integer, HabboItem> undefined;
     private final THashSet<ICycleable> cycleTasks;
 
+    private final SpecialItemSet<InteractionInvisibleItem> invisibleItems;
+    private InteractionInvisibleItemController invisibleItemController = null;
+
     public RoomSpecialTypes() {
-        this.banzaiTeleporters = new THashMap<>(0);
-        this.nests = new THashMap<>(0);
-        this.petDrinks = new THashMap<>(0);
-        this.petFoods = new THashMap<>(0);
-        this.petToys = new THashMap<>(0);
-        this.rollers = new THashMap<>(0);
+        banzaiTeleporters = new THashMap<>(0);
+        nests = new THashMap<>(0);
+        petDrinks = new THashMap<>(0);
+        petFoods = new THashMap<>(0);
+        petToys = new THashMap<>(0);
+        rollers = new THashMap<>(0);
 
-        this.wiredTriggers = new THashMap<>(0);
-        this.wiredEffects = new THashMap<>(0);
-        this.wiredConditions = new THashMap<>(0);
-        this.wiredExtras = new THashMap<>(0);
+        wiredTriggers = new THashMap<>(0);
+        wiredEffects = new THashMap<>(0);
+        wiredConditions = new THashMap<>(0);
+        wiredExtras = new THashMap<>(0);
 
-        this.gameScoreboards = new THashMap<>(0);
-        this.gameGates = new THashMap<>(0);
-        this.gameTimers = new THashMap<>(0);
+        gameScoreboards = new THashMap<>(0);
+        gameGates = new THashMap<>(0);
+        gameTimers = new THashMap<>(0);
 
-        this.freezeExitTile = new THashMap<>(0);
-        this.undefined = new THashMap<>(0);
-        this.cycleTasks = new THashSet<>(0);
+        freezeExitTile = new THashMap<>(0);
+        undefined = new THashMap<>(0);
+        cycleTasks = new THashSet<>(0);
+        invisibleItems = new SpecialItemSet<>();
     }
+
+
+
+    public SpecialItemSet<InteractionInvisibleItem> getInvisibleItems() {
+        return invisibleItems;
+    }
+
+    public boolean setInvisibleItemController(InteractionInvisibleItemController item) {
+        if(invisibleItemController != null) return false;
+        invisibleItemController = item;
+        return true;
+    }
+    public void removeInvisibleItemController() {
+        invisibleItemController = null;
+    }
+    public InteractionInvisibleItemController getItemController(){
+        return invisibleItemController;
+    }
+
 
 
     public InteractionBattleBanzaiTeleporter getBanzaiTeleporter(int itemId) {
@@ -736,4 +763,6 @@ public class RoomSpecialTypes {
 
         return null;
     }
+
+
 }

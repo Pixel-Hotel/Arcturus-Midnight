@@ -10,7 +10,6 @@ import com.eu.habbo.habbohotel.rooms.*;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
-import com.eu.habbo.messages.ClientMessage;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
 import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
@@ -198,12 +197,12 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
         this.direction = settings.getIntParams()[0];
         this.rotation = settings.getIntParams()[1];
 
-        int count = settings.getFurniIds().length;
+        int count = settings.getItemIds().length;
         if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count", 5)) return false;
 
         this.items.clear();
         for (int i = 0; i < count; i++) {
-            this.items.add(room.getHabboItem(settings.getFurniIds()[i]));
+            this.items.add(room.getHabboItem(settings.getItemIds()[i]));
         }
 
         this.setDelay(settings.getDelay());

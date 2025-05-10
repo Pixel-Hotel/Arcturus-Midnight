@@ -13,7 +13,6 @@ import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredConditionType;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
-import com.eu.habbo.messages.ClientMessage;
 import com.eu.habbo.messages.ServerMessage;
 import gnu.trove.set.hash.THashSet;
 
@@ -129,7 +128,7 @@ public class WiredConditionFurniHaveHabbo extends InteractionWiredCondition {
 
     @Override
     public boolean saveData(WiredSettings settings) {
-        int count = settings.getFurniIds().length;
+        int count = settings.getItemIds().length;
 
         if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count")) return false;
 
@@ -139,7 +138,7 @@ public class WiredConditionFurniHaveHabbo extends InteractionWiredCondition {
 
         if (room != null) {
             for (int i = 0; i < count; i++) {
-                HabboItem item = room.getHabboItem(settings.getFurniIds()[i]);
+                HabboItem item = room.getHabboItem(settings.getItemIds()[i]);
 
                 if (item != null)
                     this.items.add(item);

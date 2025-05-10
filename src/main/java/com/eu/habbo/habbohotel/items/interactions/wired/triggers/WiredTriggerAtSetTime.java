@@ -10,7 +10,6 @@ import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
-import com.eu.habbo.messages.ClientMessage;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.threading.runnables.WiredExecuteTask;
 import gnu.trove.procedure.TObjectProcedure;
@@ -54,7 +53,7 @@ public class WiredTriggerAtSetTime extends InteractionWiredTrigger implements Wi
             JsonData data = WiredHandler.getGsonBuilder().create().fromJson(wiredData, JsonData.class);
             this.executeTime = data.executeTime;
         } else {
-            if (wiredData.length() >= 1) {
+            if (!wiredData.isEmpty()) {
                 this.executeTime = (Integer.parseInt(wiredData));
             }
         }

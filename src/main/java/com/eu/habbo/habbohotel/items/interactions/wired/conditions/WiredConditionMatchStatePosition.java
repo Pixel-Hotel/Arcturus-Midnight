@@ -11,7 +11,6 @@ import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredConditionType;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredMatchFurniSetting;
-import com.eu.habbo.messages.ClientMessage;
 import com.eu.habbo.messages.ServerMessage;
 import gnu.trove.set.hash.THashSet;
 
@@ -81,13 +80,13 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition 
         if (room == null)
             return true;
 
-        int count = settings.getFurniIds().length;
+        int count = settings.getItemIds().length;
         if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count")) return false;
 
         this.settings.clear();
 
         for (int i = 0; i < count; i++) {
-            int itemId = settings.getFurniIds()[i];
+            int itemId = settings.getItemIds()[i];
             HabboItem item = room.getHabboItem(itemId);
 
             if (item != null)
