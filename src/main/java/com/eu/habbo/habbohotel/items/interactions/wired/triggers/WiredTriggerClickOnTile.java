@@ -3,6 +3,7 @@ package com.eu.habbo.habbohotel.items.interactions.wired.triggers;
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredTrigger;
+import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleClickItem;
 import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleItem;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
 import com.eu.habbo.habbohotel.rooms.Room;
@@ -116,7 +117,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
 
         for(int i = 0; i < settings.getItemIds().length; i++){
             HabboItem item = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(settings.getItemIds()[i]);
-            if(item instanceof InteractionInvisibleItem){
+            if(item instanceof InteractionInvisibleClickItem){
                 this.items.add(item);
             }
         }
@@ -129,7 +130,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     }
 
     private void clearItems(){
-        THashSet<HabboItem> items  = WiredSettings.clearItemByType(this.items, InteractionInvisibleItem.class);
+        THashSet<HabboItem> items  = WiredSettings.clearItemByType(this.items, InteractionInvisibleClickItem.class);
         this.items.clear();
         this.items.addAll(items);
     }

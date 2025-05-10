@@ -39,6 +39,7 @@ import com.eu.habbo.habbohotel.items.interactions.games.tag.icetag.InteractionIc
 import com.eu.habbo.habbohotel.items.interactions.games.tag.icetag.InteractionIceTagPole;
 import com.eu.habbo.habbohotel.items.interactions.games.tag.rollerskate.InteractionRollerskateField;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleClickItem;
 import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleItem;
 import com.eu.habbo.habbohotel.items.interactions.pets.*;
 import com.eu.habbo.habbohotel.items.interactions.totems.InteractionTotemHead;
@@ -215,6 +216,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_trg_game_team_lose", WiredTriggerTeamLoses.class));
         // <----------- NEW TRIGGERS -----------> \\
         this.interactionsList.add(new ItemInteraction("wf_trg_click_on_avatar", WiredTriggerClickOnAvatar.class));
+        this.interactionsList.add(new ItemInteraction("wf_trg_click_on_tile", WiredTriggerClickOnTile.class));
 
         this.interactionsList.add(new ItemInteraction("wf_act_toggle_state", WiredEffectToggleFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_reset_timers", WiredEffectResetTimers.class));
@@ -283,6 +285,7 @@ public class ItemManager {
 
         this.interactionsList.add(new ItemInteraction("conf_invisible_control", InteractionInvisibleItemController.class));
         this.interactionsList.add(new ItemInteraction("invisible_item", InteractionInvisibleItem.class));
+        this.interactionsList.add(new ItemInteraction("invisible_click_item", InteractionInvisibleClickItem.class));
 
 
         this.interactionsList.add(new ItemInteraction("battlebanzai_tile", InteractionBattleBanzaiTile.class));
