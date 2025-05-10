@@ -7,6 +7,7 @@ import com.eu.habbo.habbohotel.items.interactions.InteractionWiredCondition;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredEffect;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredExtra;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredTrigger;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredTriggerReset;
 import com.eu.habbo.habbohotel.items.interactions.wired.effects.WiredEffectGiveReward;
 import com.eu.habbo.habbohotel.items.interactions.wired.effects.WiredEffectTriggerStacks;
@@ -44,21 +45,19 @@ import java.util.List;
 public class WiredHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredHandler.class);
 
-    //Configuration. Loaded from database & updated accordingly.
-    public static int MAXIMUM_FURNI_SELECTION = 20;
+    //Configuration. Loaded from a database and updated accordingly.
+    public static int MAXIMUM_ITEM_SELECTION = 20;
     public static int TELEPORT_DELAY = 500;
 
     private static GsonBuilder gsonBuilder = null;
 
     public static boolean handle(WiredTriggerType triggerType, RoomUnit roomUnit, Room room, Object[] stuff) {
+        if(isDisabled(room)) return false;
         if (triggerType == WiredTriggerType.CUSTOM) return false;
 
         boolean talked = false;
 
         if (!Emulator.isReady)
-            return false;
-
-        if (room == null)
             return false;
 
         if (!room.isLoaded())
@@ -73,7 +72,7 @@ public class WiredHandler {
             return false;
 
         long millis = System.currentTimeMillis();
-        THashSet<InteractionWiredEffect> effectsToExecute = new THashSet<InteractionWiredEffect>();
+        THashSet<InteractionWiredEffect> effectsToExecute = new THashSet<>();
 
         List<RoomTile> triggeredTiles = new ArrayList<>();
         for (InteractionWiredTrigger trigger : triggers) {
@@ -82,7 +81,7 @@ public class WiredHandler {
             if (triggeredTiles.contains(tile))
                 continue;
 
-            THashSet<InteractionWiredEffect> tEffectsToExecute = new THashSet<InteractionWiredEffect>();
+            THashSet<InteractionWiredEffect> tEffectsToExecute = new THashSet<>();
 
             if (handle(trigger, roomUnit, room, stuff, tEffectsToExecute)) {
                 effectsToExecute.addAll(tEffectsToExecute);
@@ -101,26 +100,24 @@ public class WiredHandler {
         return talked;
     }
 
-    public static boolean handleCustomTrigger(Class<? extends InteractionWiredTrigger> triggerType, RoomUnit roomUnit, Room room, Object[] stuff) {
+    public static void handleCustomTrigger(Class<? extends InteractionWiredTrigger> triggerType, RoomUnit roomUnit, Room room, Object[] stuff) {
+        if(isDisabled(room)) return;
         if (!Emulator.isReady)
-            return false;
-
-        if (room == null)
-            return false;
+            return;
 
         if (!room.isLoaded())
-            return false;
+            return;
 
         if (room.getRoomSpecialTypes() == null)
-            return false;
+            return;
 
         THashSet<InteractionWiredTrigger> triggers = room.getRoomSpecialTypes().getTriggers(WiredTriggerType.CUSTOM);
 
         if (triggers == null || triggers.isEmpty())
-            return false;
+            return;
 
         long millis = System.currentTimeMillis();
-        THashSet<InteractionWiredEffect> effectsToExecute = new THashSet<InteractionWiredEffect>();
+        THashSet<InteractionWiredEffect> effectsToExecute = new THashSet<>();
 
         List<RoomTile> triggeredTiles = new ArrayList<>();
         for (InteractionWiredTrigger trigger : triggers) {
@@ -131,7 +128,7 @@ public class WiredHandler {
             if (triggeredTiles.contains(tile))
                 continue;
 
-            THashSet<InteractionWiredEffect> tEffectsToExecute = new THashSet<InteractionWiredEffect>();
+            THashSet<InteractionWiredEffect> tEffectsToExecute = new THashSet<>();
 
             if (handle(trigger, roomUnit, room, stuff, tEffectsToExecute)) {
                 effectsToExecute.addAll(tEffectsToExecute);
@@ -143,12 +140,12 @@ public class WiredHandler {
             triggerEffect(effect, roomUnit, room, stuff, millis);
         }
 
-        return effectsToExecute.size() > 0;
     }
 
     public static boolean handle(InteractionWiredTrigger trigger, final RoomUnit roomUnit, final Room room, final Object[] stuff) {
+        if(isDisabled(room)) return false;
         long millis = System.currentTimeMillis();
-        THashSet<InteractionWiredEffect> effectsToExecute = new THashSet<InteractionWiredEffect>();
+        THashSet<InteractionWiredEffect> effectsToExecute = new THashSet<>();
 
         if(handle(trigger, roomUnit, room, stuff, effectsToExecute)) {
             for (InteractionWiredEffect effect : effectsToExecute) {
@@ -160,6 +157,7 @@ public class WiredHandler {
     }
 
     public static boolean handle(InteractionWiredTrigger trigger, final RoomUnit roomUnit, final Room room, final Object[] stuff, final THashSet<InteractionWiredEffect> effectsToExecute) {
+        if(isDisabled(room)) return false;
         long millis = System.currentTimeMillis();
         int roomUnitId = roomUnit != null ? roomUnit.getId() : -1;
         if (Emulator.isReady && ((Emulator.getConfig().getBoolean("wired.custom.enabled", false) && (trigger.canExecute(millis) || roomUnitId > -1) && trigger.userCanExecute(roomUnitId, millis)) || (!Emulator.getConfig().getBoolean("wired.custom.enabled", false) && trigger.canExecute(millis))) && trigger.execute(roomUnit, room, stuff)) {
@@ -178,7 +176,7 @@ public class WiredHandler {
                     }
                 }
 
-                if(matchedConditions.size() == 0) {
+                if(matchedConditions.isEmpty()) {
                     return false;
                 }
             }
@@ -245,27 +243,24 @@ public class WiredHandler {
         return false;
     }
 
-    private static boolean triggerEffect(InteractionWiredEffect effect, RoomUnit roomUnit, Room room, Object[] stuff, long millis) {
-        boolean executed = false;
+    private static void triggerEffect(InteractionWiredEffect effect, RoomUnit roomUnit, Room room, Object[] stuff, long millis) {
+        if(isDisabled(room)) return;
         if (effect != null && (effect.canExecute(millis) || (roomUnit != null && effect.requiresTriggeringUser() && Emulator.getConfig().getBoolean("wired.custom.enabled", false) && effect.userCanExecute(roomUnit.getId(), millis)))) {
-            executed = true;
             if (!effect.requiresTriggeringUser() || (roomUnit != null && effect.requiresTriggeringUser())) {
                 Emulator.getThreading().run(() -> {
-                    if (room.isLoaded() && room.getHabbos().size() > 0) {
+                    if (room.isLoaded() && !room.getHabbos().isEmpty()) {
                         try {
                             if (!effect.execute(roomUnit, room, stuff)) return;
                             effect.setCooldown(millis);
                         } catch (Exception e) {
                             LOGGER.error("Caught exception", e);
                         }
-
                         effect.activateBox(room, roomUnit, millis);
                     }
                 }, effect.getDelay() * 500L);
             }
         }
 
-        return executed;
     }
 
     public static GsonBuilder getGsonBuilder() {
@@ -275,22 +270,20 @@ public class WiredHandler {
         return gsonBuilder;
     }
 
-    public static boolean executeEffectsAtTiles(THashSet<RoomTile> tiles, final RoomUnit roomUnit, final Room room, final Object[] stuff) {
+    public static void executeEffectsAtTiles(THashSet<RoomTile> tiles, final RoomUnit roomUnit, final Room room, final Object[] stuff) {
+        if(isDisabled(room)) return;
         for (RoomTile tile : tiles) {
-            if (room != null) {
-                THashSet<HabboItem> items = room.getItemsAt(tile);
+            THashSet<HabboItem> items = room.getItemsAt(tile);
 
-                long millis = room.getCycleTimestamp();
-                for (final HabboItem item : items) {
-                    if (item instanceof InteractionWiredEffect && !(item instanceof WiredEffectTriggerStacks)) {
-                        triggerEffect((InteractionWiredEffect) item, roomUnit, room, stuff, millis);
-                        ((InteractionWiredEffect) item).setCooldown(millis);
-                    }
+            long millis = room.getCycleTimestamp();
+            for (final HabboItem item : items) {
+                if (item instanceof InteractionWiredEffect && !(item instanceof WiredEffectTriggerStacks)) {
+                    triggerEffect((InteractionWiredEffect) item, roomUnit, room, stuff, millis);
+                    ((InteractionWiredEffect) item).setCooldown(millis);
                 }
             }
         }
 
-        return true;
     }
 
     public static void dropRewards(int wiredId) {
@@ -355,8 +348,7 @@ public class WiredHandler {
 
                     try {
                         type = Integer.parseInt(rewardReceived.type.replace("points", ""));
-                    } catch (Exception e) {
-                    }
+                    } catch (Exception ignored) {}
 
                     habbo.givePoints(type, points);
                 } else if (rewardReceived.type.equalsIgnoreCase("furni")) {
@@ -489,5 +481,12 @@ public class WiredHandler {
         });
 
         room.setLastTimerReset(Emulator.getIntUnixTimestamp());
+    }
+
+    private static boolean isDisabled(Room room){
+        if(room == null) return true;
+        InteractionWiredDisabler item = room.getRoomSpecialTypes().getWiredDisabler();
+        if(item == null) return false;
+        return item.isDisabled();
     }
 }

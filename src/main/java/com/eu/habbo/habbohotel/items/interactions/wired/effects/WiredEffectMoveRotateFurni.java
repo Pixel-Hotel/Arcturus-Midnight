@@ -28,7 +28,7 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredEffectMoveRotateFurni.class);
 
     public static final WiredEffectType type = WiredEffectType.MOVE_ROTATE;
-    private final THashSet<HabboItem> items = new THashSet<>(WiredHandler.MAXIMUM_FURNI_SELECTION / 2);
+    private final THashSet<HabboItem> items = new THashSet<>(WiredHandler.MAXIMUM_ITEM_SELECTION / 2);
     private int direction;
     private int rotation;
     private THashSet<HabboItem> itemCooldowns;
@@ -169,7 +169,7 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
         }
 
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
         message.appendInt(this.items.size());
         for (HabboItem item : this.items)
             message.appendInt(item.getId());
