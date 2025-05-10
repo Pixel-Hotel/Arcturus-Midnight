@@ -1,6 +1,7 @@
 package com.eu.habbo.messages.incoming.rooms.users;
 
 import com.eu.habbo.Emulator;
+import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleClickItem;
 import com.eu.habbo.habbohotel.pets.PetTasks;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
@@ -8,6 +9,8 @@ import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.rooms.RoomUnitStatus;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.wired.WiredHandler;
+import com.eu.habbo.habbohotel.wired.WiredTriggerType;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.messages.outgoing.rooms.users.RoomUnitOnRollerComposer;
 import com.eu.habbo.plugin.events.users.UserIdleEvent;
@@ -36,12 +39,10 @@ public class RoomUserWalkEvent extends MessageHandler {
             RoomUnit roomUnit = this.client.getHabbo().getRoomUnit();
 
             // If habbo is teleporting, dont calculate a new path
-            if (roomUnit.isTeleporting)
-                return;
+            if (roomUnit.isTeleporting) return;
 
             // If habbo is being kicked dont calculate a new path
-            if (roomUnit.isKicked)
-                return;
+            if (roomUnit.isKicked) return;
 
             // If habbo has control (im assuming admin, do something else, but we dont care about this part here)
             if (roomUnit.getCacheable().get("control") != null) {
@@ -56,13 +57,28 @@ public class RoomUserWalkEvent extends MessageHandler {
 
             // Get room unit?
             roomUnit = habbo.getRoomUnit();
+            if(roomUnit == null) return;
 
             // Get the room the habbo is in
             Room room = habbo.getHabboInfo().getCurrentRoom();
+            if(room == null) return;
+
+            // Get room height map
+            RoomTile tile = room.getLayout().getTile((short) x, (short) y);
+
+            // this should never happen, if it does it would be a design flaw
+            if (tile == null) return;
+
+            for(HabboItem item : room.getItemsAt(tile)){
+                if(item instanceof InteractionInvisibleClickItem){
+                    RoomUnit finalRoomUnit = roomUnit;
+                    Emulator.getThreading().run(() -> WiredHandler.handle(WiredTriggerType.CLICK_ON_TILE, finalRoomUnit, room, new Object[]{item}));
+                }
+            }
 
             try {
                 // If our room unit is not nullptr and we are in a room and we can walk, then calculate a new path
-                if (roomUnit != null && roomUnit.isInRoom() && roomUnit.canWalk()) {
+                if (roomUnit.isInRoom() && roomUnit.canWalk()) {
                     // If we are not teleporting calcualte a new path
                     if (!roomUnit.cmdTeleport) {
                         // Don't calculate a new path if we are on a horse
@@ -73,7 +89,7 @@ public class RoomUserWalkEvent extends MessageHandler {
                         if (x == roomUnit.getX() && y == roomUnit.getY())
                             return;
 
-                        if (room == null || room.getLayout() == null)
+                        if (room.getLayout() == null)
                             return;
 
                         // Reset idle status
@@ -89,14 +105,6 @@ public class RoomUserWalkEvent extends MessageHandler {
                             }
                         }
 
-                        // Get room height map
-                        RoomTile tile = room.getLayout().getTile((short) x, (short) y);
-
-                        // this should never happen, if it does it would be a design flaw
-                        if (tile == null) {
-                            return;
-                        }
-
                         // Don't care
                         if (habbo.getRoomUnit().hasStatus(RoomUnitStatus.LAY)) {
                             if (room.getLayout().getTilesInFront(habbo.getRoomUnit().getCurrentLocation(), habbo.getRoomUnit().getBodyRotation().getValue(), 2).contains(tile))
@@ -107,16 +115,11 @@ public class RoomUserWalkEvent extends MessageHandler {
 
                             if (bed != null && bed.getBaseItem().allowLay()) {
                                 RoomTile pillow = room.getLayout().getTile(bed.getX(), bed.getY());
-                                switch (bed.getRotation()) {
-                                    case 0:
-                                    case 4:
-                                        pillow = room.getLayout().getTile((short) x, bed.getY());
-                                        break;
-                                    case 2:
-                                    case 8:
-                                        pillow = room.getLayout().getTile(bed.getX(), (short) y);
-                                        break;
-                                }
+                                pillow = switch (bed.getRotation()) {
+                                    case 0, 4 -> room.getLayout().getTile((short) x, bed.getY());
+                                    case 2, 8 -> room.getLayout().getTile(bed.getX(), (short) y);
+                                    default -> pillow;
+                                };
 
                                 if (pillow != null && room.canLayAt(pillow.x, pillow.y)) {
                                     roomUnit.setGoalLocation(pillow);

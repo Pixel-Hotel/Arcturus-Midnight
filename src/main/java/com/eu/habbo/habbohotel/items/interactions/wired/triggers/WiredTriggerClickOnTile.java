@@ -129,6 +129,11 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
         return type;
     }
 
+    @Override
+    public boolean isTriggeredByRoomUnit() {
+        return true;
+    }
+
     private void clearItems(){
         THashSet<HabboItem> items  = WiredSettings.clearItemByType(this.items, InteractionInvisibleClickItem.class);
         this.items.clear();

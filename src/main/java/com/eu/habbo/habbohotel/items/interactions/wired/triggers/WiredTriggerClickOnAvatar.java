@@ -63,4 +63,9 @@ public class WiredTriggerClickOnAvatar extends InteractionWiredTrigger {
 
     @Override
     public void onPickUp() {}
+
+    @Override
+    public boolean isTriggeredByRoomUnit() {
+        return true;
+    }
 }

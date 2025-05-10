@@ -8,7 +8,6 @@ import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
-import com.eu.habbo.messages.ClientMessage;
 import com.eu.habbo.messages.ServerMessage;
 
 import java.sql.ResultSet;
@@ -32,7 +31,7 @@ public class WiredTriggerHabboEntersRoom extends InteractionWiredTrigger {
         Habbo habbo = room.getHabbo(roomUnit);
 
         if (habbo != null) {
-            if (this.username.length() > 0) {
+            if (!this.username.isEmpty()) {
                 return habbo.getHabboInfo().getUsername().equalsIgnoreCase(this.username);
             }
 
