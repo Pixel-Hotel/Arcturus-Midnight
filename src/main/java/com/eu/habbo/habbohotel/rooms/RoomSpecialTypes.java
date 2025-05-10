@@ -23,10 +23,13 @@ import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetDrink;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetFood;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetToy;
 import com.eu.habbo.habbohotel.rooms.utils.SpecialItemSet;
+import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredConditionType;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
+import com.eu.habbo.messages.ServerMessage;
+import com.eu.habbo.messages.outgoing.rooms.items.RemoveFloorItemComposer;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
 
@@ -93,7 +96,9 @@ public class RoomSpecialTypes {
 
     public void setInvisibleItemController(InteractionInvisibleItemController item, Room room) {
         if(invisibleItemController == null) invisibleItemController = item;
-        else room.ejectUserItem(item);
+        room.ejectUserItem(item);
+        Habbo habbo = room.getHabbo(item.getUserId());
+        habbo.getClient().sendResponse(new RemoveFloorItemComposer(item).compose());
     }
     public void removeInvisibleItemController() {
         invisibleItemController = null;
@@ -104,7 +109,9 @@ public class RoomSpecialTypes {
 
     public void setWiredDisabler(InteractionWiredDisabler item, Room room) {
         if(wiredDisabler == null) wiredDisabler = item;
-        else room.ejectUserItem(item);
+        room.ejectUserItem(item);
+        Habbo habbo = room.getHabbo(item.getUserId());
+        habbo.getClient().sendResponse(new RemoveFloorItemComposer(item).compose());
     }
     public void removeWiredDisabler() {
         wiredDisabler = null;
