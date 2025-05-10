@@ -12,6 +12,7 @@ public enum WiredTriggerType {
     GAME_ENDS(9),
     SCORE_ACHIEVED(10),
     COLLISION(11),
+    CLICK_ON_AVATAR(11),
     PERIODICALLY_LONG(12),
     BOT_REACHED_STF(13),
     BOT_REACHED_AVTR(14),

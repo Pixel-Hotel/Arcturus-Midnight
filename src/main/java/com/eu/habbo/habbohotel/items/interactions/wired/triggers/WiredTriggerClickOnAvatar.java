@@ -5,7 +5,6 @@ import com.eu.habbo.habbohotel.items.interactions.InteractionWiredTrigger;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
-import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
 import com.eu.habbo.messages.ServerMessage;
@@ -13,36 +12,35 @@ import com.eu.habbo.messages.ServerMessage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class WiredTriggerCollision extends InteractionWiredTrigger {
-    private static final WiredTriggerType type = WiredTriggerType.COLLISION;
+public class WiredTriggerClickOnAvatar extends InteractionWiredTrigger {
+    private static final WiredTriggerType type = WiredTriggerType.CLICK_ON_AVATAR;
 
-    public WiredTriggerCollision(ResultSet set, Item baseItem) throws SQLException {
+    protected WiredTriggerClickOnAvatar(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
     }
 
-    public WiredTriggerCollision(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
+    protected WiredTriggerClickOnAvatar(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
     @Override
+    public WiredTriggerType getType() {
+        return type;
+    }
+
+    @Override
+    public boolean saveData(WiredSettings settings) {
+        return true;
+    }
+
+    @Override
     public boolean execute(RoomUnit roomUnit, Room room, Object[] stuff) {
-        return stuff.length > 0 && stuff[0] instanceof HabboItem;
+        return roomUnit != null;
     }
 
     @Override
     public String getWiredData() {
         return "";
-    }
-
-    @Override
-    public void loadWiredData(ResultSet set, Room room) throws SQLException {}
-
-    @Override
-    public void onPickUp() {}
-
-    @Override
-    public WiredTriggerType getType() {
-        return type;
     }
 
     @Override
@@ -61,12 +59,8 @@ public class WiredTriggerCollision extends InteractionWiredTrigger {
     }
 
     @Override
-    public boolean saveData(WiredSettings settings) {
-        return true;
-    }
+    public void loadWiredData(ResultSet set, Room room) throws SQLException {}
 
     @Override
-    public boolean isTriggeredByRoomUnit() {
-        return true;
-    }
+    public void onPickUp() {}
 }

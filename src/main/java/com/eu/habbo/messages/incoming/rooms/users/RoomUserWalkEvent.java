@@ -127,7 +127,7 @@ public class RoomUserWalkEvent extends MessageHandler {
 
                         THashSet<HabboItem> items = room.getItemsAt(tile);
 
-                        if (items.size() > 0) {
+                        if (!items.isEmpty()) {
                             for (HabboItem item : items) {
                                 RoomTile overriddenTile = item.getOverrideGoalTile(roomUnit, room, tile);
 
