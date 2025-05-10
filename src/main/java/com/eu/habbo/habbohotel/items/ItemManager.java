@@ -39,6 +39,7 @@ import com.eu.habbo.habbohotel.items.interactions.games.tag.icetag.InteractionIc
 import com.eu.habbo.habbohotel.items.interactions.games.tag.icetag.InteractionIceTagPole;
 import com.eu.habbo.habbohotel.items.interactions.games.tag.rollerskate.InteractionRollerskateField;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleItem;
 import com.eu.habbo.habbohotel.items.interactions.pets.*;
 import com.eu.habbo.habbohotel.items.interactions.totems.InteractionTotemHead;
 import com.eu.habbo.habbohotel.items.interactions.totems.InteractionTotemLegs;
@@ -73,7 +74,7 @@ public class ItemManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemManager.class);
 
-    //Configuration. Loaded from database & updated accordingly.
+    //Configuration. Loaded from a database and updated accordingly.
     public static boolean RECYCLER_ENABLED = true;
 
     private final TIntObjectMap<Item> items;
@@ -281,7 +282,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_highscore", InteractionWiredHighscore.class));
 
         this.interactionsList.add(new ItemInteraction("conf_invisible_control", InteractionInvisibleItemController.class));
-
+        this.interactionsList.add(new ItemInteraction("invisible_item", InteractionInvisibleItem.class));
 
 
         this.interactionsList.add(new ItemInteraction("battlebanzai_tile", InteractionBattleBanzaiTile.class));
@@ -684,10 +685,10 @@ public class ItemManager {
 
         if (itemClass != null) {
             try {
-                Constructor c = itemClass.getConstructor(ResultSet.class, Item.class);
+                Constructor<? extends HabboItem> c = itemClass.getConstructor(ResultSet.class, Item.class);
                 c.setAccessible(true);
 
-                return (HabboItem) c.newInstance(set, baseItem);
+                return c.newInstance(set, baseItem);
             } catch (Exception e) {
                 LOGGER.error("Caught exception", e);
             }
