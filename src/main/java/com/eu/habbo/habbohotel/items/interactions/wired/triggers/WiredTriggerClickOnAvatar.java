@@ -59,10 +59,12 @@ public class WiredTriggerClickOnAvatar extends InteractionWiredTrigger {
     }
 
     @Override
-    public void loadWiredData(ResultSet set, Room room) throws SQLException {}
+    public void loadWiredData(ResultSet set, Room room) throws SQLException {
+        return;
+    }
 
     @Override
-    public void onPickUp() {}
+    public void onPickUp() { return; }
 
     @Override
     public boolean isTriggeredByRoomUnit() {

@@ -22,16 +22,14 @@ import java.util.stream.Collectors;
 public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
 
     private static final WiredTriggerType type = WiredTriggerType.CLICK_ON_TILE;
-    private final THashSet<HabboItem> items;
+    private final THashSet<HabboItem> items = new THashSet<>();
 
     protected WiredTriggerClickOnTile(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
-        items = new THashSet<>();
     }
 
     protected WiredTriggerClickOnTile(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
-        items = new THashSet<>();
     }
 
     @Override

@@ -28,7 +28,6 @@ import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredConditionType;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
-import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.outgoing.rooms.items.RemoveFloorItemComposer;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
@@ -550,7 +549,7 @@ public class RoomSpecialTypes {
 
             for (Map.Entry<Integer, InteractionGameScoreboard> set : this.gameScoreboards.entrySet()) {
                 if (set.getValue() instanceof InteractionFreezeScoreboard) {
-                    if (((InteractionFreezeScoreboard) set.getValue()).teamColor.equals(teamColor))
+                    if ((set.getValue()).teamColor.equals(teamColor))
                         boards.put(set.getValue().getId(), (InteractionFreezeScoreboard) set.getValue());
                 }
             }
@@ -579,7 +578,7 @@ public class RoomSpecialTypes {
 
             for (Map.Entry<Integer, InteractionGameScoreboard> set : this.gameScoreboards.entrySet()) {
                 if (set.getValue() instanceof InteractionBattleBanzaiScoreboard) {
-                    if (((InteractionBattleBanzaiScoreboard) set.getValue()).teamColor.equals(teamColor))
+                    if ((set.getValue()).teamColor.equals(teamColor))
                         boards.put(set.getValue().getId(), (InteractionBattleBanzaiScoreboard) set.getValue());
                 }
             }
@@ -608,7 +607,7 @@ public class RoomSpecialTypes {
 
             for (Map.Entry<Integer, InteractionGameScoreboard> set : this.gameScoreboards.entrySet()) {
                 if (set.getValue() instanceof InteractionFootballScoreboard) {
-                    if (((InteractionFootballScoreboard) set.getValue()).teamColor.equals(teamColor))
+                    if ((set.getValue()).teamColor.equals(teamColor))
                         boards.put(set.getValue().getId(), (InteractionFootballScoreboard) set.getValue());
                 }
             }
