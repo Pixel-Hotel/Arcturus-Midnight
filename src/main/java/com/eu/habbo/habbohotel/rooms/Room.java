@@ -261,7 +261,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         this.promoted = set.getString("promoted").equals("1");
         this.jukeboxActive = set.getString("jukebox_active").equals("1");
         this.hideWired = set.getString("hidewired").equals("1");
-        this.hideInvisibleItems = set.getString("hide_invisible_items").equals("1");
+        this.hideInvisibleItems = set.getInt("hide_invisible_items") == 1;
 
         this.bannedHabbos = new TIntObjectHashMap<>();
 
