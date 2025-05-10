@@ -4522,7 +4522,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
     public void setHideInvisibleItems(boolean hideInvisibleItems){
         this.hideInvisibleItems = hideInvisibleItems;
-
+        setNeedsUpdate(true);
         if(this.hideInvisibleItems){
             for(HabboItem item : roomSpecialTypes.getInvisibleItems().getItems()){
                 this.sendComposer(new RemoveFloorItemComposer(item).compose());
@@ -4540,7 +4540,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
     public void setHideWired(boolean hideWired) {
         this.hideWired = hideWired;
-
+        setNeedsUpdate(true);
         if (this.hideWired) {
             for (HabboItem item : this.roomSpecialTypes.getTriggers()) {
                 this.sendComposer(new RemoveFloorItemComposer(item).compose());
