@@ -2444,9 +2444,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 this.roomSpecialTypes.getInvisibleItems().add(specialItem);
             } else if (item instanceof InteractionInvisibleItemController specialItem){
                 if(!this.roomSpecialTypes.setInvisibleItemController(specialItem)){
-                    this.roomItems.remove(specialItem.getId());
-                    item.setRoomId(0);
-                    item.needsUpdate(true);
+                    item.onPickUp(this);
                 }
             }
 
