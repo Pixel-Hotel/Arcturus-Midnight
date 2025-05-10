@@ -38,13 +38,13 @@ public class RoomUserWalkEvent extends MessageHandler {
             // Get Room Habbo object (Unique GUID?)
             RoomUnit roomUnit = this.client.getHabbo().getRoomUnit();
 
-            // If habbo is teleporting, dont calculate a new path
+            // If habbo is teleporting, don't calculate a new path
             if (roomUnit.isTeleporting) return;
 
-            // If habbo is being kicked dont calculate a new path
+            // If habbo is being kicked, don't calculate a new path
             if (roomUnit.isKicked) return;
 
-            // If habbo has control (im assuming admin, do something else, but we dont care about this part here)
+            // If habbo has control (im assuming admin, do something else, but we don't care about this part here)
             if (roomUnit.getCacheable().get("control") != null) {
                 habbo = (Habbo) roomUnit.getCacheable().get("control");
 
@@ -63,10 +63,10 @@ public class RoomUserWalkEvent extends MessageHandler {
             Room room = habbo.getHabboInfo().getCurrentRoom();
             if(room == null) return;
 
-            // Get room height map
+            // Get a room height map
             RoomTile tile = room.getLayout().getTile((short) x, (short) y);
 
-            // this should never happen, if it does it would be a design flaw
+            // this should never happen, if it does, it would be a design flaw
             if (tile == null) return;
 
             for(HabboItem item : room.getItemsAt(tile)){
@@ -77,15 +77,15 @@ public class RoomUserWalkEvent extends MessageHandler {
             }
 
             try {
-                // If our room unit is not nullptr and we are in a room and we can walk, then calculate a new path
+                // If our room unit is not nullptr, and we are in a room, and we can walk, then calculate a new path
                 if (roomUnit.isInRoom() && roomUnit.canWalk()) {
-                    // If we are not teleporting calcualte a new path
+                    // If we are not teleporting, calculate a new path
                     if (!roomUnit.cmdTeleport) {
                         // Don't calculate a new path if we are on a horse
                         if (habbo.getHabboInfo().getRiding() != null && habbo.getHabboInfo().getRiding().getTask() != null && habbo.getHabboInfo().getRiding().getTask().equals(PetTasks.JUMP))
                             return;
 
-                        // Don't calulcate a new path if are already at the end position
+                        // Don't calculate a new path if are already at the end position
                         if (x == roomUnit.getX() && y == roomUnit.getY())
                             return;
 
