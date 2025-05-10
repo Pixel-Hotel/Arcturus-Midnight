@@ -6,6 +6,7 @@ import com.eu.habbo.habbohotel.items.ICycleable;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameScoreboard;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameTimer;
@@ -59,6 +60,7 @@ public class RoomSpecialTypes {
 
     private final SpecialItemSet<InteractionInvisibleItem> invisibleItems;
     private InteractionInvisibleItemController invisibleItemController = null;
+    private InteractionWiredDisabler wiredDisabler = null;
 
     public RoomSpecialTypes() {
         banzaiTeleporters = new THashMap<>(0);
@@ -89,16 +91,26 @@ public class RoomSpecialTypes {
         return invisibleItems;
     }
 
-    public boolean setInvisibleItemController(InteractionInvisibleItemController item) {
-        if(invisibleItemController != null) return false;
-        invisibleItemController = item;
-        return true;
+    public void setInvisibleItemController(InteractionInvisibleItemController item, Room room) {
+        if(invisibleItemController == null) invisibleItemController = item;
+        else item.onPickUp(room);
     }
     public void removeInvisibleItemController() {
         invisibleItemController = null;
     }
-    public InteractionInvisibleItemController getItemController(){
+    public InteractionInvisibleItemController getInvisibleItemController(){
         return invisibleItemController;
+    }
+
+    public void setWiredDisabler(InteractionWiredDisabler item, Room room) {
+        if(wiredDisabler == null) wiredDisabler = item;
+        else item.onPickUp(room);
+    }
+    public void removeWiredDisabler() {
+        wiredDisabler = null;
+    }
+    public InteractionWiredDisabler getWiredDisabler(){
+        return wiredDisabler;
     }
 
 

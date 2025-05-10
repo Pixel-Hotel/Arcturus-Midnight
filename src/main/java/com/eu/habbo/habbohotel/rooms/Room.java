@@ -13,6 +13,7 @@ import com.eu.habbo.habbohotel.items.ICycleable;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameScoreboard;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameTimer;
@@ -2443,9 +2444,9 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             } else if (item instanceof InteractionInvisibleItem specialItem){
                 this.roomSpecialTypes.getInvisibleItems().add(specialItem);
             } else if (item instanceof InteractionInvisibleItemController specialItem){
-                if(!this.roomSpecialTypes.setInvisibleItemController(specialItem)){
-                    item.onPickUp(this);
-                }
+                this.roomSpecialTypes.setInvisibleItemController(specialItem, this);
+            } else if (item instanceof InteractionWiredDisabler specialItem){
+                this.roomSpecialTypes.setWiredDisabler(specialItem, this);
             }
 
         }
@@ -2498,6 +2499,12 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
         if (item == null)
             item = this.roomSpecialTypes.getInvisibleItems().get(id);
+
+        if (item == null)
+            item = this.roomSpecialTypes.getInvisibleItemController();
+
+        if (item == null)
+            item = this.roomSpecialTypes.getWiredDisabler();
 
         return item;
     }
@@ -2597,6 +2604,10 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                     this.roomSpecialTypes.removeUndefined(item);
                 } else if (item instanceof InteractionInvisibleItem specialItem) {
                     this.roomSpecialTypes.getInvisibleItems().remove(specialItem);
+                } else if (item instanceof InteractionInvisibleItemController) {
+                    this.roomSpecialTypes.removeInvisibleItemController();
+                } else if (item instanceof InteractionWiredDisabler) {
+                    this.roomSpecialTypes.removeWiredDisabler();
                 }
             }
         }
