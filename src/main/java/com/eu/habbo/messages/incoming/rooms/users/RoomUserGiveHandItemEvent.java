@@ -17,7 +17,8 @@ public class RoomUserGiveHandItemEvent extends MessageHandler {
 
         Room room = this.client.getHabbo().getHabboInfo().getCurrentRoom();
 
-        if (room != null) {
+        if (room != null && !room.isHanditemDisabled()) {
+
             Habbo target = room.getHabbo(userId);
 
             if (target != null) {

@@ -8,10 +8,12 @@ public class RoomUserDropHandItemEvent extends MessageHandler {
     @Override
     public void handle() throws Exception {
         Room room = this.client.getHabbo().getHabboInfo().getCurrentRoom();
+
+        if(room.isHanditemDisabled()) return;
+
         this.client.getHabbo().getRoomUnit().setHandItem(0);
-        if (room != null) {
-            room.unIdle(this.client.getHabbo());
-            room.sendComposer(new RoomUserHandItemComposer(this.client.getHabbo().getRoomUnit()).compose());
-        }
+        room.unIdle(this.client.getHabbo());
+        room.sendComposer(new RoomUserHandItemComposer(this.client.getHabbo().getRoomUnit()).compose());
+
     }
 }

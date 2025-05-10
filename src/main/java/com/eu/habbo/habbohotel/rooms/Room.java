@@ -4977,4 +4977,9 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         THashSet<RoomUnit> roomUnits = getRoomUnits();
         return roomUnits.stream().filter(unit -> unit.getCurrentLocation() == tile).collect(Collectors.toSet());
     }
+
+    public boolean isHanditemDisabled(){
+        if(roomSpecialTypes.getHanditemBlocker() == null) return false;
+        return roomSpecialTypes.getHanditemBlocker().isDisabled();
+    }
 }

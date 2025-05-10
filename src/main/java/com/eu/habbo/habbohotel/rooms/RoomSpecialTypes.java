@@ -5,6 +5,7 @@ import com.eu.habbo.habbohotel.games.GameTeamColors;
 import com.eu.habbo.habbohotel.items.ICycleable;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
@@ -63,6 +64,8 @@ public class RoomSpecialTypes {
     private final SpecialItemSet<InteractionInvisibleItem> invisibleItems;
     private InteractionInvisibleItemController invisibleItemController = null;
     private InteractionWiredDisabler wiredDisabler = null;
+    private InteractionHanditemBlocker handitemBlocker = null;
+
 
     public RoomSpecialTypes() {
         banzaiTeleporters = new THashMap<>(0);
@@ -119,7 +122,18 @@ public class RoomSpecialTypes {
         return wiredDisabler;
     }
 
-
+    public void setHanditemBlocker(InteractionHanditemBlocker item, Room room) {
+        if(handitemBlocker == null) handitemBlocker = item;
+        room.ejectUserItem(item);
+        Habbo habbo = room.getHabbo(item.getUserId());
+        habbo.getClient().sendResponse(new RemoveFloorItemComposer(item).compose());
+    }
+    public void removeHanditemBlocker() {
+        handitemBlocker = null;
+    }
+    public InteractionHanditemBlocker getHanditemBlocker(){
+        return handitemBlocker;
+    }
 
     public InteractionBattleBanzaiTeleporter getBanzaiTeleporter(int itemId) {
         return this.banzaiTeleporters.get(itemId);

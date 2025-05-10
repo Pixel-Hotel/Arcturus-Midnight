@@ -2,6 +2,7 @@ package com.eu.habbo.habbohotel.items;
 
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.items.interactions.*;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameTimer;
 import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.*;
@@ -198,6 +199,7 @@ public class ItemManager {
 
         this.interactionsList.add(new ItemInteraction("game_timer", InteractionGameTimer.class));
 
+        this.interactionsList.add(new ItemInteraction("conf_handitem_block", InteractionHanditemBlocker.class));
         this.interactionsList.add(new ItemInteraction("conf_wired_disable", InteractionWiredDisabler.class));
 
         this.interactionsList.add(new ItemInteraction("wf_trg_walks_on_furni", WiredTriggerHabboWalkOnFurni.class));
