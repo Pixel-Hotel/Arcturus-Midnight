@@ -15,11 +15,11 @@ import java.sql.SQLException;
 public class WiredTriggerClickOnAvatar extends InteractionWiredTrigger {
     private static final WiredTriggerType type = WiredTriggerType.CLICK_ON_AVATAR;
 
-    protected WiredTriggerClickOnAvatar(ResultSet set, Item baseItem) throws SQLException {
+    public WiredTriggerClickOnAvatar(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
     }
 
-    protected WiredTriggerClickOnAvatar(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
+    public WiredTriggerClickOnAvatar(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
@@ -59,12 +59,10 @@ public class WiredTriggerClickOnAvatar extends InteractionWiredTrigger {
     }
 
     @Override
-    public void loadWiredData(ResultSet set, Room room) throws SQLException {
-        return;
-    }
+    public void loadWiredData(ResultSet set, Room room) throws SQLException {}
 
     @Override
-    public void onPickUp() { return; }
+    public void onPickUp() {}
 
     @Override
     public boolean isTriggeredByRoomUnit() {

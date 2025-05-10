@@ -24,11 +24,11 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     private static final WiredTriggerType type = WiredTriggerType.CLICK_ON_TILE;
     private final THashSet<HabboItem> items = new THashSet<>();
 
-    protected WiredTriggerClickOnTile(ResultSet set, Item baseItem) throws SQLException {
+    public WiredTriggerClickOnTile(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
     }
 
-    protected WiredTriggerClickOnTile(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
+    public WiredTriggerClickOnTile(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
