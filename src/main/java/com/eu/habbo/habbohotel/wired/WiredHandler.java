@@ -45,7 +45,7 @@ public class WiredHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredHandler.class);
 
     //Configuration. Loaded from database & updated accordingly.
-    public static int MAXIMUM_FURNI_SELECTION = 5;
+    public static int MAXIMUM_FURNI_SELECTION = 20;
     public static int TELEPORT_DELAY = 500;
 
     private static GsonBuilder gsonBuilder = null;
