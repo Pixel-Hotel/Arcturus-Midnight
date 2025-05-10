@@ -200,7 +200,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     private volatile boolean moveDiagonally;
     private volatile boolean jukeboxActive;
     private volatile boolean hideWired;
-    private volatile boolean hideInivisbleItems;
+    private volatile boolean hideInvisibleItems;
     private RoomPromotion promotion;
     private volatile boolean needsUpdate;
     private volatile boolean loaded;
@@ -261,7 +261,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         this.promoted = set.getString("promoted").equals("1");
         this.jukeboxActive = set.getString("jukebox_active").equals("1");
         this.hideWired = set.getString("hidewired").equals("1");
-        this.hideInivisbleItems = set.getString("hide_invisible_items").equals("1");
+        this.hideInvisibleItems = set.getString("hide_invisible_items").equals("1");
 
         this.bannedHabbos = new TIntObjectHashMap<>();
 
@@ -1143,7 +1143,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 statement.setString(37, this.ownerName);
                 statement.setString(38, this.jukeboxActive ? "1" : "0");
                 statement.setString(39, this.hideWired ? "1" : "0");
-                statement.setString(40, this.hideInivisbleItems ? "1" : "0");
+                statement.setInt(40, this.hideInvisibleItems ? 1 : 0);
                 statement.setInt(41, this.id);
                 statement.executeUpdate();
                 this.needsUpdate = false;
@@ -4507,10 +4507,14 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         this.needsUpdate = true;
     }
 
-    public void setHideInvisibleItems(boolean hideInvisibleItems){
-        this.hideInivisbleItems = hideInvisibleItems;
+    public boolean isHideInvisibleItems(){
+        return this.hideInvisibleItems;
+    }
 
-        if(this.hideInivisbleItems){
+    public void setHideInvisibleItems(boolean hideInvisibleItems){
+        this.hideInvisibleItems = hideInvisibleItems;
+
+        if(this.hideInvisibleItems){
             for(HabboItem item : roomSpecialTypes.getInvisibleItems().getItems()){
                 this.sendComposer(new RemoveFloorItemComposer(item).compose());
             }

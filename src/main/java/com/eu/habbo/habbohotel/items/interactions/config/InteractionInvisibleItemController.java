@@ -14,14 +14,10 @@ public class InteractionInvisibleItemController extends InteractionDefault {
 
     public InteractionInvisibleItemController(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
-        if(this.getExtradata().equals("1") && getRoomId() > 0)
-            getRoom().setHideInvisibleItems(true);
     }
 
     public InteractionInvisibleItemController(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
-        if(this.getExtradata().equals("1") && getRoomId() > 0)
-            getRoom().setHideInvisibleItems(true);
     }
 
     @Override

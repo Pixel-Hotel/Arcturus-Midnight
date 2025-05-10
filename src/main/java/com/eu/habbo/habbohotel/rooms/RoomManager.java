@@ -15,6 +15,7 @@ import com.eu.habbo.habbohotel.games.tag.RollerskateGame;
 import com.eu.habbo.habbohotel.games.wired.WiredGame;
 import com.eu.habbo.habbohotel.guilds.Guild;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWired;
+import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleItem;
 import com.eu.habbo.habbohotel.messenger.MessengerBuddy;
 import com.eu.habbo.habbohotel.navigation.NavigatorFilterComparator;
 import com.eu.habbo.habbohotel.navigation.NavigatorFilterField;
@@ -48,7 +49,6 @@ import com.eu.habbo.plugin.events.rooms.UserVoteRoomEvent;
 import com.eu.habbo.plugin.events.users.HabboAddedToRoomEvent;
 import com.eu.habbo.plugin.events.users.UserEnterRoomEvent;
 import com.eu.habbo.plugin.events.users.UserExitRoomEvent;
-import com.eu.habbo.plugin.events.users.UsernameTalkEvent;
 import gnu.trove.iterator.TIntObjectIterator;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.procedure.TIntProcedure;
@@ -815,6 +815,21 @@ public class RoomManager {
                         floorItems.clear();
                     }
 
+                    return true;
+                }
+            });
+
+            allFloorItems.forEach(new TObjectProcedure<HabboItem>() {
+                @Override
+                public boolean execute(HabboItem object) {
+                    if (room.isHideInvisibleItems() && object instanceof InteractionInvisibleItem)
+                        return true;
+
+                    floorItems.add(object);
+                    if (floorItems.size() == 250) {
+                        habbo.getClient().sendResponse(new RoomFloorItemsComposer(room.getFurniOwnerNames(), floorItems));
+                        floorItems.clear();
+                    }
                     return true;
                 }
             });
