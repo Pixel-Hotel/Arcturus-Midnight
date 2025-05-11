@@ -38,7 +38,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
         String wiredData = set.getString("wired_data");
 
         if (wiredData.startsWith("{")) {
-            WiredTriggerHabboWalkOnFurni.JsonData data = WiredHandler.getGsonBuilder().create().fromJson(wiredData, WiredTriggerHabboWalkOnFurni.JsonData.class);
+            JsonData data = WiredHandler.getGsonBuilder().create().fromJson(wiredData, JsonData.class);
             for (Integer id: data.itemIds) {
                 HabboItem item = room.getHabboItem(id);
                 if (item instanceof InteractionInvisibleItem) {
