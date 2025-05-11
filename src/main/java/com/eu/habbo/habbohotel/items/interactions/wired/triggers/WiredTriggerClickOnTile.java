@@ -89,7 +89,6 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
         message.appendInt(0);
         message.appendInt(this.getType().code);
         message.appendInt(0);
-        message.appendInt(0);
     }
 
     @Override
