@@ -26,5 +26,11 @@ public class InteractionInvisibleItemController extends InteractionDefault {
         room.setHideInvisibleItems(this.getExtradata().equals("1"));
     }
 
+    @Override
+    public void onPickUp(Room room) {
+        room.setHideInvisibleItems(false);
+        setExtradata("0");
+    }
+
 
 }
