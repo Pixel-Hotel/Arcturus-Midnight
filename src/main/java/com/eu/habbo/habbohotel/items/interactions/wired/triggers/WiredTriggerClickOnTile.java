@@ -119,7 +119,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
                 this.items.add(item);
             }
         }
-        return false;
+        return true;
     }
 
     @Override
