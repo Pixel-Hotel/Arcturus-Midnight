@@ -2,6 +2,9 @@ package com.eu.habbo.messages.incoming.rooms.items;
 
 import com.eu.habbo.habbohotel.items.FurnitureType;
 import com.eu.habbo.habbohotel.items.interactions.*;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.modtool.ScripterManager;
 import com.eu.habbo.habbohotel.rooms.*;
 import com.eu.habbo.habbohotel.users.HabboItem;
@@ -48,6 +51,19 @@ public class RoomPlaceItemEvent extends MessageHandler {
             return;
         }
         if (item instanceof InteractionJukeBox && !room.getRoomSpecialTypes().getItemsOfType(InteractionJukeBox.class).isEmpty()) {
+            this.client.sendResponse(new BubbleAlertComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, FurnitureMovementError.MAX_ITEMS.errorCode));
+            return;
+        }
+
+        if(item instanceof InteractionWiredDisabler && room.getRoomSpecialTypes().getWiredDisabler() != null){
+            this.client.sendResponse(new BubbleAlertComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, FurnitureMovementError.MAX_ITEMS.errorCode));
+            return;
+        }
+        else if(item instanceof InteractionHanditemBlocker && room.getRoomSpecialTypes().getHanditemBlocker() != null){
+            this.client.sendResponse(new BubbleAlertComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, FurnitureMovementError.MAX_ITEMS.errorCode));
+            return;
+        }
+        else if (item instanceof InteractionInvisibleItemController && room.getRoomSpecialTypes().getInvisibleItemController() != null) {
             this.client.sendResponse(new BubbleAlertComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, FurnitureMovementError.MAX_SOUNDFURNI.errorCode));
             return;
         }

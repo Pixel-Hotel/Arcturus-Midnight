@@ -24,12 +24,10 @@ import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetDrink;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetFood;
 import com.eu.habbo.habbohotel.items.interactions.pets.InteractionPetToy;
 import com.eu.habbo.habbohotel.rooms.utils.SpecialItemSet;
-import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredConditionType;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
-import com.eu.habbo.messages.outgoing.rooms.items.RemoveFloorItemComposer;
 import gnu.trove.map.hash.THashMap;
 import gnu.trove.set.hash.THashSet;
 
@@ -96,11 +94,8 @@ public class RoomSpecialTypes {
         return invisibleItems;
     }
 
-    public void setInvisibleItemController(InteractionInvisibleItemController item, Room room) {
+    public void setInvisibleItemController(InteractionInvisibleItemController item) {
         if(invisibleItemController == null) invisibleItemController = item;
-        room.ejectUserItem(item);
-        Habbo habbo = room.getHabbo(item.getUserId());
-        habbo.getClient().sendResponse(new RemoveFloorItemComposer(item).compose());
     }
     public void removeInvisibleItemController() {
         invisibleItemController = null;
@@ -109,11 +104,8 @@ public class RoomSpecialTypes {
         return invisibleItemController;
     }
 
-    public void setWiredDisabler(InteractionWiredDisabler item, Room room) {
+    public void setWiredDisabler(InteractionWiredDisabler item) {
         if(wiredDisabler == null) wiredDisabler = item;
-        room.ejectUserItem(item);
-        Habbo habbo = room.getHabbo(item.getUserId());
-        habbo.getClient().sendResponse(new RemoveFloorItemComposer(item).compose());
     }
     public void removeWiredDisabler() {
         wiredDisabler = null;
@@ -122,11 +114,8 @@ public class RoomSpecialTypes {
         return wiredDisabler;
     }
 
-    public void setHanditemBlocker(InteractionHanditemBlocker item, Room room) {
+    public void setHanditemBlocker(InteractionHanditemBlocker item) {
         if(handitemBlocker == null) handitemBlocker = item;
-        room.ejectUserItem(item);
-        Habbo habbo = room.getHabbo(item.getUserId());
-        habbo.getClient().sendResponse(new RemoveFloorItemComposer(item).compose());
     }
     public void removeHanditemBlocker() {
         handitemBlocker = null;
