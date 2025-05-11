@@ -609,7 +609,7 @@ public class RoomManager {
         habbo.getRoomUnit().clearStatus();
         if (habbo.getRoomUnit().getCurrentLocation() == null) {
             habbo.getRoomUnit().setLocation(doorLocation != null ? doorLocation : room.getLayout().getDoorTile());
-            if (habbo.getRoomUnit().getCurrentLocation() != null) habbo.getRoomUnit().setZ(habbo.getRoomUnit().getCurrentLocation().getStackHeight());
+            if (habbo.getRoomUnit().getCurrentLocation() != null) habbo.getRoomUnit().setZ(habbo.getRoomUnit().getCurrentLocation().getWalkHeight());
 
             if (doorLocation == null) {
                 habbo.getRoomUnit().setBodyRotation(RoomUserRotation.values()[room.getLayout().getDoorDirection()]);
@@ -709,7 +709,7 @@ public class RoomManager {
 
             if (doorTile != null) {
                 habbo.getRoomUnit().setLocation(doorTile);
-                habbo.getRoomUnit().setZ(doorTile.getStackHeight());
+                habbo.getRoomUnit().setZ(doorTile.getWalkHeight());
             }
 
             habbo.getRoomUnit().setBodyRotation(RoomUserRotation.values()[room.getLayout().getDoorDirection()]);

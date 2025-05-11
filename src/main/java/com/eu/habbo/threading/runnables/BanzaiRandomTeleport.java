@@ -67,7 +67,7 @@ public class BanzaiRandomTeleport implements Runnable {
 
         Emulator.getThreading().run(() -> {
             this.habbo.setRotation(RoomUserRotation.fromValue(Emulator.getRandom().nextInt(8)));
-            this.room.teleportRoomUnitToLocation(this.habbo, newLocation.x, newLocation.y, newLocation.getStackHeight());
+            this.room.teleportRoomUnitToLocation(this.habbo, newLocation.x, newLocation.y, newLocation.getWalkHeight());
         }, 250);
 
     }

@@ -44,8 +44,11 @@ public class SetStackHelperHeightEvent extends MessageHandler {
                 }
 
                 for (RoomTile tile : tiles) {
-                    tile.setStackHeight(height);
+                    if(item instanceof InteractionStackHelper)
+                        tile.setStackHeight(height);
+                    else tile.setWalkHeight(height);
                 }
+
 
                 item.setZ(height);
                 item.setExtradata((int) (height * 100) + "");

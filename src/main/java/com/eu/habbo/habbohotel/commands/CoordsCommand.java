@@ -27,7 +27,9 @@ public class CoordsCommand extends Command {
                     "Tile State: " + gameClient.getHabbo().getHabboInfo().getCurrentRoom().getLayout().getTile(gameClient.getHabbo().getRoomUnit().getX(), gameClient.getHabbo().getRoomUnit().getY()).state.name() + "\r" +
                     "Tile Walkable: " + gameClient.getHabbo().getHabboInfo().getCurrentRoom().getLayout().getTile(gameClient.getHabbo().getRoomUnit().getX(), gameClient.getHabbo().getRoomUnit().getY()).isWalkable() + "\r" +
                     "Tile relative height: " + gameClient.getHabbo().getHabboInfo().getCurrentRoom().getLayout().getTile(gameClient.getHabbo().getRoomUnit().getX(), gameClient.getHabbo().getRoomUnit().getY()).relativeHeight() + "\r" +
-                    "Tile stack height: " + gameClient.getHabbo().getHabboInfo().getCurrentRoom().getLayout().getTile(gameClient.getHabbo().getRoomUnit().getX(), gameClient.getHabbo().getRoomUnit().getY()).getStackHeight());
+                    "Tile stack height: " + gameClient.getHabbo().getHabboInfo().getCurrentRoom().getLayout().getTile(gameClient.getHabbo().getRoomUnit().getX(), gameClient.getHabbo().getRoomUnit().getY()).getStackHeight() + "\r" +
+                    "Tile walk height: " + gameClient.getHabbo().getHabboInfo().getCurrentRoom().getLayout().getTile(gameClient.getHabbo().getRoomUnit().getX(), gameClient.getHabbo().getRoomUnit().getY()).getWalkHeight());
+
 
         } else {
             RoomTile tile = gameClient.getHabbo().getHabboInfo().getCurrentRoom().getLayout().getTile(Short.parseShort(params[1]), Short.parseShort(params[2]));
@@ -40,6 +42,7 @@ public class CoordsCommand extends Command {
                         "Tile State: " + tile.state.name() + "\r" +
                         "Tile Relative Height: " + tile.relativeHeight() + "\r" +
                         "Tile Stack Height: " + tile.getStackHeight() + "\r" +
+                        "Tile Walk Height: " + tile.getWalkHeight() + "\r" +
                         "Tile Walkable: " + (tile.isWalkable() ? "Yes" : "No") + "\r");
             } else {
                 gameClient.getHabbo().whisper(Emulator.getTexts().getValue("generic.tile.not.exists"));
