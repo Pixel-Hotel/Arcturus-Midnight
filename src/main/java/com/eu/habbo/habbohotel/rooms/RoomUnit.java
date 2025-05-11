@@ -130,11 +130,11 @@ public class RoomUnit {
                 }
 
                 if (rider.getRoomUnit().getCurrentLocation().x != this.getX() || rider.getRoomUnit().getCurrentLocation().y != this.getY()) {
-                    this.status.put(RoomUnitStatus.MOVE, rider.getRoomUnit().getCurrentLocation().x + "," + rider.getRoomUnit().getCurrentLocation().y + "," + (rider.getRoomUnit().getCurrentLocation().getStackHeight()));
+                    this.status.put(RoomUnitStatus.MOVE, rider.getRoomUnit().getCurrentLocation().x + "," + rider.getRoomUnit().getCurrentLocation().y + "," + (rider.getRoomUnit().getCurrentLocation().getWalkHeight()));
                     this.setPreviousLocation(rider.getRoomUnit().getPreviousLocation());
-                    this.setPreviousLocationZ(rider.getRoomUnit().getPreviousLocation().getStackHeight());
+                    this.setPreviousLocationZ(rider.getRoomUnit().getPreviousLocation().getWalkHeight());
                     this.setCurrentLocation(rider.getRoomUnit().getCurrentLocation());
-                    this.setZ(rider.getRoomUnit().getCurrentLocation().getStackHeight());
+                    this.setZ(rider.getRoomUnit().getCurrentLocation().getWalkHeight());
                 }
 
                 return this.statusUpdate;
@@ -241,7 +241,7 @@ public class RoomUnit {
 
             //if(!(this.path.size() == 0 && canSitNextTile))
             {
-                double height = next.getStackHeight() - this.currentLocation.getStackHeight();
+                double height = next.getWalkHeight() - this.currentLocation.getWalkHeight();
                 if (!room.tileWalkable(next) || (!RoomLayout.ALLOW_FALLING && height < -RoomLayout.MAXIMUM_STEP_HEIGHT) || (next.state == RoomTileState.OPEN && height > RoomLayout.MAXIMUM_STEP_HEIGHT)) {
                     this.room = room;
                     this.path.clear();

@@ -44,7 +44,8 @@ public class RoomUnitOnRollerComposer extends MessageComposer {
         this.oldLocation = this.roomUnit.getCurrentLocation();
         this.oldZ = this.roomUnit.getZ();
         this.newLocation = newLocation;
-        this.newZ = this.newLocation.getStackHeight();
+        this.newZ = this.newLocation.getWalkHeight();
+        //this.newZ = this.newLocation.getStackHeight();
         this.room = room;
         this.oldTopItem = null;
     }
@@ -81,8 +82,8 @@ public class RoomUnitOnRollerComposer extends MessageComposer {
                     }
 
                     this.roomUnit.setLocation(this.newLocation);
-                    this.roomUnit.setZ(this.newLocation.getStackHeight());
-                    this.roomUnit.setPreviousLocationZ(this.newLocation.getStackHeight());
+                    this.roomUnit.setZ(this.newLocation.getWalkHeight());
+                    this.roomUnit.setPreviousLocationZ(this.newLocation.getWalkHeight());
 
                     if (topItemNewLocation != null && topItemNewLocation != roller && oldTopItem != topItemNewLocation) {
                         try {

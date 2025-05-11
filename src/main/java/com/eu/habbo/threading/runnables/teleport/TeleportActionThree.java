@@ -58,8 +58,8 @@ class TeleportActionThree implements Runnable {
         this.client.getHabbo().getRoomUnit().setLocation(teleportLocation);
         this.client.getHabbo().getRoomUnit().getPath().clear();
         this.client.getHabbo().getRoomUnit().removeStatus(RoomUnitStatus.MOVE);
-        this.client.getHabbo().getRoomUnit().setZ(teleportLocation.getStackHeight());
-        this.client.getHabbo().getRoomUnit().setPreviousLocationZ(teleportLocation.getStackHeight());
+        this.client.getHabbo().getRoomUnit().setZ(teleportLocation.getWalkHeight());
+        this.client.getHabbo().getRoomUnit().setPreviousLocationZ(teleportLocation.getWalkHeight());
 
         if (targetRoom != this.room) {
             this.room.removeHabbo(this.client.getHabbo(), false);

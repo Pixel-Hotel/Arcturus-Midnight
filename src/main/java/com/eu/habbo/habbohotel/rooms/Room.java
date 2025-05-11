@@ -560,6 +560,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     public void updateTile(RoomTile tile) {
         if (tile != null) {
             tile.setStackHeight(this.getStackHeight(tile.x, tile.y, false));
+            tile.setWalkHeight(this.getWalkHeight(tile.x, tile.y, false));
             tile.setState(this.calculateTileState(tile));
         }
     }
@@ -568,6 +569,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         for (RoomTile tile : tiles) {
             this.tileCache.remove(tile);
             tile.setStackHeight(this.getStackHeight(tile.x, tile.y, false));
+            tile.setWalkHeight(this.getWalkHeight(tile.x, tile.y, false));
             tile.setState(this.calculateTileState(tile));
         }
 
@@ -679,10 +681,12 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             for (short x = (short) rectangle.x; x < rectangle.x + rectangle.getWidth(); x++) {
                 for (short y = (short) rectangle.y; y < rectangle.y + rectangle.getHeight(); y++) {
                     double stackHeight = this.getStackHeight(x, y, false);
+                    double walkHeight = this.getWalkHeight(x, y, false);
                     RoomTile tile = this.layout.getTile(x, y);
 
                     if (tile != null) {
                         tile.setStackHeight(stackHeight);
+                        tile.setWalkHeight(walkHeight);
                         updatedTiles.add(tile);
                     }
                 }
@@ -756,7 +760,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
             double oldZ = habbo.getRoomUnit().getZ();
             RoomUserRotation oldRotation = habbo.getRoomUnit().getBodyRotation();
-            double z = habbo.getRoomUnit().getCurrentLocation().getStackHeight();
+            double z = habbo.getRoomUnit().getCurrentLocation().getWalkHeight();
             boolean updated = false;
 
             if (habbo.getRoomUnit().hasStatus(RoomUnitStatus.SIT) && ((item == null && !habbo.getRoomUnit().cmdSit) || (item != null && !item.getBaseItem().allowSit()))) {
@@ -803,8 +807,9 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                     }
                 }
             } else {
-                bot.getRoomUnit().setZ(bot.getRoomUnit().getCurrentLocation().getStackHeight());
-                bot.getRoomUnit().setPreviousLocationZ(bot.getRoomUnit().getCurrentLocation().getStackHeight());
+                double walkHeight = bot.getRoomUnit().getCurrentLocation().getWalkHeight();
+                bot.getRoomUnit().setZ(walkHeight);
+                bot.getRoomUnit().setPreviousLocationZ(walkHeight);
             }
 
             roomUnits.add(bot.getRoomUnit());
@@ -834,8 +839,9 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                     }
                 }
             } else {
-                pet.getRoomUnit().setZ(pet.getRoomUnit().getCurrentLocation().getStackHeight());
-                pet.getRoomUnit().setPreviousLocationZ(pet.getRoomUnit().getCurrentLocation().getStackHeight());
+                double walkHeight = pet.getRoomUnit().getCurrentLocation().getWalkHeight();
+                pet.getRoomUnit().setZ(walkHeight);
+                pet.getRoomUnit().setPreviousLocationZ(walkHeight);
             }
 
             roomUnits.add(pet.getRoomUnit());
@@ -1443,7 +1449,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                                 return true;
                             }
                         } else {
-                            zOffset = -Item.getCurrentHeight(roller) + tileInFront.getStackHeight() - rollerTile.z;
+                            zOffset = -Item.getCurrentHeight(roller) + tileInFront.getWalkHeight() - rollerTile.z;
                         }
 
                         if (allowUsers) {
@@ -3706,7 +3712,44 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         boolean canStack = true;
 
         THashSet<HabboItem> stackHelpers = this.getItemsAt(InteractionStackHelper.class, x, y);
-        stackHelpers.addAll(this.getItemsAt(InteractionTileWalkMagic.class, x, y));
+        //stackHelpers.addAll(this.getItemsAt(InteractionTileWalkMagic.class, x, y));
+
+        if(!stackHelpers.isEmpty()) {
+            for(HabboItem item : stackHelpers) {
+                if (item == exclude) continue;
+                return calculateHeightmap ? item.getZ() * 256.0D : item.getZ();
+            }
+        }
+
+        HabboItem item = this.getTopItemAt(x, y, exclude);
+        if (item != null) {
+            canStack = item.getBaseItem().allowStack();
+            height = item.getZ() + (item.getBaseItem().allowSit() ? 0 : Item.getCurrentHeight(item));
+        }
+
+        if (calculateHeightmap) {
+            return (canStack ? height * 256.0D : Short.MAX_VALUE);
+        }
+
+        return canStack ? height : -1;
+    }
+
+    public double getWalkHeight(short x, short y, boolean calculateHeightmap, HabboItem exclude) {
+
+        if (x < 0 || y < 0 || this.layout == null)
+            return calculateHeightmap ? Short.MAX_VALUE : 0.0;
+
+        if (Emulator.getPluginManager().isRegistered(FurnitureStackHeightEvent.class, true)) {
+            FurnitureStackHeightEvent event = Emulator.getPluginManager().fireEvent(new FurnitureStackHeightEvent(x, y, this));
+            if(event.hasPluginHelper()) {
+                return calculateHeightmap ? event.getHeight() * 256.0D : event.getHeight();
+            }
+        }
+
+        double height = this.layout.getHeightAtSquare(x, y);
+        boolean canStack = true;
+
+        THashSet<HabboItem> stackHelpers = this.getItemsAt(InteractionTileWalkMagic.class, x, y);
 
         if(!stackHelpers.isEmpty()) {
             for(HabboItem item : stackHelpers) {
@@ -3730,6 +3773,10 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
     public double getStackHeight(short x, short y, boolean calculateHeightmap) {
         return this.getStackHeight(x, y, calculateHeightmap, null);
+    }
+
+    public double getWalkHeight(short x, short y, boolean calculateHeightmap){
+        return this.getWalkHeight(x, y, calculateHeightmap, null);
     }
 
     public boolean hasObjectTypeAt(Class<?> type, int x, int y) {
@@ -4660,6 +4707,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         double height = tile.z;
 
         // Calculate height by item height, not by tile height
+        //TODO: test if its working
         boolean foundStackHelper = false;
         for(RoomTile t : occupiedTiles) {
             for(HabboItem i : getItemsAt(t)){

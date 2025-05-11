@@ -13,6 +13,7 @@ public class RoomTile {
     private final THashSet<RoomUnit> units;
     public RoomTileState state;
     private double stackHeight;
+    private double walkHeight;
     private boolean allowStack = true;
     private RoomTile previous = null;
     private boolean diagonally;
@@ -25,6 +26,7 @@ public class RoomTile {
         this.y = y;
         this.z = z;
         this.stackHeight = z;
+        this.walkHeight = z;
         this.state = state;
         this.setAllowStack(allowStack);
         this.units = new THashSet<>();
@@ -35,6 +37,7 @@ public class RoomTile {
         this.y = tile.y;
         this.z = tile.z;
         this.stackHeight = tile.stackHeight;
+        this.walkHeight = tile.walkHeight;
         this.state = tile.state;
         this.allowStack = tile.allowStack;
         this.diagonally = tile.diagonally;
@@ -47,18 +50,38 @@ public class RoomTile {
         this.units = tile.units;
     }
 
-    public RoomTile()
-    {
+    public RoomTile() {
         x = 0;
         y = 0;
         z = 0;
         this.stackHeight = 0;
+        this.walkHeight = 0;
         this.state = RoomTileState.INVALID;
         this.allowStack = false;
         this.diagonally = false;
         this.gCosts = 0;
         this.hCosts = 0;
         this.units = null;
+    }
+
+    public double getWalkHeight() {
+        return this.walkHeight;
+    }
+
+    public void setWalkHeight(double walkHeight) {
+        if (this.state == RoomTileState.INVALID) {
+            this.walkHeight = Short.MAX_VALUE;
+            this.allowStack = false;
+            return;
+        }
+
+        if (walkHeight >= 0 && walkHeight != Short.MAX_VALUE) {
+            this.walkHeight = walkHeight;
+            this.allowStack = true;
+        } else {
+            this.allowStack = false;
+            this.walkHeight = this.z;
+        }
     }
 
     public double getStackHeight() {

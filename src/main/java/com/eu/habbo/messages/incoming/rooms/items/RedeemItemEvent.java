@@ -101,6 +101,7 @@ public class RedeemItemEvent extends MessageHandler {
                     room.sendComposer(new RemoveFloorItemComposer(item).compose());
                     RoomTile t = room.getLayout().getTile(item.getX(), item.getY());
                     t.setStackHeight(room.getStackHeight(item.getX(), item.getY(), false));
+                    t.setWalkHeight(room.getWalkHeight(item.getX(), item.getY(), false));
                     room.updateTile(t);
                     room.sendComposer(new UpdateStackHeightComposer(item.getX(), item.getY(), t.z, t.relativeHeight()).compose());
                     Emulator.getThreading().run(new QueryDeleteHabboItem(item.getId()));
