@@ -4,7 +4,6 @@ import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredTrigger;
 import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleClickItem;
-import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleItem;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
@@ -41,7 +40,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
             JsonData data = WiredHandler.getGsonBuilder().create().fromJson(wiredData, JsonData.class);
             for (Integer id: data.itemIds) {
                 HabboItem item = room.getHabboItem(id);
-                if (item instanceof InteractionInvisibleItem) {
+                if (item instanceof InteractionInvisibleClickItem) {
                     this.items.add(item);
                 }
             }
@@ -57,7 +56,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
                         try {
                             HabboItem item = room.getHabboItem(Integer.parseInt(s));
 
-                            if (item instanceof InteractionInvisibleItem)
+                            if (item instanceof InteractionInvisibleClickItem)
                                 this.items.add(item);
                         } catch (Exception ignored) {}
                     }
@@ -101,7 +100,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     @Override
     public boolean execute(RoomUnit roomUnit, Room room, Object[] stuff) {
         if (stuff.length >= 1) {
-            if (stuff[0] instanceof InteractionInvisibleItem item) {
+            if (stuff[0] instanceof InteractionInvisibleClickItem item) {
                 return this.items.contains(item);
             }
         }
