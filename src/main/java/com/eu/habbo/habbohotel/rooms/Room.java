@@ -4531,7 +4531,11 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             }
         } else{
             THashSet<HabboItem> items = new THashSet<>();
-            items.addAll(this.roomSpecialTypes.getInvisibleItems().getItems());
+            for(HabboItem item : getFloorItems()){
+                if(item instanceof InteractionInvisibleItem || item instanceof InteractionTileWalkMagic){
+                    items.add(item);
+                }
+            }
             this.sendComposer(new RoomFloorItemsComposer(this.furniOwnerNames, items).compose());
         }
     }

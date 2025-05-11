@@ -67,7 +67,7 @@ public class RoomManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(RoomManager.class);
 
     private static final int page = 0;
-    //Configuration. Loaded from database & updated accordingly.
+    //Configuration. Loaded from a database and updated accordingly.
     public static int MAXIMUM_ROOMS_USER = 25;
     public static int MAXIMUM_ROOMS_HC = 35;
     public static int HOME_ROOM_ID = 0;
@@ -883,9 +883,7 @@ public class RoomManager {
                     try {
                         habbo.getClient().sendResponse(new RoomUserRemoveComposer(roomHabbo.getRoomUnit()));
                         habbo.getClient().sendResponse(new RoomUserPetComposer(((PetData) roomHabbo.getHabboStats().cache.get("pet_type")).getType(), (Integer) roomHabbo.getHabboStats().cache.get("pet_race"), (String) roomHabbo.getHabboStats().cache.get("pet_color"), roomHabbo));
-                    } catch (Exception e) {
-
-                    }
+                    } catch (Exception ignored) {}
                 }
             }
         }
@@ -1449,9 +1447,6 @@ public class RoomManager {
         ArrayList<Room> r = new ArrayList<>();
 
         for (Room room : rooms) {
-            if (room.getTags().split(";").length == 0)
-                continue;
-
             for (String s : room.getTags().split(";")) {
                 if (s.equalsIgnoreCase(filter))
                     r.add(room);
@@ -1568,7 +1563,7 @@ public class RoomManager {
         RWUAM_BAN_USER_DAY(24 * 60 * 60),
         RWUAM_BAN_USER_PERM(10 * 365 * 24 * 60 * 60);
 
-        public int duration;
+        public final int duration;
 
         RoomBanTypes(int duration) {
             this.duration = duration;
