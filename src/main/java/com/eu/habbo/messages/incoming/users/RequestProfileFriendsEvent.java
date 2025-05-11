@@ -10,13 +10,17 @@ import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.messages.outgoing.users.ProfileFriendsComposer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RequestProfileFriendsEvent extends MessageHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestProfileFriendsEvent.class);
+
     @Override
     public void handle() throws Exception {
         int userId = this.packet.readInt();
         Habbo habbo = Emulator.getGameEnvironment().getHabboManager().getHabbo(userId);
-
+        LOGGER.info("Requested friends for user: {}", userId);
         if (habbo != null) {
             handleWired(habbo.getRoomUnit());
             this.client.sendResponse(new ProfileFriendsComposer(habbo));
@@ -35,6 +39,7 @@ public class RequestProfileFriendsEvent extends MessageHandler {
     }
 
     private void handleWired(RoomUnit roomUnit){
+        LOGGER.debug(roomUnit == null ? "RoomUnit is null." : "RoomUnit is not null.");
         if(roomUnit == null) return;
         Emulator.getThreading().run(() -> WiredHandler.handle(WiredTriggerType.CLICK_ON_AVATAR, roomUnit, roomUnit.getRoom(), new Object[]{}));
     }
