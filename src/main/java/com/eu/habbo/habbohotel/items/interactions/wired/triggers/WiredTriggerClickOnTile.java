@@ -73,7 +73,17 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
 
-        clearItems();
+        THashSet<HabboItem> items = new THashSet<>();
+
+        for (HabboItem item : this.items) {
+            if (item.getRoomId() == 0 || item.getRoomId() != this.getRoomId() || !(item instanceof InteractionInvisibleClickItem)) {
+                items.add(item);
+            }
+        }
+
+        for (HabboItem item : items) {
+            this.items.remove(item);
+        }
 
         message.appendBoolean(false);
         message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
@@ -111,8 +121,8 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     public boolean saveData(WiredSettings settings) {
         items.clear();
 
-        for(int i = 0; i < settings.getItemIds().length; i++){
-            HabboItem item = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(settings.getItemIds()[i]);
+        for(int id : settings.getItemIds()){
+            HabboItem item = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(id);
             if(item instanceof InteractionInvisibleClickItem){
                 this.items.add(item);
             }
@@ -131,7 +141,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     }
 
     private void clearItems(){
-        THashSet<HabboItem> items  = WiredSettings.clearItemByType(this.items, InteractionInvisibleClickItem.class);
+        THashSet<HabboItem> items = WiredSettings.clearItemByType(this.items, InteractionInvisibleClickItem.class);
         this.items.clear();
         this.items.addAll(items);
     }
