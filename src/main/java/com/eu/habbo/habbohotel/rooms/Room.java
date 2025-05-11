@@ -4657,14 +4657,31 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             return fits;
         }
 
-        double height = tile.getStackHeight();
+        double height = tile.z;
 
-        for(RoomTile tile2 : occupiedTiles) {
+        // Calculate height by item height, not by tile height
+        boolean foundStackHelper = false;
+        for(RoomTile t : occupiedTiles) {
+            for(HabboItem i : getItemsAt(t)){
+                if(i instanceof InteractionStackHelper sHelper){
+                    height = sHelper.getZ();
+                    foundStackHelper = true;
+                    break;
+                }
+                double sHeight = item.getZ() + item.getBaseItem().getHeight();
+                if(sHeight > height){
+                    height = sHeight;
+                }
+            }
+            if(foundStackHelper) break;
+        }
+
+        /*for(RoomTile tile2 : occupiedTiles) {
             double sHeight = tile2.getStackHeight();
             if(sHeight > height) {
                 height = sHeight;
             }
-        }
+        }*/
 
         if (Emulator.getPluginManager().isRegistered(FurnitureBuildheightEvent.class, true)) {
             FurnitureBuildheightEvent event = Emulator.getPluginManager().fireEvent(new FurnitureBuildheightEvent(item, owner, 0.00, height));
