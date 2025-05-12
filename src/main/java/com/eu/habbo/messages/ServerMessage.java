@@ -61,10 +61,7 @@ public class ServerMessage {
     }
 
     public void appendString(String obj) {
-        if (obj == null) {
-            this.appendString("");
-            return;
-        }
+        obj = obj == null ? "" : obj;
 
         try {
             byte[] data = obj.getBytes();

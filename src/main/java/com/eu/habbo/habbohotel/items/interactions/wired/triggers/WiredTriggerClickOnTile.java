@@ -72,19 +72,6 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
-
-        THashSet<HabboItem> items = new THashSet<>();
-
-        for (HabboItem item : this.items) {
-            if (item.getRoomId() == 0 || item.getRoomId() != this.getRoomId() || !(item instanceof InteractionInvisibleClickItem)) {
-                items.add(item);
-            }
-        }
-
-        for (HabboItem item : items) {
-            this.items.remove(item);
-        }
-
         message.appendBoolean(false);
         message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
         message.appendInt(this.items.size());
@@ -141,9 +128,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     }
 
     private void clearItems(){
-        THashSet<HabboItem> items = WiredSettings.clearItemByType(this.items, InteractionInvisibleClickItem.class);
-        this.items.clear();
-        this.items.addAll(items);
+        WiredSettings.clearItemByType(this.items, InteractionInvisibleClickItem.class);
     }
 
     static class JsonData {

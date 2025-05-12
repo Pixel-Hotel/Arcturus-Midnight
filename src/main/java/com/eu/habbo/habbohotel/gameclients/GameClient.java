@@ -11,9 +11,7 @@ import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -87,6 +85,8 @@ public class GameClient {
             if (response == null || response.getHeader() <= 0) {
                 return;
             }
+
+            LOGGER.debug("Sending packet: {} {} bytes", response.getHeader(), response.get().readableBytes());
 
             OutgoingPacketEvent event = new OutgoingPacketEvent(this.habbo, response.getComposer(), response);
             Emulator.getPluginManager().fireEvent(event);
