@@ -90,7 +90,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition 
             HabboItem item = room.getHabboItem(itemId);
 
             if (item != null)
-                this.settings.add(new WiredMatchFurniSetting(item.getId(), item.getExtradata(), item.getRotation(), item.getX(), item.getY()));
+                this.settings.add(new WiredMatchFurniSetting(item));
         }
 
         return true;
@@ -166,7 +166,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition 
                 String[] stuff = items[i].split("-");
 
                 if (stuff.length >= 5)
-                    this.settings.add(new WiredMatchFurniSetting(Integer.parseInt(stuff[0]), stuff[1], Integer.parseInt(stuff[2]), Integer.parseInt(stuff[3]), Integer.parseInt(stuff[4])));
+                    this.settings.add(new WiredMatchFurniSetting(Integer.parseInt(stuff[0]), stuff[1], Integer.parseInt(stuff[2]), Integer.parseInt(stuff[3]), Integer.parseInt(stuff[4]), 0));
             }
 
             this.state = data[2].equals("1");

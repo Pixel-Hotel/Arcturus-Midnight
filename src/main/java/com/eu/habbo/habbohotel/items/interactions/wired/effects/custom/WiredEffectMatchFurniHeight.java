@@ -1,4 +1,4 @@
-package com.eu.habbo.habbohotel.items.interactions.wired.effects;
+package com.eu.habbo.habbohotel.items.interactions.wired.effects.custom;
 
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
@@ -24,22 +24,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class WiredEffectMatchFurni extends InteractionWiredEffect implements InteractionWiredMatchFurniSettings {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WiredEffectMatchFurni.class);
+public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implements InteractionWiredMatchFurniSettings {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WiredEffectMatchFurniHeight.class);
 
     private static final WiredEffectType type = WiredEffectType.MATCH_SSHOT;
     public boolean checkForWiredResetPermission = true;
-    private THashSet<WiredMatchFurniSetting> settings;
+    private final THashSet<WiredMatchFurniSetting> settings;
     private boolean state = false;
     private boolean direction = false;
     private boolean position = false;
+    private boolean height = false;
 
-    public WiredEffectMatchFurni(ResultSet set, Item baseItem) throws SQLException {
+    public WiredEffectMatchFurniHeight(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
         this.settings = new THashSet<>(0);
     }
 
-    public WiredEffectMatchFurni(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
+    public WiredEffectMatchFurniHeight(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
         this.settings = new THashSet<>(0);
     }
@@ -61,7 +62,6 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
                 }
 
                 RoomTile oldLocation = room.getLayout().getTile(item.getX(), item.getY());
-                double oldZ = item.getZ();
 
                 if(this.direction && !this.position) {
                     if(item.getRotation() != setting.rotation && room.furnitureFitsAt(oldLocation, item, setting.rotation, false) == FurnitureMovementError.NONE) {
@@ -76,7 +76,7 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
                     if(newLocation != null && newLocation.state != RoomTileState.INVALID && (newLocation != oldLocation || newRotation != item.getRotation()) && room.furnitureFitsAt(newLocation, item, newRotation, true) == FurnitureMovementError.NONE) {
                         if(room.moveFurniTo(item, newLocation, newRotation, null, !slideAnimation) == FurnitureMovementError.NONE) {
                             if(slideAnimation) {
-                                room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, oldZ, newLocation, item.getZ(), 0, room).compose());
+                                room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
                             }
                         }
                     }
@@ -91,7 +91,7 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
     @Override
     public String getWiredData() {
         this.refresh();
-        return WiredHandler.getGsonBuilder().create().toJson(new JsonData(this.state, this.direction, this.position, new ArrayList<WiredMatchFurniSetting>(this.settings), this.getDelay()));
+        return WiredHandler.getGsonBuilder().create().toJson(new JsonData(this.state, this.direction, this.position, this.height, new ArrayList<>(this.settings), this.getDelay()));
     }
 
     @Override
@@ -104,6 +104,7 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
             this.state = data.state;
             this.direction = data.direction;
             this.position = data.position;
+            this.height = data.height;
             this.settings.clear();
             this.settings.addAll(data.items);
         }
@@ -114,10 +115,10 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
 
             String[] items = data[1].split(Pattern.quote(";"));
 
-            for (int i = 0; i < items.length; i++) {
+            for (String item : items) {
                 try {
 
-                    String[] stuff = items[i].split(Pattern.quote("-"));
+                    String[] stuff = item.split(Pattern.quote("-"));
 
                     if (stuff.length >= 5) {
                         this.settings.add(new WiredMatchFurniSetting(stuff));
@@ -131,6 +132,7 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
             this.state = data[2].equals("1");
             this.direction = data[3].equals("1");
             this.position = data[4].equals("1");
+            this.height = true;
             this.setDelay(Integer.parseInt(data[5]));
             this.needsUpdate(true);
         }
@@ -142,6 +144,7 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
         this.state = false;
         this.direction = false;
         this.position = false;
+        this.height = false;
         this.setDelay(0);
     }
 
@@ -164,10 +167,11 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getId());
         message.appendString("");
-        message.appendInt(3);
+        message.appendInt(3); //TODO change to 4 if package is ready
         message.appendInt(this.state ? 1 : 0);
         message.appendInt(this.direction ? 1 : 0);
         message.appendInt(this.position ? 1 : 0);
+        //TODO: message.appenInt(this.height ? 1 : 0); //if the package is ready
         message.appendInt(0);
         message.appendInt(this.getType().code);
         message.appendInt(this.getDelay());
@@ -177,9 +181,6 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
     @Override
     public boolean saveData(WiredSettings settings, GameClient gameClient) throws WiredSaveException {
         if(settings.getIntParams().length < 3) throw new WiredSaveException("Invalid data");
-        boolean setState = settings.getIntParams()[0] == 1;
-        boolean setDirection = settings.getIntParams()[1] == 1;
-        boolean setPosition = settings.getIntParams()[2] == 1;
 
         Room room = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId());
 
@@ -209,9 +210,10 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
         if(delay > Emulator.getConfig().getInt("hotel.wired.max_delay", 20))
             throw new WiredSaveException("Delay too long");
 
-        this.state = setState;
-        this.direction = setDirection;
-        this.position = setPosition;
+        this.state = settings.getIntParams()[0] == 1;
+        this.direction = settings.getIntParams()[1] == 1;
+        this.position = settings.getIntParams()[2] == 1;
+        this.height = true; //TODO when package is ready change it to: settings.getIntParams()[3] == 1;
         this.settings.clear();
         this.settings.addAll(newSettings);
         this.setDelay(delay);
@@ -262,13 +264,15 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
         boolean state;
         boolean direction;
         boolean position;
+        boolean height;
         List<WiredMatchFurniSetting> items;
         int delay;
 
-        public JsonData(boolean state, boolean direction, boolean position, List<WiredMatchFurniSetting> items, int delay) {
+        public JsonData(boolean state, boolean direction, boolean position, boolean height, List<WiredMatchFurniSetting> items, int delay) {
             this.state = state;
             this.direction = direction;
             this.position = position;
+            this.height = height;
             this.items = items;
             this.delay = delay;
         }
