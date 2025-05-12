@@ -1,6 +1,6 @@
 ﻿# Arcturus Midnight
 
-**Arcturus Midnight** is a pixel‑driven fork of [Arcturus Morningstar](https://git.krews.org/morningstar/Arcturus-Community), while remaining 100 % free software under the **GPL‑3.0**.
+**Arcturus Midnight** is a fork of [Arcturus Morningstar](https://git.krews.org/morningstar/Arcturus-Community).
 
 > **Latest branch:** `main` (based on Morningstar dev 4.x)
 
