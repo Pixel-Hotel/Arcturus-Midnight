@@ -71,11 +71,13 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             }
             else if(this.position) {
                 RoomTile newLocation = room.getLayout().getTile((short) setting.x, (short) setting.y);
+                // valid tile
                 if(newLocation == null || newLocation.state == RoomTileState.INVALID) continue;
 
                 int newRotation = this.direction ? setting.rotation : item.getRotation();
-                if(newLocation == currentLocation && newRotation == item.getRotation()) continue;
 
+
+                if(newRotation == item.getRotation() && ((!height && newLocation == currentLocation) ||(height && item.getZ() == setting.z))) continue;
                 if(room.furnitureFitsAt(newLocation, item, newRotation, true) != FurnitureMovementError.NONE) continue;
 
                 boolean slideAnimation = !this.direction || item.getRotation() == setting.rotation;
