@@ -53,35 +53,39 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
 
         for (WiredMatchFurniSetting setting : this.settings) {
             HabboItem item = room.getHabboItem(setting.item_id);
-            if (item != null) {
-                if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
-                    if (!setting.state.equals(" ") && !item.getExtradata().equals(setting.state)) {
-                        item.setExtradata(setting.state);
-                        room.updateItemState(item);
-                    }
+            if (item == null) continue;
+
+            if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
+                if (!setting.state.equals(" ") && !item.getExtradata().equals(setting.state)) {
+                    item.setExtradata(setting.state);
+                    room.updateItemState(item);
                 }
+            }
 
-                RoomTile oldLocation = room.getLayout().getTile(item.getX(), item.getY());
+            RoomTile currentLocation = room.getLayout().getTile(item.getX(), item.getY());
 
-                if(this.direction && !this.position) {
-                    if(item.getRotation() != setting.rotation && room.furnitureFitsAt(oldLocation, item, setting.rotation, false) == FurnitureMovementError.NONE) {
-                        room.moveFurniTo(item, oldLocation, setting.rotation, null, true);
-                    }
+            if(this.direction && !this.position) {
+                if(item.getRotation() != setting.rotation && room.furnitureFitsAt(currentLocation, item, setting.rotation, false) == FurnitureMovementError.NONE) {
+                    room.moveFurniTo(item, currentLocation, setting.rotation, null, true);
                 }
-                else if(this.position) {
-                    boolean slideAnimation = !this.direction || item.getRotation() == setting.rotation;
-                    RoomTile newLocation = room.getLayout().getTile((short) setting.x, (short) setting.y);
-                    int newRotation = this.direction ? setting.rotation : item.getRotation();
+            }
+            else if(this.position) {
+                RoomTile newLocation = room.getLayout().getTile((short) setting.x, (short) setting.y);
+                if(newLocation == null || newLocation.state == RoomTileState.INVALID) continue;
 
-                    if(newLocation != null && newLocation.state != RoomTileState.INVALID && (newLocation != oldLocation || newRotation != item.getRotation()) && room.furnitureFitsAt(newLocation, item, newRotation, true) == FurnitureMovementError.NONE) {
-                        if(room.moveFurniTo(item, newLocation, newRotation, null, !slideAnimation) == FurnitureMovementError.NONE) {
-                            if(slideAnimation) {
-                                room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
-                            }
-                        }
-                    }
+                int newRotation = this.direction ? setting.rotation : item.getRotation();
+                if(newLocation == currentLocation && newRotation == item.getRotation()) continue;
+
+                if(room.furnitureFitsAt(newLocation, item, newRotation, true) != FurnitureMovementError.NONE) continue;
+
+                boolean slideAnimation = !this.direction || item.getRotation() == setting.rotation;
+                if(room.moveFurniTo(item, newLocation, newRotation, null, !slideAnimation) != FurnitureMovementError.NONE) continue;
+                if(slideAnimation) {
+                    room.sendComposer(new FloorItemOnRollerComposer(item, null, currentLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
+                } else if(this.height) {
+                    item.setZ(setting.z);
+                    item.needsUpdate(true);
                 }
-
             }
         }
 

@@ -114,10 +114,9 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
 
             String[] items = data[1].split(Pattern.quote(";"));
 
-            for (int i = 0; i < items.length; i++) {
+            for (String item : items) {
                 try {
-
-                    String[] stuff = items[i].split(Pattern.quote("-"));
+                    String[] stuff = item.split(Pattern.quote("-"));
 
                     if (stuff.length >= 5) {
                         this.settings.add(new WiredMatchFurniSetting(stuff));
