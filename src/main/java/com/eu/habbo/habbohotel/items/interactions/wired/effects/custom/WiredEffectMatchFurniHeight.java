@@ -76,8 +76,10 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
 
                 int newRotation = this.direction ? setting.rotation : item.getRotation();
 
-
+                // item doesn't need to be rotated or moved
                 if(newRotation == item.getRotation() && ((!height && newLocation == currentLocation) ||(height && item.getZ() == setting.z))) continue;
+
+                //item can fit at location
                 if(room.furnitureFitsAt(newLocation, item, newRotation, true) != FurnitureMovementError.NONE) continue;
 
                 boolean slideAnimation = !this.direction || item.getRotation() == setting.rotation;
