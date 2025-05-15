@@ -10,6 +10,9 @@ public class WiredMatchFurniSetting {
     public final int y;
     public final double z;
 
+    public WiredMatchFurniSetting(int itemId, String state, int rotation, int x, int y){
+        this(itemId, state, rotation, x, y, 0.0);
+    }
     public WiredMatchFurniSetting(int itemId, String state, int rotation, int x, int y, double z) {
         this.item_id = itemId;
         this.state = state.replace("\t\t\t", " ");

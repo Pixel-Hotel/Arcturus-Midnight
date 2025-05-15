@@ -1,10 +1,8 @@
 package com.eu.habbo.habbohotel.items.interactions.wired;
 
-import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import gnu.trove.set.hash.THashSet;
 
-import java.util.List;
 
 public class WiredSettings {
     private int[] intParams;
@@ -68,11 +66,12 @@ public class WiredSettings {
     }
 
     @SafeVarargs
-    public static THashSet<HabboItem> clearItemByType(THashSet<HabboItem> items, Class<? extends HabboItem>... allowedTypes) {
-        if(items == null) return new THashSet<>();
-        else if(allowedTypes == null || allowedTypes.length == 0) return items;
+    public static void clearItemByType(THashSet<HabboItem> items, Class<? extends HabboItem>... allowedTypes) {
+        if(items == null) {
+            new THashSet<>();
+            return;
+        } else if(allowedTypes == null || allowedTypes.length == 0) return;
         items.removeIf(item -> {
-            //HabboItem item = room.getHabboItem(id);
             if (item == null) return true; // Entfernen, wenn Item nicht existiert
             for (Class<? extends HabboItem> allowed : allowedTypes) {
                 if (allowed.isInstance(item)) {
@@ -81,6 +80,5 @@ public class WiredSettings {
             }
             return true; // Entfernen, wenn kein Typ gepasst hat
         });
-        return items;
     }
 }

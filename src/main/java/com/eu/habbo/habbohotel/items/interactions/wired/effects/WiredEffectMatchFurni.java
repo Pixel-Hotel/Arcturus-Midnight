@@ -29,7 +29,7 @@ public class WiredEffectMatchFurni extends InteractionWiredEffect implements Int
 
     private static final WiredEffectType type = WiredEffectType.MATCH_SSHOT;
     public boolean checkForWiredResetPermission = true;
-    private THashSet<WiredMatchFurniSetting> settings;
+    private final THashSet<WiredMatchFurniSetting> settings;
     private boolean state = false;
     private boolean direction = false;
     private boolean position = false;
