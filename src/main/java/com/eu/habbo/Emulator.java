@@ -43,8 +43,7 @@ public final class Emulator {
     public static final String version = "Arcturus Midnight" + " " + MAJOR + "." + MINOR + "." + BUILD + " " + PREVIEW;
 		
     private static final String logo =
-            """
-                    
+            """       
                     █████╗ ██████╗  ██████╗████████╗██╗   ██╗██████╗ ██╗   ██╗███████╗
                     ██╔══██╗██╔══██╗██╔════╝╚══██╔══╝██║   ██║██╔══██╗██║   ██║██╔════╝
                     ███████║██████╔╝██║        ██║   ██║   ██║██████╔╝██║   ██║███████╗

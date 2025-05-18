@@ -72,7 +72,8 @@ public class RoomUserWalkEvent extends MessageHandler {
             for(HabboItem item : room.getItemsAt(tile)){
                 if(item instanceof InteractionInvisibleClickItem){
                     RoomUnit finalRoomUnit = roomUnit;
-                    Emulator.getThreading().run(() -> WiredHandler.handle(WiredTriggerType.CLICK_ON_TILE, finalRoomUnit, room, new Object[]{item}));
+                    // TODO: CLICK_ON_TILE
+                    Emulator.getThreading().run(() -> WiredHandler.handle(WiredTriggerType.STATE_CHANGED, finalRoomUnit, room, new Object[]{item}));
                 }
             }
 
