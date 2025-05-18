@@ -6,6 +6,7 @@ import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.messages.outgoing.MessageComposer;
+import com.eu.habbo.messages.outgoing.Outgoing;
 import com.eu.habbo.plugin.events.emulator.OutgoingPacketEvent;
 import io.netty.channel.Channel;
 import org.slf4j.Logger;
@@ -86,7 +87,9 @@ public class GameClient {
                 return;
             }
 
-            LOGGER.debug("Sending packet: {} {} bytes", response.getHeader(), response.get().readableBytes());
+            if(response.getHeader() != Outgoing.PingComposer) {
+                LOGGER.debug("Sending packet: {} {} bytes", response.getHeader(), response.get().readableBytes());
+            }
 
             OutgoingPacketEvent event = new OutgoingPacketEvent(this.habbo, response.getComposer(), response);
             Emulator.getPluginManager().fireEvent(event);
