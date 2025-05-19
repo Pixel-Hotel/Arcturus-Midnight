@@ -56,7 +56,7 @@ public final class Emulator {
         "██║╚██╔╝██║██║██║  ██║██║╚██╗██║██║██║   ██║██╔══██║   ██║\n" +
         "██║ ╚═╝ ██║██║██████╔╝██║ ╚████║██║╚██████╔╝██║  ██║   ██║\n" +
         "╚═╝     ╚═╝╚═╝╚═════╝ ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝\n" +
-        "Pixel-Hotel.de MAIN\n";
+        "Pixel-Hotel.de - MAIN\n";
 
     public static String build = "";
     public static boolean isReady = false;
