@@ -88,7 +88,7 @@ public class GameClient {
             }
 
             if(response.getHeader() != Outgoing.PingComposer) {
-                LOGGER.debug("Sending packet: {}, {} bytes", response.getHeader(), response.get().readableBytes());
+                LOGGER.debug("Sending packet: {}; {} bytes", response.getHeader(), response.get().readableBytes());
             }
 
             OutgoingPacketEvent event = new OutgoingPacketEvent(this.habbo, response.getComposer(), response);
