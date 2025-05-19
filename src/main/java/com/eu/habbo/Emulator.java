@@ -56,7 +56,7 @@ public final class Emulator {
                     ██║╚██╔╝██║██║██║  ██║██║╚██╗██║██║██║   ██║██╔══██║   ██║
                     ██║ ╚═╝ ██║██║██████╔╝██║ ╚████║██║╚██████╔╝██║  ██║   ██║
                     ╚═╝     ╚═╝╚═╝╚═════╝ ╚═╝  ╚═══╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝
-                    Pixel-Hotel.de
+                    Pixel-Hotel.de - DEV DEV
                     """;
 
     public static String build = "";
