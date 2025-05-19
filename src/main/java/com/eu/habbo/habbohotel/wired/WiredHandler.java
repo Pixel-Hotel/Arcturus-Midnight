@@ -46,13 +46,13 @@ public class WiredHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredHandler.class);
 
     //Configuration. Loaded from a database and updated accordingly.
-    public static int MAXIMUM_ITEM_SELECTION = 20;
+    public static int MAXIMUM_ITEM_SELECTION = 5;
     public static int TELEPORT_DELAY = 500;
 
     private static GsonBuilder gsonBuilder = null;
 
     public static boolean handle(WiredTriggerType triggerType, RoomUnit roomUnit, Room room, Object[] stuff) {
-        if(isDisabled(room)) return false;
+        //if(isDisabled(room)) return false;
         if (triggerType == WiredTriggerType.CUSTOM) return false;
 
         boolean talked = false;

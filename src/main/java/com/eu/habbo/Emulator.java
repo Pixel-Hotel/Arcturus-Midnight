@@ -116,7 +116,7 @@ public final class Emulator {
             ConsoleCommand.load();
             Emulator.logging = new Logging();
 
-            //System.out.println(logo);
+            System.out.println(logo);
 
             // Checks if this is a BETA build before allowing them to continue.
             if (PREVIEW.toLowerCase().contains("beta")) {

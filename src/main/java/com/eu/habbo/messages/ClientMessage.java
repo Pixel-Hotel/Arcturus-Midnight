@@ -16,7 +16,7 @@ public class ClientMessage {
         this.header = messageId;
         this.buffer = ((buffer == null) || (buffer.readableBytes() == 0) ? Unpooled.EMPTY_BUFFER : buffer);
         if (header != Incoming.PongEvent) {
-            if (buffer != null) LOGGER.debug("ClientMessage: {} {} bytes", header, buffer.readableBytes());
+            if (buffer != null) LOGGER.debug("ClientMessage: {}; {} bytes", header, buffer.readableBytes());
             else LOGGER.debug("ClientMessage: {} EMPTY BUFFER", header);
         }
     }
