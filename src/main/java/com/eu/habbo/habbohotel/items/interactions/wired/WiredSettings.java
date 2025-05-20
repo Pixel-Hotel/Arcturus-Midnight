@@ -33,6 +33,9 @@ public class WiredSettings {
         this.stuffTypeSelectionCode = stuffTypeSelectionCode;
     }
 
+    public int[] getFurniIds(){
+        return itemIds;
+    }
     public int[] getItemIds() {
         return itemIds;
     }
