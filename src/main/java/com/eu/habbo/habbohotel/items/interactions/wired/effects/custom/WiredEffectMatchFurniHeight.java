@@ -166,7 +166,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         this.refresh();
 
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(this.settings.size());
 
         for (WiredMatchFurniSetting item : this.settings)
@@ -195,7 +195,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         if (room == null)
             throw new WiredSaveException("Trying to save wired in unloaded room");
 
-        int itemsCount = settings.getItemIds().length;
+        int itemsCount = settings.getFurniIds().length;
 
         if(itemsCount > Emulator.getConfig().getInt("hotel.wired.furni.selection.count")) {
             throw new WiredSaveException("Too many furni selected");
@@ -204,7 +204,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         List<WiredMatchFurniSetting> newSettings = new ArrayList<>();
 
         for (int i = 0; i < itemsCount; i++) {
-            int itemId = settings.getItemIds()[i];
+            int itemId = settings.getFurniIds()[i];
             HabboItem it = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(itemId);
 
             if(it == null)

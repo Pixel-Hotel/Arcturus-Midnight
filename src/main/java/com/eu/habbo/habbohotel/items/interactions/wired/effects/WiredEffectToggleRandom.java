@@ -103,7 +103,7 @@ public class WiredEffectToggleRandom extends InteractionWiredEffect {
         }
 
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(this.items.size());
         for (HabboItem item : this.items) {
             message.appendInt(item.getId());
@@ -138,7 +138,7 @@ public class WiredEffectToggleRandom extends InteractionWiredEffect {
 
     @Override
     public boolean saveData(WiredSettings settings, GameClient gameClient) throws WiredSaveException {
-        int itemsCount = settings.getItemIds().length;
+        int itemsCount = settings.getFurniIds().length;
 
         if(itemsCount > Emulator.getConfig().getInt("hotel.wired.furni.selection.count")) {
             throw new WiredSaveException("Too many furni selected");
@@ -147,7 +147,7 @@ public class WiredEffectToggleRandom extends InteractionWiredEffect {
         List<HabboItem> newItems = new ArrayList<>();
 
         for (int i = 0; i < itemsCount; i++) {
-            int itemId = settings.getItemIds()[i];
+            int itemId = settings.getFurniIds()[i];
             HabboItem it = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(itemId);
 
             if(it == null)

@@ -73,7 +73,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(this.items.size());
         for (HabboItem item : this.items) {
             message.appendInt(item.getId());
@@ -108,7 +108,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     public boolean saveData(WiredSettings settings) {
         items.clear();
 
-        for(int id : settings.getItemIds()){
+        for(int id : settings.getFurniIds()){
             HabboItem item = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(id);
             if(item instanceof InteractionInvisibleClickItem){
                 this.items.add(item);

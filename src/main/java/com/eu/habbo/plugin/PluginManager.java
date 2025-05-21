@@ -116,7 +116,7 @@ public class PluginManager {
         RoomManager.MAXIMUM_ROOMS_USER = Emulator.getConfig().getInt("hotel.users.max.rooms", 50);
         RoomManager.MAXIMUM_ROOMS_HC = Emulator.getConfig().getInt("hotel.users.max.rooms.hc", 75);
         RoomManager.HOME_ROOM_ID = Emulator.getConfig().getInt("hotel.home.room");
-        WiredHandler.MAXIMUM_ITEM_SELECTION = Emulator.getConfig().getInt("hotel.wired.furni.selection.count");
+        WiredHandler.MAXIMUM_FURNI_SELECTION = Emulator.getConfig().getInt("hotel.wired.furni.selection.count");
         WiredHandler.TELEPORT_DELAY = Emulator.getConfig().getInt("wired.effect.teleport.delay", 500);
         NavigatorManager.MAXIMUM_RESULTS_PER_PAGE = Emulator.getConfig().getInt("hotel.navigator.search.maxresults");
         NavigatorManager.CATEGORY_SORT_USING_ORDER_NUM = Emulator.getConfig().getBoolean("hotel.navigator.sort.ordernum");

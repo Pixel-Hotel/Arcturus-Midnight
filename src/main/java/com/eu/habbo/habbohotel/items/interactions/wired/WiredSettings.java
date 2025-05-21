@@ -33,7 +33,7 @@ public class WiredSettings {
         this.stuffTypeSelectionCode = stuffTypeSelectionCode;
     }
 
-    public int[] getItemIds() {
+    public int[] getFurniIds() {
         return itemIds;
     }
 

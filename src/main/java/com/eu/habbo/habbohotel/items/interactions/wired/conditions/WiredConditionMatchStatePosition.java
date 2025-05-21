@@ -48,7 +48,7 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition 
         this.refresh();
 
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(this.settings.size());
 
         for (WiredMatchFurniSetting item : this.settings)
@@ -80,13 +80,13 @@ public class WiredConditionMatchStatePosition extends InteractionWiredCondition 
         if (room == null)
             return true;
 
-        int count = settings.getItemIds().length;
+        int count = settings.getFurniIds().length;
         if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count")) return false;
 
         this.settings.clear();
 
         for (int i = 0; i < count; i++) {
-            int itemId = settings.getItemIds()[i];
+            int itemId = settings.getFurniIds()[i];
             HabboItem item = room.getHabboItem(itemId);
 
             if (item != null)

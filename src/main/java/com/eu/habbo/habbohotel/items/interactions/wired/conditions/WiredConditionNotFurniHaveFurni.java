@@ -119,7 +119,7 @@ public class WiredConditionNotFurniHaveFurni extends InteractionWiredCondition {
         this.refresh();
 
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(this.items.size());
 
         for (HabboItem item : this.items)
@@ -141,7 +141,7 @@ public class WiredConditionNotFurniHaveFurni extends InteractionWiredCondition {
         if(settings.getIntParams().length < 1) return false;
         this.all = settings.getIntParams()[0] == 1;
 
-        int count = settings.getItemIds().length;
+        int count = settings.getFurniIds().length;
         if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count")) return false;
 
         this.items.clear();
@@ -150,7 +150,7 @@ public class WiredConditionNotFurniHaveFurni extends InteractionWiredCondition {
 
         if (room != null) {
             for (int i = 0; i < count; i++) {
-                HabboItem item = room.getHabboItem(settings.getItemIds()[i]);
+                HabboItem item = room.getHabboItem(settings.getFurniIds()[i]);
 
                 if (item != null)
                     this.items.add(item);

@@ -46,7 +46,7 @@ public class WiredTriggerClickOnAvatar extends InteractionWiredTrigger {
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(0);
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getId());
