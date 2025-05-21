@@ -160,7 +160,7 @@ public class WiredEffectMoveFurniTo extends InteractionWiredEffect {
         }
 
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(this.items.size());
         for (HabboItem item : this.items)
             message.appendInt(item.getId());

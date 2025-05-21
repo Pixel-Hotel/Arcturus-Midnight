@@ -192,7 +192,7 @@ public class WiredEffectChangeFurniDirection extends InteractionWiredEffect {
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
         message.appendBoolean(false);
-        message.appendInt(WiredHandler.MAXIMUM_ITEM_SELECTION);
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(this.items.size());
         for (Map.Entry<HabboItem, WiredChangeDirectionSetting> item : this.items.entrySet()) {
             message.appendInt(item.getKey().getId());
