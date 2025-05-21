@@ -65,7 +65,7 @@ public class WiredSettings {
         this.delay = delay;
     }
 
-    @SafeVarargs
+    /*@SafeVarargs
     public static void clearItemByType(THashSet<HabboItem> items, Class<? extends HabboItem>... allowedTypes) {
         if(items == null) {
             new THashSet<>();
@@ -80,5 +80,5 @@ public class WiredSettings {
             }
             return true; // Entfernen, wenn kein Typ gepasst hat
         });
-    }
+    }*/
 }
