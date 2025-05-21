@@ -108,7 +108,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     public boolean saveData(WiredSettings settings) {
         items.clear();
 
-        for(int id : settings.getItemIds()){
+        for(int id : settings.getFurniIds()){
             HabboItem item = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(id);
             if(item instanceof InteractionInvisibleClickItem){
                 this.items.add(item);

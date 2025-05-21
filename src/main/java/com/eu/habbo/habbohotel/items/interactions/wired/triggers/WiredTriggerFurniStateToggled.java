@@ -138,10 +138,10 @@ public class WiredTriggerFurniStateToggled extends InteractionWiredTrigger {
     public boolean saveData(WiredSettings settings) {
         this.items.clear();
 
-        int count = settings.getItemIds().length;
+        int count = settings.getFurniIds().length;
 
         for (int i = 0; i < count; i++) {
-            this.items.add(Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(settings.getItemIds()[i]));
+            this.items.add(Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(settings.getFurniIds()[i]));
         }
 
         return true;

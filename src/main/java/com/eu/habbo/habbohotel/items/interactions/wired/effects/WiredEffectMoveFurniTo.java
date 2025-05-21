@@ -53,9 +53,9 @@ public class WiredEffectMoveFurniTo extends InteractionWiredEffect {
         this.direction = settings.getIntParams()[0];
         this.spacing = settings.getIntParams()[1];
 
-        int count = settings.getItemIds().length;
+        int count = settings.getFurniIds().length;
         for (int i = 0; i < count; i++) {
-            this.items.add(room.getHabboItem(settings.getItemIds()[i]));
+            this.items.add(room.getHabboItem(settings.getFurniIds()[i]));
         }
 
         this.setDelay(settings.getDelay());

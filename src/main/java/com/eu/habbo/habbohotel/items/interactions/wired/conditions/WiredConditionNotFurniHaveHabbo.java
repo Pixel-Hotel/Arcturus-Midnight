@@ -128,7 +128,7 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
 
     @Override
     public boolean saveData(WiredSettings settings) {
-        int count = settings.getItemIds().length;
+        int count = settings.getFurniIds().length;
         if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count")) return false;
 
         this.items.clear();
@@ -137,7 +137,7 @@ public class WiredConditionNotFurniHaveHabbo extends InteractionWiredCondition {
 
         if (room != null) {
             for (int i = 0; i < count; i++) {
-                HabboItem item = room.getHabboItem(settings.getItemIds()[i]);
+                HabboItem item = room.getHabboItem(settings.getFurniIds()[i]);
 
                 if (item != null)
                     this.items.add(item);
