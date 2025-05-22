@@ -22,7 +22,7 @@ public enum WiredTriggerType {
     CUSTOM(13),
     STARTS_DANCING(11),
     STOPS_DANCING(11),
-    CLICK_ON_FURNI(4),
+    CLICK_ON_ITEM(4),
     CLICK_ON_TILE(4);
 
     public final int code;

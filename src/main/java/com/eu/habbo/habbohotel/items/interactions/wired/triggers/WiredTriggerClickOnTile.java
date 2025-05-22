@@ -128,7 +128,7 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
     }
 
     private void clearItems(){
-        WiredSettings.clearItemByType(this.items, InteractionInvisibleClickItem.class);
+        clearItemByType(InteractionInvisibleClickItem.class);
     }
 
     static class JsonData {
@@ -137,5 +137,22 @@ public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
         public JsonData(List<Integer> itemIds) {
             this.itemIds = itemIds;
         }
+    }
+
+    @SafeVarargs
+    private void clearItemByType(Class<? extends HabboItem>... allowedTypes) {
+        if(items == null) {
+            new THashSet<>();
+            return;
+        } else if(allowedTypes == null || allowedTypes.length == 0) return;
+        items.removeIf(item -> {
+            if (item == null) return true; // Entfernen, wenn Item nicht existiert
+            for (Class<? extends HabboItem> allowed : allowedTypes) {
+                if (allowed.isInstance(item)) {
+                    return false; // Behalten
+                }
+            }
+            return true; // Entfernen, wenn kein Typ gepasst hat
+        });
     }
 }

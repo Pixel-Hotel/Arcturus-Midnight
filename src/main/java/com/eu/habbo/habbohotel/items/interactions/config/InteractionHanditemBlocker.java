@@ -8,6 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InteractionHanditemBlocker extends InteractionDefault {
+    /*
+    Handitem-Blocker:
+    Durch das Aktivieren dieses Items können keine Handitems mehr zwischen Personen herumgereicht bzw. abgestellt werden.
+    Jetzt erhält man Handitems nur noch im Kühlschrank oder durch Wireds.
+    */
+
     public InteractionHanditemBlocker(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
     }
