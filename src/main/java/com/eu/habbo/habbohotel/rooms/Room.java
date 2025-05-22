@@ -12,6 +12,7 @@ import com.eu.habbo.habbohotel.items.FurnitureType;
 import com.eu.habbo.habbohotel.items.ICycleable;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
@@ -1635,7 +1636,6 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         }
     }
 
-
     private boolean cycleRoomUnit(RoomUnit unit, RoomUnitType type) {
         boolean update = unit.needsStatusUpdate();
         if (unit.hasStatus(RoomUnitStatus.SIGN)) {
@@ -2447,6 +2447,8 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 this.roomSpecialTypes.setInvisibleItemController(specialItem);
             } else if (item instanceof InteractionWiredDisabler specialItem){
                 this.roomSpecialTypes.setWiredDisabler(specialItem);
+            } else if (item instanceof InteractionHanditemBlocker specialItem){
+                this.roomSpecialTypes.setHanditemBlocker(specialItem);
             }
 
         }
@@ -2608,6 +2610,8 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                     this.roomSpecialTypes.removeInvisibleItemController();
                 } else if (item instanceof InteractionWiredDisabler) {
                     this.roomSpecialTypes.removeWiredDisabler();
+                } else if (item instanceof InteractionHanditemBlocker) {
+                    this.roomSpecialTypes.removeHanditemBlocker();
                 }
             }
         }
@@ -4307,11 +4311,9 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         this.pickUpItem(item, null);
     }
 
-
     public void ejectAll() {
         this.ejectAll(null);
     }
-
 
     public void ejectAll(Habbo habbo) {
         THashMap<Integer, THashSet<HabboItem>> userItemsMap = new THashMap<>();
