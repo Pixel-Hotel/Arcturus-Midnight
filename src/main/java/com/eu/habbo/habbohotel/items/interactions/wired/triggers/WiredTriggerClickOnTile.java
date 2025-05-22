@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class WiredTriggerClickOnTile extends InteractionWiredTrigger {
 
-    private static final WiredTriggerType type = WiredTriggerType.STATE_CHANGED; //TODO: CLICK_ON_TILE
+    private static final WiredTriggerType type = WiredTriggerType.CLICK_ON_TILE;
     private final THashSet<HabboItem> items = new THashSet<>();
 
     public WiredTriggerClickOnTile(ResultSet set, Item baseItem) throws SQLException {
