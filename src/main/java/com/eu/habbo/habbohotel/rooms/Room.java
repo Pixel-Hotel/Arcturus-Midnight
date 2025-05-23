@@ -14,6 +14,7 @@ import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionRollerSpeedController;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameScoreboard;
@@ -2449,6 +2450,8 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 this.roomSpecialTypes.setWiredDisabler(specialItem);
             } else if (item instanceof InteractionHanditemBlocker specialItem){
                 this.roomSpecialTypes.setHanditemBlocker(specialItem);
+            } else if (item instanceof InteractionRollerSpeedController speedController){
+                this.roomSpecialTypes.setRollerSpeedController(speedController);
             }
 
         }
@@ -2612,6 +2615,8 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                     this.roomSpecialTypes.removeWiredDisabler();
                 } else if (item instanceof InteractionHanditemBlocker) {
                     this.roomSpecialTypes.removeHanditemBlocker();
+                } else if (item instanceof InteractionRollerSpeedController) {
+                    this.roomSpecialTypes.removeRollerSpeedController();
                 }
             }
         }

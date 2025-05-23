@@ -3,9 +3,14 @@ package com.eu.habbo.habbohotel.items;
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionRollerSpeedController;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameTimer;
-import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.*;
+import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.InteractionBattleBanzaiPuck;
+import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.InteractionBattleBanzaiSphere;
+import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.InteractionBattleBanzaiTeleporter;
+import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.InteractionBattleBanzaiTile;
 import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.gates.InteractionBattleBanzaiGateBlue;
 import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.gates.InteractionBattleBanzaiGateGreen;
 import com.eu.habbo.habbohotel.items.interactions.games.battlebanzai.gates.InteractionBattleBanzaiGateRed;
@@ -40,7 +45,6 @@ import com.eu.habbo.habbohotel.items.interactions.games.tag.bunnyrun.Interaction
 import com.eu.habbo.habbohotel.items.interactions.games.tag.icetag.InteractionIceTagField;
 import com.eu.habbo.habbohotel.items.interactions.games.tag.icetag.InteractionIceTagPole;
 import com.eu.habbo.habbohotel.items.interactions.games.tag.rollerskate.InteractionRollerskateField;
-import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
 import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleClickItem;
 import com.eu.habbo.habbohotel.items.interactions.invisible.InteractionInvisibleItem;
 import com.eu.habbo.habbohotel.items.interactions.pets.*;
@@ -54,10 +58,10 @@ import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredBlob;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraOrEval;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraRandom;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraUnseen;
-import com.eu.habbo.habbohotel.wired.highscores.WiredHighscoreManager;
 import com.eu.habbo.habbohotel.items.interactions.wired.triggers.*;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.wired.highscores.WiredHighscoreManager;
 import com.eu.habbo.messages.outgoing.inventory.AddHabboItemComposer;
 import com.eu.habbo.plugin.events.emulator.EmulatorLoadItemsManagerEvent;
 import com.eu.habbo.threading.runnables.QueryDeleteHabboItem;
@@ -200,8 +204,11 @@ public class ItemManager {
 
         this.interactionsList.add(new ItemInteraction("game_timer", InteractionGameTimer.class));
 
-        this.interactionsList.add(new ItemInteraction("conf_handitem_block", InteractionHanditemBlocker.class));
-        this.interactionsList.add(new ItemInteraction("conf_wired_disable", InteractionWiredDisabler.class));
+        // <----------- Config stuff -----------> \\
+        addInteraction("conf_invisible_control", InteractionInvisibleItemController.class);
+        addInteraction("conf_handitem_block", InteractionHanditemBlocker.class);
+        addInteraction("conf_wired_disable", InteractionWiredDisabler.class);
+        addInteraction("conf_queue_speed", InteractionRollerSpeedController.class);
 
         this.interactionsList.add(new ItemInteraction("wf_trg_walks_on_furni", WiredTriggerHabboWalkOnFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_trg_walks_off_furni", WiredTriggerHabboWalkOffFurni.class));
@@ -291,7 +298,6 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_highscore", InteractionWiredHighscore.class));
 
         // <----------- Invisible stuff -----------> \\
-        this.interactionsList.add(new ItemInteraction("conf_invisible_control", InteractionInvisibleItemController.class));
         this.interactionsList.add(new ItemInteraction("invisible_item", InteractionInvisibleItem.class));
         this.interactionsList.add(new ItemInteraction("invisible_click_item", InteractionInvisibleClickItem.class));
 

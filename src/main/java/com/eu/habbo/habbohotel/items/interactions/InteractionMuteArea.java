@@ -21,7 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InteractionMuteArea extends InteractionCustomValues {
-    public static THashMap<String, String> defaultValues = new THashMap<String, String>() {
+    public static THashMap<String, String> defaultValues = new THashMap<>() {
         {
             this.put("tilesLeft", "0");
         }
@@ -43,7 +43,7 @@ public class InteractionMuteArea extends InteractionCustomValues {
         }
     };
 
-    private THashSet<RoomTile> tiles;
+    private final THashSet<RoomTile> tiles;
 
     public InteractionMuteArea(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem, defaultValues);
@@ -89,7 +89,7 @@ public class InteractionMuteArea extends InteractionCustomValues {
         if(!this.values.get("state").equals("1"))
             return false;
 
-        if(room != null && this.tiles.size() == 0) {
+        if(room != null && this.tiles.isEmpty()) {
             regenAffectedTiles(room);
         }
 

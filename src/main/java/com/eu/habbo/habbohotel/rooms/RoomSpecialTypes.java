@@ -7,6 +7,7 @@ import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionRollerSpeedController;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameScoreboard;
@@ -63,6 +64,7 @@ public class RoomSpecialTypes {
     private InteractionInvisibleItemController invisibleItemController = null;
     private InteractionWiredDisabler wiredDisabler = null;
     private InteractionHanditemBlocker handitemBlocker = null;
+    private InteractionRollerSpeedController rollerSpeedController = null;
 
 
     public RoomSpecialTypes() {
@@ -122,6 +124,16 @@ public class RoomSpecialTypes {
     }
     public InteractionHanditemBlocker getHanditemBlocker(){
         return handitemBlocker;
+    }
+
+    public void setRollerSpeedController(InteractionRollerSpeedController item) {
+        if(rollerSpeedController == null) rollerSpeedController = item;
+    }
+    public void removeRollerSpeedController() {
+        rollerSpeedController = null;
+    }
+    public InteractionRollerSpeedController getRollerSpeedController(){
+        return rollerSpeedController;
     }
 
     public InteractionBattleBanzaiTeleporter getBanzaiTeleporter(int itemId) {
