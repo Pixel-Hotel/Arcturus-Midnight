@@ -97,10 +97,10 @@ public class InteractionRollerSpeedController extends InteractionDefault {
 
         try {
             int data = Integer.parseInt(this.getExtradata());
-            int group = data / 3;
 
-            if (group >= 0 && group <= 2) {
-                return String.valueOf((group + 1) * 3);
+            if (data >= 0 && data <= 11) {
+                int group = data / 3;
+                return String.valueOf((group + 1) % 4 * 3);
             }
         } catch (NumberFormatException ignored) {
             // ignore and fall back to default
