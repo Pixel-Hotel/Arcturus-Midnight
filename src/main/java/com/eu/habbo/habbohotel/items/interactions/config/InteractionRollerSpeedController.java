@@ -144,7 +144,6 @@ public class InteractionRollerSpeedController extends HabboItem {
     }
 
     public MessageComposer handleAnimation(Room room) {
-        if(needsUpdate()) return new ItemStateComposer(this);
         String oldData = this.getExtradata();
         String newData;
 
