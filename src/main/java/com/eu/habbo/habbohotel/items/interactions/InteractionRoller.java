@@ -43,7 +43,7 @@ public class InteractionRoller extends HabboItem {
 
     @Override
     public boolean isWalkable() {
-        return true;
+        return this.getBaseItem().allowWalk();
     }
 
     @Override

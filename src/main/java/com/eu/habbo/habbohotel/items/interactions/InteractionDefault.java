@@ -70,7 +70,7 @@ public class InteractionDefault extends HabboItem {
 
             if (objects != null && objects.length > 0) {
                 if (objects[0] instanceof Integer) {
-                    if (this.getExtradata().length() == 0)
+                    if (this.getExtradata().isEmpty())
                         this.setExtradata("0");
 
                     if (this.getBaseItem().getStateCount() > 0) {
@@ -143,8 +143,7 @@ public class InteractionDefault extends HabboItem {
                 int nextEffectF = 0;
 
                 if (objects != null && objects.length == 2) {
-                    if (objects[0] instanceof RoomTile && objects[1] instanceof RoomTile) {
-                        RoomTile goalTile = (RoomTile) objects[0];
+                    if (objects[0] instanceof RoomTile goalTile && objects[1] instanceof RoomTile) {
                         HabboItem topItem = room.getTopItemAt(goalTile.x, goalTile.y, (objects[0] != objects[1]) ? this : null);
 
                         if (topItem != null && (topItem.getBaseItem().getEffectM() == this.getBaseItem().getEffectM() || topItem.getBaseItem().getEffectF() == this.getBaseItem().getEffectF())) {
