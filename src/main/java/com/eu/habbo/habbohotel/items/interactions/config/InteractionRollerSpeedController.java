@@ -145,14 +145,7 @@ public class InteractionRollerSpeedController extends HabboItem {
             case "7"      -> newData = "8";
             case "9", "11"-> newData = "10";
             case "10"     -> newData = "11";
-            default -> {
-                try {
-                    int fallback = ((Integer.parseInt(oldData) / 3 + 1) % 4) * 3;
-                    newData = String.valueOf(fallback);
-                } catch (NumberFormatException e) {
-                    newData = "0";
-                }
-            }
+            default -> newData = "0";
         }
         if(!List.of(new String[]{"0", "1", "2"}).contains(newData) )
             LOGGER.debug("handleAnimation set's Extradata from {} to {}.", oldData, newData);
