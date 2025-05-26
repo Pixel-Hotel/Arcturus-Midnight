@@ -8,11 +8,19 @@ import com.eu.habbo.habbohotel.items.interactions.InteractionRoller;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
+import com.eu.habbo.habbohotel.wired.WiredEffectType;
+import com.eu.habbo.messages.outgoing.MessageComposer;
+import com.eu.habbo.messages.outgoing.rooms.items.ItemStateComposer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InteractionRollerSpeedController extends InteractionDefault {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(InteractionRollerSpeedController.class);
+
     public InteractionRollerSpeedController(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
         setRollerSpeed(Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()));
@@ -52,7 +60,34 @@ public class InteractionRollerSpeedController extends InteractionDefault {
 
     @Override
     public void onClick(GameClient client, Room room, Object[] objects) throws Exception {
-        super.onClick(client, room, objects);
+        if (room != null && (client == null || this.canToggle(client.getHabbo(), room) || (objects.length >= 2 && objects[1] instanceof WiredEffectType && objects[1] == WiredEffectType.TOGGLE_STATE))) {
+            super.onClick(client, room, objects);
+
+            if (objects == null || objects.length == 0) return;
+
+            if(!(objects[0] instanceof Integer)) return;
+
+            if (this.getExtradata().isEmpty())
+                this.setExtradata("0");
+
+            if (this.getBaseItem().getStateCount() > 0) {
+                int currentState = 0;
+
+                try {
+                    currentState = Integer.parseInt(this.getExtradata());
+                } catch (NumberFormatException e) {
+                    LOGGER.error("Incorrect extradata ({}) for item ID ({}) of type ({})", this.getExtradata(), this.getId(), this.getBaseItem().getName());
+                }
+
+                // 12 zustände 0, 1-2 animation, 3, 4-5 animation, 6, 7-8 animation, 9, 10-11 animation
+                int state = ((currentState / 3 + 1) % 4) * 3;
+                this.setExtradata(String.valueOf(state));
+                this.needsUpdate(true);
+
+                room.updateItemState(this);
+            }
+
+        }
         setRollerSpeed(room);
     }
 
@@ -65,5 +100,33 @@ public class InteractionRollerSpeedController extends InteractionDefault {
     private void setRollerSpeed(Room room){
         if(room == null) return;
         room.setRollerSpeed(Integer.parseInt(getExtradata()));
+    }
+
+    public MessageComposer handleAnimation(Room room) {
+
+        String oldData = this.getExtradata();
+        String newData;
+
+        switch (oldData) {
+            case "0", "1" -> newData = "2";
+            case "2"      -> newData = "1";
+            case "3", "4" -> newData = "5";
+            case "5"      -> newData = "4";
+            case "6", "7" -> newData = "8";
+            case "8"      -> newData = "7";
+            case "9", "10"-> newData = "11";
+            case "11"     -> newData = "10";
+            default -> {
+                try {
+                    int fallback = ((Integer.parseInt(oldData) / 3 + 1) % 4) * 3;
+                    newData = String.valueOf(fallback);
+                } catch (NumberFormatException e) {
+                    newData = "0";
+                }
+            }
+        }
+
+        setExtradata(newData);
+        return new ItemStateComposer(this);
     }
 }
