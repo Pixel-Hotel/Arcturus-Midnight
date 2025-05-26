@@ -118,19 +118,20 @@ public class InteractionRollerSpeedController extends HabboItem {
     }
 
     private void updateExtraData(Room room) {
-
-        /*try {
+        String oldData = this.getExtradata();
+        try {
             int data = Integer.parseInt(this.getExtradata());
 
             if (data >= 0 && data <= 11) {
                 int group = data / 3;
-                return String.valueOf((group + 1) % 4 * 3);
+                setExtradata(String.valueOf((group + 1) % 4 * 3));
             }
         } catch (NumberFormatException ignored) {
             // ignore and fall back to default
         }
-        return "0";*/
-        String oldData = this.getExtradata();
+        String newData = this.getExtradata();
+        setExtradata("0");
+        /*String oldData = this.getExtradata();
         switch (this.getExtradata()) {
             case "0", "1", "2" -> setExtradata("3");
             case "3", "4", "5" -> setExtradata("6");
@@ -139,7 +140,7 @@ public class InteractionRollerSpeedController extends HabboItem {
         }
         this.needsUpdate(true);
         room.updateItemState(this);
-        String newData = this.getExtradata();
+        String newData = this.getExtradata();*/
         LOGGER.debug("updateExtraData set's Extradata from {} to {}.", oldData, newData);
     }
 
@@ -150,8 +151,8 @@ public class InteractionRollerSpeedController extends HabboItem {
         switch (oldData) {
             case "0", "1" -> newData = "2";
             case "2"      -> newData = "1";
-            case "3", "4" -> newData = "5";
-            case "5"      -> newData = "4";
+            case "3", "5" -> newData = "4";
+            case "4"      -> newData = "5";
             case "6", "7" -> newData = "8";
             case "8"      -> newData = "7";
             case "9", "10"-> newData = "11";
