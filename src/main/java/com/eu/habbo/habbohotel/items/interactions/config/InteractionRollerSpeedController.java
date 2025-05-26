@@ -137,14 +137,14 @@ public class InteractionRollerSpeedController extends HabboItem {
         String newData;
 
         switch (oldData) {
-            case "0", "1" -> newData = "2";
-            case "2"      -> newData = "1";
-            case "3", "4" -> newData = "5";
-            case "5"      -> newData = "4";
-            case "6", "7" -> newData = "8";
-            case "8"      -> newData = "7";
-            case "9", "10"-> newData = "11";
-            case "11"     -> newData = "10";
+            case "0", "2" -> newData = "1";
+            case "1"      -> newData = "2";
+            case "3", "5" -> newData = "4";
+            case "4"      -> newData = "5";
+            case "6", "8" -> newData = "7";
+            case "7"      -> newData = "8";
+            case "9", "11"-> newData = "10";
+            case "10"     -> newData = "11";
             default -> {
                 try {
                     int fallback = ((Integer.parseInt(oldData) / 3 + 1) % 4) * 3;
