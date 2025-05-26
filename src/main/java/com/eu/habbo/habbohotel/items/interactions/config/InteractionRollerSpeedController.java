@@ -71,10 +71,9 @@ public class InteractionRollerSpeedController extends InteractionDefault {
 
                     if (this.getBaseItem().getStateCount() > 0) {
                         // 12 zustände 0, 1-2 animation, 3, 4-5 animation, 6, 7-8 animation, 9, 10-11 animation
-                        updateExtraData();
-                        this.needsUpdate(true);
+                        updateExtraData(room);
 
-                        room.updateItemState(this);
+
                     }
                 }
             }
@@ -94,7 +93,7 @@ public class InteractionRollerSpeedController extends InteractionDefault {
         room.setRollerSpeed(Integer.parseInt(getExtradata()));
     }
 
-    private void updateExtraData() {
+    private void updateExtraData(Room room) {
 
         /*try {
             int data = Integer.parseInt(this.getExtradata());
@@ -107,12 +106,17 @@ public class InteractionRollerSpeedController extends InteractionDefault {
             // ignore and fall back to default
         }
         return "0";*/
+        String oldData = this.getExtradata();
         switch (this.getExtradata()) {
             case "0", "1", "2" -> setExtradata("3");
             case "3", "4", "5" -> setExtradata("6");
             case "6", "7", "8" -> setExtradata("9");
             default -> setExtradata("0");
         }
+        this.needsUpdate(true);
+        room.updateItemState(this);
+        String newData = this.getExtradata();
+        LOGGER.debug("updateExtraData set's Extradata from {} to {}.", oldData, newData);
     }
 
     public MessageComposer handleAnimation(Room room) {
@@ -138,7 +142,7 @@ public class InteractionRollerSpeedController extends InteractionDefault {
                 }
             }
         }
-
+        LOGGER.debug("handleAnimation set's Extradata from {} to {}.", oldData, newData);
         setExtradata(newData);
         return new ItemStateComposer(this);
     }
