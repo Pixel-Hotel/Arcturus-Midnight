@@ -71,17 +71,8 @@ public class InteractionRollerSpeedController extends InteractionDefault {
                 this.setExtradata("0");
 
             if (this.getBaseItem().getStateCount() > 0) {
-                int currentState = 0;
-
-                try {
-                    currentState = Integer.parseInt(this.getExtradata());
-                } catch (NumberFormatException e) {
-                    LOGGER.error("Incorrect extradata ({}) for item ID ({}) of type ({})", this.getExtradata(), this.getId(), this.getBaseItem().getName());
-                }
-
                 // 12 zustände 0, 1-2 animation, 3, 4-5 animation, 6, 7-8 animation, 9, 10-11 animation
-                int state = ((currentState / 3 + 1) % 4) * 3;
-                this.setExtradata(String.valueOf(state));
+                this.setExtradata(getNextExtraData());
                 this.needsUpdate(true);
 
                 room.updateItemState(this);
@@ -100,6 +91,35 @@ public class InteractionRollerSpeedController extends InteractionDefault {
     private void setRollerSpeed(Room room){
         if(room == null) return;
         room.setRollerSpeed(Integer.parseInt(getExtradata()));
+    }
+
+    private String getNextExtraData() {
+
+        try {
+            int data = Integer.parseInt(this.getExtradata());
+            int group = data / 3;
+
+            if (group >= 0 && group <= 2) {
+                return String.valueOf((group + 1) * 3);
+            }
+        } catch (NumberFormatException ignored) {
+            // ignore and fall back to default
+        }
+        return "0";
+        /*switch (this.getExtradata()) {
+            case "0", "1", "2" -> {
+                return "3";
+            }
+            case "3", "4", "5" -> {
+                return "6";
+            }
+            case "6", "7", "8" -> {
+                return "9";
+            }
+            default -> {
+                return "0";
+            }
+        }*/
     }
 
     public MessageComposer handleAnimation(Room room) {
