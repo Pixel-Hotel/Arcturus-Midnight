@@ -120,19 +120,6 @@ public class InteractionRollerSpeedController extends HabboItem {
 
     private void updateExtraData(Room room) {
         String oldData = this.getExtradata();
-        try {
-            int data = Integer.parseInt(this.getExtradata());
-
-            if (data >= 0 && data <= 11) {
-                int group = data / 3;
-                setExtradata(String.valueOf((group + 1) % 4 * 3));
-            }
-        } catch (NumberFormatException ignored) {
-            setExtradata("0");
-        }
-        String newData = this.getExtradata();
-
-        /*String oldData = this.getExtradata();
         switch (this.getExtradata()) {
             case "0", "1", "2" -> setExtradata("3");
             case "3", "4", "5" -> setExtradata("6");
@@ -141,7 +128,7 @@ public class InteractionRollerSpeedController extends HabboItem {
         }
         this.needsUpdate(true);
         room.updateItemState(this);
-        String newData = this.getExtradata();*/
+        String newData = this.getExtradata();
         LOGGER.debug("updateExtraData set's Extradata from {} to {}.", oldData, newData);
     }
 
