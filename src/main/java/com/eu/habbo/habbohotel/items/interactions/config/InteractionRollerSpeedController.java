@@ -95,7 +95,7 @@ public class InteractionRollerSpeedController extends InteractionDefault {
 
     private String getNextExtraData() {
 
-        try {
+        /*try {
             int data = Integer.parseInt(this.getExtradata());
 
             if (data >= 0 && data <= 11) {
@@ -105,8 +105,8 @@ public class InteractionRollerSpeedController extends InteractionDefault {
         } catch (NumberFormatException ignored) {
             // ignore and fall back to default
         }
-        return "0";
-        /*switch (this.getExtradata()) {
+        return "0";*/
+        switch (this.getExtradata()) {
             case "0", "1", "2" -> {
                 return "3";
             }
@@ -119,7 +119,7 @@ public class InteractionRollerSpeedController extends InteractionDefault {
             default -> {
                 return "0";
             }
-        }*/
+        }
     }
 
     public MessageComposer handleAnimation(Room room) {
