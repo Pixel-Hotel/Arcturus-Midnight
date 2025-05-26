@@ -63,19 +63,20 @@ public class InteractionRollerSpeedController extends InteractionDefault {
         if (room != null && (client == null || this.canToggle(client.getHabbo(), room) || (objects.length >= 2 && objects[1] instanceof WiredEffectType && objects[1] == WiredEffectType.TOGGLE_STATE))) {
             super.onClick(client, room, objects);
 
-            if (objects == null || objects.length == 0) return;
+            if (objects != null && objects.length > 0) {
+                if (objects[0] instanceof Integer) {
 
-            if(!(objects[0] instanceof Integer)) return;
+                    if (this.getExtradata().isEmpty())
+                        this.setExtradata("0");
 
-            if (this.getExtradata().isEmpty())
-                this.setExtradata("0");
+                    if (this.getBaseItem().getStateCount() > 0) {
+                        // 12 zustände 0, 1-2 animation, 3, 4-5 animation, 6, 7-8 animation, 9, 10-11 animation
+                        updateExtraData();
+                        this.needsUpdate(true);
 
-            if (this.getBaseItem().getStateCount() > 0) {
-                // 12 zustände 0, 1-2 animation, 3, 4-5 animation, 6, 7-8 animation, 9, 10-11 animation
-                this.setExtradata(getNextExtraData());
-                this.needsUpdate(true);
-
-                room.updateItemState(this);
+                        room.updateItemState(this);
+                    }
+                }
             }
 
         }
@@ -93,7 +94,7 @@ public class InteractionRollerSpeedController extends InteractionDefault {
         room.setRollerSpeed(Integer.parseInt(getExtradata()));
     }
 
-    private String getNextExtraData() {
+    private void updateExtraData() {
 
         /*try {
             int data = Integer.parseInt(this.getExtradata());
@@ -107,23 +108,15 @@ public class InteractionRollerSpeedController extends InteractionDefault {
         }
         return "0";*/
         switch (this.getExtradata()) {
-            case "0", "1", "2" -> {
-                return "3";
-            }
-            case "3", "4", "5" -> {
-                return "6";
-            }
-            case "6", "7", "8" -> {
-                return "9";
-            }
-            default -> {
-                return "0";
-            }
+            case "0", "1", "2" -> setExtradata("3");
+            case "3", "4", "5" -> setExtradata("6");
+            case "6", "7", "8" -> setExtradata("9");
+            default -> setExtradata("0");
         }
     }
 
     public MessageComposer handleAnimation(Room room) {
-
+        if(needsUpdate()) return new ItemStateComposer(this);
         String oldData = this.getExtradata();
         String newData;
 
