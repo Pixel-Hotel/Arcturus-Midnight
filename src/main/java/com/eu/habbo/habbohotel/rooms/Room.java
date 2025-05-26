@@ -2132,6 +2132,10 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         this.pollId = pollId;
     }
 
+    public long getRollerCycle(){
+        return this.rollerCycle;
+    }
+
     public int getRollerSpeed() {
         return this.rollerSpeed;
     }

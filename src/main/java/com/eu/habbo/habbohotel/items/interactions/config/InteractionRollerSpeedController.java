@@ -123,6 +123,7 @@ public class InteractionRollerSpeedController extends HabboItem implements ICycl
 
     @Override
     public void cycle(Room room) {
+        if(room.getRollerCycle() < room.getRollerSpeed()) return;
         switch (getExtradata()) {
             case "0", "2" -> setExtradata("1");
             case "1"      -> setExtradata("2");
