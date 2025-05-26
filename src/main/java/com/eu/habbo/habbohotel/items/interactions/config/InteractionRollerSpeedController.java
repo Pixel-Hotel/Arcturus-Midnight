@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class InteractionRollerSpeedController extends HabboItem {
 
@@ -83,10 +82,7 @@ public class InteractionRollerSpeedController extends HabboItem {
                         this.setExtradata("0");
 
                     if (this.getBaseItem().getStateCount() > 0) {
-                        // 12 zustände 0, 1-2 animation, 3, 4-5 animation, 6, 7-8 animation, 9, 10-11 animation
                         updateExtraData(room);
-
-
                     }
                 }
             }
@@ -133,23 +129,20 @@ public class InteractionRollerSpeedController extends HabboItem {
     }
 
     public MessageComposer handleAnimation(Room room) {
-        String oldData = this.getExtradata();
         String newData;
 
-        switch (oldData) {
-            case "0", "2" -> newData = "1";
-            case "1"      -> newData = "2";
-            case "3", "5" -> newData = "4";
-            case "4"      -> newData = "5";
-            case "6", "8" -> newData = "7";
-            case "7"      -> newData = "8";
-            case "9", "11"-> newData = "10";
-            case "10"     -> newData = "11";
-            default -> newData = "0";
+        switch (getExtradata()) {
+            case "0", "2" -> setExtradata("1");
+            case "1"      -> setExtradata("2");
+            case "3", "5" -> setExtradata("4");
+            case "4"      -> setExtradata("5");
+            case "6", "8" -> setExtradata("7");
+            case "7"      -> setExtradata("8");
+            case "9", "11"-> setExtradata("10");
+            case "10"     -> setExtradata("11");
+            default -> setExtradata("0");
         }
-        if(!List.of(new String[]{"0", "1", "2"}).contains(newData) )
-            LOGGER.debug("handleAnimation set's Extradata from {} to {}.", oldData, newData);
-        setExtradata(newData);
+
         return new ItemStateComposer(this);
     }
 }
