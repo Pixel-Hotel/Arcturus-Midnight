@@ -14,15 +14,11 @@ import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.outgoing.MessageComposer;
 import com.eu.habbo.messages.outgoing.rooms.items.ItemStateComposer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InteractionRollerSpeedController extends HabboItem {
-
-    public static final Logger LOGGER = LoggerFactory.getLogger(InteractionRollerSpeedController.class);
 
     public InteractionRollerSpeedController(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -115,7 +111,6 @@ public class InteractionRollerSpeedController extends HabboItem {
     }
 
     private void updateExtraData(Room room) {
-        String oldData = this.getExtradata();
         switch (this.getExtradata()) {
             case "0", "1", "2" -> setExtradata("3");
             case "3", "4", "5" -> setExtradata("6");
@@ -124,13 +119,9 @@ public class InteractionRollerSpeedController extends HabboItem {
         }
         this.needsUpdate(true);
         room.updateItemState(this);
-        String newData = this.getExtradata();
-        LOGGER.debug("updateExtraData set's Extradata from {} to {}.", oldData, newData);
     }
 
     public MessageComposer handleAnimation(Room room) {
-        String newData;
-
         switch (getExtradata()) {
             case "0", "2" -> setExtradata("1");
             case "1"      -> setExtradata("2");
@@ -142,7 +133,6 @@ public class InteractionRollerSpeedController extends HabboItem {
             case "10"     -> setExtradata("11");
             default -> setExtradata("0");
         }
-
         return new ItemStateComposer(this);
     }
 }
