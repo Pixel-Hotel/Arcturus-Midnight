@@ -2,6 +2,7 @@ package com.eu.habbo.habbohotel.items.interactions.config;
 
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
+import com.eu.habbo.habbohotel.items.ICycleable;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionRoller;
 import com.eu.habbo.habbohotel.rooms.Room;
@@ -12,13 +13,12 @@ import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.messages.ServerMessage;
-import com.eu.habbo.messages.outgoing.MessageComposer;
 import com.eu.habbo.messages.outgoing.rooms.items.ItemStateComposer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class InteractionRollerSpeedController extends HabboItem {
+public class InteractionRollerSpeedController extends HabboItem implements ICycleable {
 
     public InteractionRollerSpeedController(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -121,7 +121,8 @@ public class InteractionRollerSpeedController extends HabboItem {
         room.updateItemState(this);
     }
 
-    public MessageComposer handleAnimation(Room room) {
+    @Override
+    public void cycle(Room room) {
         switch (getExtradata()) {
             case "0", "2" -> setExtradata("1");
             case "1"      -> setExtradata("2");
@@ -133,6 +134,6 @@ public class InteractionRollerSpeedController extends HabboItem {
             case "10"     -> setExtradata("11");
             default -> setExtradata("0");
         }
-        return new ItemStateComposer(this);
+        room.sendComposer(new ItemStateComposer(this).compose());
     }
 }

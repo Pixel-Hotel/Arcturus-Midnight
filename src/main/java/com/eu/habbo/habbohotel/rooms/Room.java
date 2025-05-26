@@ -1352,10 +1352,10 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
                     THashSet<MessageComposer> messages = new THashSet<>();
 
-                    InteractionRollerSpeedController rollerSpeedController = this.roomSpecialTypes.getRollerSpeedController();
+                    /*InteractionRollerSpeedController rollerSpeedController = this.roomSpecialTypes.getRollerSpeedController();
                     if(rollerSpeedController != null) {
                         messages.add(rollerSpeedController.handleAnimation(room));
-                    }
+                    }*/
 
                     //Find an alternative for this.
                     //Reason is that tile gets updated after every roller.
