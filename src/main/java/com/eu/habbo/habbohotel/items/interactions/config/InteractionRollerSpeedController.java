@@ -3,12 +3,15 @@ package com.eu.habbo.habbohotel.items.interactions.config;
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
-import com.eu.habbo.habbohotel.items.interactions.InteractionDefault;
 import com.eu.habbo.habbohotel.items.interactions.InteractionRoller;
 import com.eu.habbo.habbohotel.rooms.Room;
+import com.eu.habbo.habbohotel.rooms.RoomLayout;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
+import com.eu.habbo.habbohotel.users.Habbo;
+import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
+import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.outgoing.MessageComposer;
 import com.eu.habbo.messages.outgoing.rooms.items.ItemStateComposer;
 import org.slf4j.Logger;
@@ -17,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class InteractionRollerSpeedController extends InteractionDefault {
+public class InteractionRollerSpeedController extends HabboItem {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(InteractionRollerSpeedController.class);
 
@@ -31,6 +34,15 @@ public class InteractionRollerSpeedController extends InteractionDefault {
         setRollerSpeed(Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()));
     }
 
+    @Override
+    public void serializeExtradata(ServerMessage serverMessage) {
+        serverMessage.appendInt((this.isLimited() ? 256 : 0));
+        serverMessage.appendString(this.getExtradata());
+
+        super.serializeExtradata(serverMessage);
+    }
+    @Override
+    public void onWalk(RoomUnit roomUnit, Room room, Object[] objects) throws Exception {}
     @Override
     public boolean canWalkOn(RoomUnit roomUnit, Room room, Object[] objects) {
         return false;
@@ -80,6 +92,18 @@ public class InteractionRollerSpeedController extends InteractionDefault {
 
         }
         setRollerSpeed(room);
+    }
+
+
+    public boolean canToggle(Habbo habbo, Room room) {
+        if (room.hasRights(habbo)) return true;
+
+        if (!habbo.getHabboStats().isRentingSpace()) return false;
+
+        HabboItem rentSpace = room.getHabboItem(habbo.getHabboStats().rentedItemId);
+
+        return rentSpace != null && RoomLayout.squareInSquare(RoomLayout.getRectangle(rentSpace.getX(), rentSpace.getY(), rentSpace.getBaseItem().getWidth(), rentSpace.getBaseItem().getLength(), rentSpace.getRotation()), RoomLayout.getRectangle(this.getX(), this.getY(), this.getBaseItem().getWidth(), this.getBaseItem().getLength(), this.getRotation()));
+
     }
 
     @Override
