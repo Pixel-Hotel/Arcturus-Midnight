@@ -4,6 +4,7 @@ import com.eu.habbo.habbohotel.items.FurnitureType;
 import com.eu.habbo.habbohotel.items.interactions.*;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionHanditemBlocker;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionInvisibleItemController;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionRollerSpeedController;
 import com.eu.habbo.habbohotel.items.interactions.config.InteractionWiredDisabler;
 import com.eu.habbo.habbohotel.modtool.ScripterManager;
 import com.eu.habbo.habbohotel.rooms.*;
@@ -13,7 +14,21 @@ import com.eu.habbo.messages.outgoing.generic.alerts.BubbleAlertComposer;
 import com.eu.habbo.messages.outgoing.generic.alerts.BubbleAlertKeys;
 import com.eu.habbo.messages.outgoing.inventory.RemoveHabboItemComposer;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+
 public class RoomPlaceItemEvent extends MessageHandler {
+
+    private static final Map<Class<? extends HabboItem>, Function<RoomSpecialTypes, Object>> CONTROLLER_MAP =
+            new HashMap<>() {{
+                put(InteractionWiredDisabler.class, RoomSpecialTypes::getWiredDisabler);
+                put(InteractionHanditemBlocker.class, RoomSpecialTypes::getHanditemBlocker);
+                put(InteractionInvisibleItemController.class, RoomSpecialTypes::getInvisibleItemController);
+                put(InteractionRollerSpeedController.class, RoomSpecialTypes::getRollerSpeedController);
+            }};
+
+
     @Override
     public void handle() throws Exception {
         String[] values = this.packet.readString().split(" ");
@@ -55,16 +70,8 @@ public class RoomPlaceItemEvent extends MessageHandler {
             return;
         }
 
-        if(item instanceof InteractionWiredDisabler && room.getRoomSpecialTypes().getWiredDisabler() != null){
+        if(canNotPlaceControllerItem(room, item)){
             this.client.sendResponse(new BubbleAlertComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, FurnitureMovementError.MAX_ITEMS.errorCode));
-            return;
-        }
-        else if(item instanceof InteractionHanditemBlocker && room.getRoomSpecialTypes().getHanditemBlocker() != null){
-            this.client.sendResponse(new BubbleAlertComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, FurnitureMovementError.MAX_ITEMS.errorCode));
-            return;
-        }
-        else if (item instanceof InteractionInvisibleItemController && room.getRoomSpecialTypes().getInvisibleItemController() != null) {
-            this.client.sendResponse(new BubbleAlertComposer(BubbleAlertKeys.FURNITURE_PLACEMENT_ERROR.key, FurnitureMovementError.MAX_SOUNDFURNI.errorCode));
             return;
         }
 
@@ -130,5 +137,14 @@ public class RoomPlaceItemEvent extends MessageHandler {
         this.client.sendResponse(new RemoveHabboItemComposer(item.getGiftAdjustedId()));
         this.client.getHabbo().getInventory().getItemsComponent().removeHabboItem(item.getId());
         item.setFromGift(false);
+    }
+
+    private boolean canNotPlaceControllerItem(Room room, HabboItem item){
+        return CONTROLLER_MAP.entrySet().stream()
+                .anyMatch(entry ->
+                        entry.getKey().isInstance(item) &&
+                                entry.getValue().apply(room.getRoomSpecialTypes()) != null
+                );
+
     }
 }
