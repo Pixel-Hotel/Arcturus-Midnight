@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class InteractionRollerSpeedController extends HabboItem {
 
@@ -127,10 +128,10 @@ public class InteractionRollerSpeedController extends HabboItem {
                 setExtradata(String.valueOf((group + 1) % 4 * 3));
             }
         } catch (NumberFormatException ignored) {
-            // ignore and fall back to default
+            setExtradata("0");
         }
         String newData = this.getExtradata();
-        setExtradata("0");
+
         /*String oldData = this.getExtradata();
         switch (this.getExtradata()) {
             case "0", "1", "2" -> setExtradata("3");
@@ -151,8 +152,8 @@ public class InteractionRollerSpeedController extends HabboItem {
         switch (oldData) {
             case "0", "1" -> newData = "2";
             case "2"      -> newData = "1";
-            case "3", "5" -> newData = "4";
-            case "4"      -> newData = "5";
+            case "3", "4" -> newData = "5";
+            case "5"      -> newData = "4";
             case "6", "7" -> newData = "8";
             case "8"      -> newData = "7";
             case "9", "10"-> newData = "11";
@@ -166,7 +167,8 @@ public class InteractionRollerSpeedController extends HabboItem {
                 }
             }
         }
-        LOGGER.debug("handleAnimation set's Extradata from {} to {}.", oldData, newData);
+        if(!List.of(new String[]{"0", "1", "2"}).contains(newData) )
+            LOGGER.debug("handleAnimation set's Extradata from {} to {}.", oldData, newData);
         setExtradata(newData);
         return new ItemStateComposer(this);
     }
