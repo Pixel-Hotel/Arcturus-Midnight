@@ -175,6 +175,7 @@ public class CommandHandler {
     }
 
     public void reloadCommands() {
+        addCommand(new PackageLoggingCommand());
         addCommand(new AboutCommand());
         addCommand(new AlertCommand());
         addCommand(new AllowTradingCommand());

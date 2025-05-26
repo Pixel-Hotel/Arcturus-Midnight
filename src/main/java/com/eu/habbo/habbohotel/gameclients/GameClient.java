@@ -12,7 +12,6 @@ import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -87,7 +86,7 @@ public class GameClient {
                 return;
             }
 
-            if(response.getHeader() != Outgoing.PingComposer) {
+            if(response.getHeader() != Outgoing.PingComposer && Emulator.enabledPackageLogging) {
                 LOGGER.debug("Sending packet: {}; {} bytes", response.getHeader(), response.get().readableBytes());
             }
 

@@ -1,5 +1,6 @@
 package com.eu.habbo.messages;
 
+import com.eu.habbo.Emulator;
 import com.eu.habbo.messages.incoming.Incoming;
 import com.eu.habbo.util.PacketUtils;
 import io.netty.buffer.ByteBuf;
@@ -15,7 +16,7 @@ public class ClientMessage {
     public ClientMessage(int messageId, ByteBuf buffer) {
         this.header = messageId;
         this.buffer = ((buffer == null) || (buffer.readableBytes() == 0) ? Unpooled.EMPTY_BUFFER : buffer);
-        if (header != Incoming.PongEvent) {
+        if (header != Incoming.PongEvent && Emulator.enabledPackageLogging) {
             if (buffer != null) LOGGER.debug("ClientMessage: {}; {} bytes", header, buffer.readableBytes());
             else LOGGER.debug("ClientMessage: {} EMPTY BUFFER", header);
         }
