@@ -100,21 +100,22 @@ public class WiredHandler {
         return talked;
     }
 
-    public static void handleCustomTrigger(Class<? extends InteractionWiredTrigger> triggerType, RoomUnit roomUnit, Room room, Object[] stuff) {
-        if(isDisabled(room)) return;
+    // DON'T CHANGE THE RETURN VALUE BECAUSE PLUGINS NEED IT -.-
+    public static boolean handleCustomTrigger(Class<? extends InteractionWiredTrigger> triggerType, RoomUnit roomUnit, Room room, Object[] stuff) {
+        if(isDisabled(room)) return false;
         if (!Emulator.isReady)
-            return;
+            return false;
 
         if (!room.isLoaded())
-            return;
+            return false;
 
         if (room.getRoomSpecialTypes() == null)
-            return;
+            return false;
 
         THashSet<InteractionWiredTrigger> triggers = room.getRoomSpecialTypes().getTriggers(WiredTriggerType.CUSTOM);
 
         if (triggers == null || triggers.isEmpty())
-            return;
+            return false;
 
         long millis = System.currentTimeMillis();
         THashSet<InteractionWiredEffect> effectsToExecute = new THashSet<>();
@@ -139,7 +140,7 @@ public class WiredHandler {
         for (InteractionWiredEffect effect : effectsToExecute) {
             triggerEffect(effect, roomUnit, room, stuff, millis);
         }
-
+        return true;
     }
 
     public static boolean handle(InteractionWiredTrigger trigger, final RoomUnit roomUnit, final Room room, final Object[] stuff) {
