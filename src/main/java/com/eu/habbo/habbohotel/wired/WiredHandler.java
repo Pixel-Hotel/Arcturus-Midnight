@@ -325,7 +325,8 @@ public class WiredHandler {
             habbo.getInventory().getBadgesComponent().addBadge(badge);
             habbo.getClient().sendResponse(new AddUserBadgeComposer(badge));
             habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_RECEIVED_BADGE));
-        } else {
+        }
+        else {
             String[] data = reward.data.split("#");
 
             if (data.length == 2) {
@@ -379,14 +380,12 @@ public class WiredHandler {
     }
 
     public static boolean getReward(Habbo habbo, WiredEffectGiveReward wiredBox) {
-        if (wiredBox.limit > 0) {
-            if (wiredBox.limit - wiredBox.given == 0) {
-                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.LIMITED_NO_MORE_AVAILABLE));
-                return false;
-            }
+        if (wiredBox.limit > 0 && wiredBox.limit - wiredBox.given == 0) {
+            habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.LIMITED_NO_MORE_AVAILABLE));
+            return false;
         }
 
-        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) as row_count, wired_rewards_given.* FROM wired_rewards_given WHERE user_id = ? AND wired_item = ? ORDER BY timestamp DESC LIMIT ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) OVER() as row_count, wired_rewards_given.* FROM wired_rewards_given WHERE user_id = ? AND wired_item = ? ORDER BY timestamp DESC LIMIT ?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             statement.setInt(1, habbo.getHabboInfo().getId());
             statement.setInt(2, wiredBox.getId());
             statement.setInt(3, wiredBox.rewardItems.size());
@@ -394,6 +393,8 @@ public class WiredHandler {
             try (ResultSet set = statement.executeQuery()) {
                 if (set.first()) {
                     if (set.getInt("row_count") >= 1) {
+
+                        // Nur einmal vergeben
                         if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_ONCE) {
                             habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED));
                             return false;
@@ -402,13 +403,6 @@ public class WiredHandler {
 
                     set.beforeFirst();
                     if (set.next()) {
-                        if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_MINUTES) {
-                            if (Emulator.getIntUnixTimestamp() - set.getInt("timestamp") <= 60) {
-                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_MINUTE));
-                                return false;
-                            }
-                        }
-
                         if (wiredBox.uniqueRewards) {
                             if (set.getInt("row_count") == wiredBox.rewardItems.size()) {
                                 habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALL_COLLECTED));
@@ -416,15 +410,21 @@ public class WiredHandler {
                             }
                         }
 
-                        if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_HOURS) {
-                            if (!(Emulator.getIntUnixTimestamp() - set.getInt("timestamp") >= (3600 * wiredBox.limitationInterval))) {
+                        int diffTimestamp = Emulator.getIntUnixTimestamp() - set.getInt("timestamp");
+                        if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_MINUTES) {
+                            if (diffTimestamp <= (60 * wiredBox.limitationInterval)) {
+                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_MINUTE));
+                                return false;
+                            }
+                        }
+                        else if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_HOURS) {
+                            if (diffTimestamp <= (3600 * wiredBox.limitationInterval)) {
                                 habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_HOUR));
                                 return false;
                             }
                         }
-
-                        if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_DAY) {
-                            if (!(Emulator.getIntUnixTimestamp() - set.getInt("timestamp") >= (86400 * wiredBox.limitationInterval))) {
+                        else if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_DAY) {
+                            if (diffTimestamp <= (86400 * wiredBox.limitationInterval)) {
                                 habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY));
                                 return false;
                             }
@@ -446,7 +446,8 @@ public class WiredHandler {
                                 return true;
                             }
                         }
-                    } else {
+                    }
+                    else {
                         int randomNumber = Emulator.getRandom().nextInt(101);
 
                         int count = 0;
@@ -466,6 +467,47 @@ public class WiredHandler {
         }
 
         return false;
+    }
+
+    private static boolean isAllowedToGetReward(Habbo habbo, WiredEffectGiveReward wiredBox) throws SQLException {
+
+        int timeUnitInSeconds;
+        int alertType;
+
+        switch(wiredBox.rewardTime) {
+            case WiredEffectGiveReward.LIMIT_ONCE:
+                timeUnitInSeconds = 60;
+                alertType = WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED;
+                break;
+            case WiredEffectGiveReward.LIMIT_N_HOURS:
+                timeUnitInSeconds = 3600;
+                alertType = WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_HOUR;
+                break;
+            case WiredEffectGiveReward.LIMIT_N_DAY:
+                timeUnitInSeconds = 86400;
+                alertType = WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY;
+                break;
+            default: return true;
+        }
+
+        String sql = "SELECT 1 FROM wired_rewards_given WHERE user_id = ? AND wired_item = ? AND timestamp >= UNIX_TIMESTAMP() - ( ? * ? ) LIMIT 1";
+
+        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, habbo.getHabboInfo().getId());
+            stmt.setInt(2, wiredBox.getId());
+            stmt.setInt(3, timeUnitInSeconds);
+            stmt.setInt(3, wiredBox.limitationInterval);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    habbo.getClient().sendResponse(new WiredRewardAlertComposer(alertType));
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public static void resetTimers(Room room) {
