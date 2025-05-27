@@ -43,7 +43,7 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
     private final THashSet<HabboItem> items;
     private boolean canAdvanceState;
 
-    private static final List<Class<? extends HabboItem>> FORBIDDEN_TYPES = new ArrayList<Class<? extends HabboItem>>() {
+    private static final List<Class<? extends HabboItem>> FORBIDDEN_TYPES = new ArrayList<>() {
         {
             this.add(InteractionWired.class);
             this.add(InteractionTeleport.class);
