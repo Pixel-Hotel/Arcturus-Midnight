@@ -101,7 +101,7 @@ public class WiredHandler {
     }
 
     public static void handleCustomTrigger(Class<? extends InteractionWiredTrigger> triggerType, RoomUnit roomUnit, Room room, Object[] stuff) {
-        //if(isDisabled(room)) return;
+        if(isDisabled(room)) return;
         if (!Emulator.isReady)
             return;
 
