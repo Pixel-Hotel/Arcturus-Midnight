@@ -429,6 +429,24 @@ public class WiredHandler {
                                 return false;
                             }
                         }
+                        else if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_WEEKS){
+                            if (diffTimestamp <= (604800 * wiredBox.limitationInterval)){
+                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY));
+                                return false;
+                            }
+                        }
+                        else if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_MONTHS){
+                            if (diffTimestamp <= (2629746 * wiredBox.limitationInterval)){
+                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY));
+                                return false;
+                            }
+                        }
+                        else if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_YEARS){
+                            if (diffTimestamp <= (31536000 * wiredBox.limitationInterval)){
+                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY));
+                                return false;
+                            }
+                        }
                     }
 
                     if (wiredBox.uniqueRewards) {
