@@ -196,7 +196,7 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
                     LOGGER.debug("Current state: {}", state);
                     if(canReversState){
                         int maxState = item.getBaseItem().getStateCount() + 1;
-                        state = (state - 1 + maxState) % maxState;
+                        state = (state - 2 + maxState) % maxState;
                     }
                     LOGGER.debug("New state: {}", state);
                     item.setExtradata(String.valueOf(state));
