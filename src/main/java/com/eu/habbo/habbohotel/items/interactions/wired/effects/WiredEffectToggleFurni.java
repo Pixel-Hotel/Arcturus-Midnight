@@ -190,21 +190,7 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
             }
             try {
                 if (!item.getExtradata().isEmpty() && (item.getBaseItem().getStateCount() > 1 || item instanceof InteractionGameTimer)) {
-                    int state = 0;
-                    try {
-                        state = Integer.parseInt(item.getExtradata()); // assumes that extradata is state, could be something else for trophies etc.
-                    } catch (NumberFormatException ignored) {}
-                    LOGGER.debug("Current state: {}", state);
-                    if(canReversState){
-                        if(!(item instanceof InteractionRollerSpeedController)) {
-                            int maxState = item.getBaseItem().getStateCount();
-                            state = (state - 2 + maxState) % maxState;
-                        }
-                        else{
-                            state = ((state / 3 - 2 + 4) % 4) * 3;
-                        }
-                    }
-                    LOGGER.debug("New state: {}", state);
+                    int state = getState(item);
                     item.setExtradata(String.valueOf(state));
                     item.onClick(habbo != null && !(item instanceof InteractionGameTimer) ? habbo.getClient() : null, room, new Object[]{state, this.getType()});
                 }
@@ -216,6 +202,23 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
         this.items.removeAll(itemsToRemove);
 
         return true;
+    }
+
+    private int getState(HabboItem item){
+        int state = 0;
+        try {
+            state = Integer.parseInt(item.getExtradata()); // assumes that extradata is state, could be something else for trophies etc.
+        } catch (NumberFormatException ignored) {}
+        if(canReversState){
+            if(!(item instanceof InteractionRollerSpeedController)) {
+                int maxState = item.getBaseItem().getStateCount();
+                state = (state - 2 + maxState) % maxState;
+            }
+            else{
+                state = ((state / 3 - 2 + 4) % 4) * 3;
+            }
+        }
+        return state;
     }
 
     @Override
