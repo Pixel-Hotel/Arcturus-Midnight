@@ -41,6 +41,7 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
     public static final WiredEffectType type = WiredEffectType.TOGGLE_STATE;
 
     private final THashSet<HabboItem> items;
+    private boolean canAdvanceState;
 
     private static final List<Class<? extends HabboItem>> FORBIDDEN_TYPES = new ArrayList<Class<? extends HabboItem>>() {
         {
@@ -85,11 +86,13 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
     public WiredEffectToggleFurni(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
         this.items = new THashSet<>();
+        canAdvanceState = true;
     }
 
     public WiredEffectToggleFurni(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
         this.items = new THashSet<>();
+        canAdvanceState = true;
     }
 
     @Override
@@ -183,17 +186,13 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
                 itemsToRemove.add(item);
                 continue;
             }
-
             try {
-                if (item.getBaseItem().getStateCount() > 1 || item instanceof InteractionGameTimer) {
+                if (!item.getExtradata().isEmpty() && (item.getBaseItem().getStateCount() > 1 || item instanceof InteractionGameTimer)) {
                     int state = 0;
-                    if (!item.getExtradata().isEmpty()) {
-                        try {
-                            state = Integer.parseInt(item.getExtradata()); // assumes that extradata is state, could be something else for trophies etc.
-                        } catch (NumberFormatException ignored) {
-
-                        }
-                    }
+                    try {
+                        state = Integer.parseInt(item.getExtradata()); // assumes that extradata is state, could be something else for trophies etc.
+                    } catch (NumberFormatException ignored) {}
+                    if(!canAdvanceState) state = state - 2 + item.getBaseItem().getStateCount();
                     item.onClick(habbo != null && !(item instanceof InteractionGameTimer) ? habbo.getClient() : null, room, new Object[]{state, this.getType()});
                 }
             } catch (Exception e) {
@@ -210,7 +209,8 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
     public String getWiredData() {
         return WiredHandler.getGsonBuilder().create().toJson(new JsonData(
                 this.getDelay(),
-                this.items.stream().map(HabboItem::getId).collect(Collectors.toList())
+                this.items.stream().map(HabboItem::getId).collect(Collectors.toList()),
+                canAdvanceState
         ));
     }
 
@@ -222,6 +222,7 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
         if (wiredData.startsWith("{")) {
             JsonData data = WiredHandler.getGsonBuilder().create().fromJson(wiredData, JsonData.class);
             this.setDelay(data.delay);
+            this.canAdvanceState = data.canAdvanceState;
             for (Integer id: data.itemIds) {
                 HabboItem item = room.getHabboItem(id);
 
@@ -269,10 +270,13 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
     static class JsonData {
         int delay;
         List<Integer> itemIds;
+        boolean canAdvanceState;
 
-        public JsonData(int delay, List<Integer> itemIds) {
+
+        public JsonData(int delay, List<Integer> itemIds, boolean canAdvanceState) {
             this.delay = delay;
             this.itemIds = itemIds;
+            this.canAdvanceState = canAdvanceState;
         }
     }
 }
