@@ -14,7 +14,6 @@ import com.eu.habbo.messages.outgoing.rooms.FloodCounterComposer;
 import com.eu.habbo.messages.outgoing.rooms.ForwardToRoomComposer;
 import com.eu.habbo.messages.outgoing.rooms.users.*;
 import com.eu.habbo.messages.outgoing.users.*;
-import com.eu.habbo.plugin.events.furniture.FurnitureBuildheightEvent;
 import com.eu.habbo.plugin.events.users.UserCreditsEvent;
 import com.eu.habbo.plugin.events.users.UserDisconnectEvent;
 import com.eu.habbo.plugin.events.users.UserGetIPAddressEvent;
@@ -156,7 +155,7 @@ public class Habbo implements Runnable {
         this.messenger.connectionChanged(this, true, false);
 
         Emulator.getGameEnvironment().getRoomManager().loadRoomsForHabbo(this);
-        LOGGER.info("{} logged in from IP {} using proxyserver {}", this.habboInfo.getUsername(), this.habboInfo.getIpLogin(), ProxyIP);
+        LOGGER.info("{} logged in.", this.habboInfo.getUsername()); //  from IP {} using proxyserver {} , this.habboInfo.getIpLogin(), ProxyIP
         return true;
     }
 
