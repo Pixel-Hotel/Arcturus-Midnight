@@ -86,13 +86,13 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
     public WiredEffectToggleFurni(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
         this.items = new THashSet<>();
-        canAdvanceState = true;
+        canAdvanceState = false;
     }
 
     public WiredEffectToggleFurni(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
         this.items = new THashSet<>();
-        canAdvanceState = true;
+        canAdvanceState = false;
     }
 
     @Override
@@ -117,7 +117,8 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getId());
         message.appendString("");
-        message.appendInt(0);
+        message.appendInt(1);
+        message.appendInt(canAdvanceState ? 1 : 0);
         message.appendInt(0);
         message.appendInt(this.getType().code);
         message.appendInt(this.getDelay());
