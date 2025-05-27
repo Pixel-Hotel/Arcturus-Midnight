@@ -193,10 +193,12 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
                     try {
                         state = Integer.parseInt(item.getExtradata()); // assumes that extradata is state, could be something else for trophies etc.
                     } catch (NumberFormatException ignored) {}
+                    LOGGER.debug("Current state: {}", state);
                     if(canReversState){
                         int maxState = item.getBaseItem().getStateCount() + 1;
                         state = (state - 2 + maxState) % maxState;
                     }
+                    LOGGER.debug("New state: {}", state);
                     item.onClick(habbo != null && !(item instanceof InteractionGameTimer) ? habbo.getClient() : null, room, new Object[]{state, this.getType()});
                 }
             } catch (Exception e) {
