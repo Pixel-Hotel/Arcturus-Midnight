@@ -238,7 +238,7 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
         if (wiredData.startsWith("{")) {
             JsonData data = WiredHandler.getGsonBuilder().create().fromJson(wiredData, JsonData.class);
             this.setDelay(data.delay);
-            this.canReversState = data.canAdvanceState;
+            this.canReversState = data.canReversState;
             for (Integer id: data.itemIds) {
                 HabboItem item = room.getHabboItem(id);
 
@@ -286,13 +286,13 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
     static class JsonData {
         int delay;
         List<Integer> itemIds;
-        boolean canAdvanceState;
+        boolean canReversState;
 
 
         public JsonData(int delay, List<Integer> itemIds, boolean canAdvanceState) {
             this.delay = delay;
             this.itemIds = itemIds;
-            this.canAdvanceState = canAdvanceState;
+            this.canReversState = canAdvanceState;
         }
     }
 }
