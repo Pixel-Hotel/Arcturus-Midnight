@@ -487,47 +487,6 @@ public class WiredHandler {
         return false;
     }
 
-    private static boolean isAllowedToGetReward(Habbo habbo, WiredEffectGiveReward wiredBox) throws SQLException {
-
-        int timeUnitInSeconds;
-        int alertType;
-
-        switch(wiredBox.rewardTime) {
-            case WiredEffectGiveReward.LIMIT_ONCE:
-                timeUnitInSeconds = 60;
-                alertType = WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED;
-                break;
-            case WiredEffectGiveReward.LIMIT_N_HOURS:
-                timeUnitInSeconds = 3600;
-                alertType = WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_HOUR;
-                break;
-            case WiredEffectGiveReward.LIMIT_N_DAY:
-                timeUnitInSeconds = 86400;
-                alertType = WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY;
-                break;
-            default: return true;
-        }
-
-        String sql = "SELECT 1 FROM wired_rewards_given WHERE user_id = ? AND wired_item = ? AND timestamp >= UNIX_TIMESTAMP() - ( ? * ? ) LIMIT 1";
-
-        try (Connection connection = Emulator.getDatabase().getDataSource().getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-
-            stmt.setInt(1, habbo.getHabboInfo().getId());
-            stmt.setInt(2, wiredBox.getId());
-            stmt.setInt(3, timeUnitInSeconds);
-            stmt.setInt(3, wiredBox.limitationInterval);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    habbo.getClient().sendResponse(new WiredRewardAlertComposer(alertType));
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     public static void resetTimers(Room room) {
         if (!room.isLoaded() || room.getRoomSpecialTypes() == null)
             return;
