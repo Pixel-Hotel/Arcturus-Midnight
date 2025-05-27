@@ -201,7 +201,7 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
                             state = (state - 2 + maxState) % maxState;
                         }
                         else{
-                            state = ((state / 3 - 1 + 4) % 4) * 3;
+                            state = ((state / 3 - 2 + 4) % 4) * 3;
                         }
                     }
                     LOGGER.debug("New state: {}", state);
