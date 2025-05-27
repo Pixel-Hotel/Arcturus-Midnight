@@ -4,6 +4,7 @@ import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.*;
+import com.eu.habbo.habbohotel.items.interactions.config.InteractionRollerSpeedController;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameGate;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameScoreboard;
 import com.eu.habbo.habbohotel.items.interactions.games.InteractionGameTimer;
@@ -195,8 +196,13 @@ public class WiredEffectToggleFurni extends InteractionWiredEffect {
                     } catch (NumberFormatException ignored) {}
                     LOGGER.debug("Current state: {}", state);
                     if(canReversState){
-                        int maxState = item.getBaseItem().getStateCount();
-                        state = (state - 2 + maxState) % maxState;
+                        if(!(item instanceof InteractionRollerSpeedController)) {
+                            int maxState = item.getBaseItem().getStateCount();
+                            state = (state - 2 + maxState) % maxState;
+                        }
+                        else{
+                            state = ((state / 3 - 1 + 4) % 4) * 3;
+                        }
                     }
                     LOGGER.debug("New state: {}", state);
                     item.setExtradata(String.valueOf(state));
