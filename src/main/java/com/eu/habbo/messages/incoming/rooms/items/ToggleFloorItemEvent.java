@@ -6,6 +6,7 @@ import com.eu.habbo.habbohotel.items.interactions.pets.InteractionMonsterPlantSe
 import com.eu.habbo.habbohotel.pets.MonsterplantPet;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.users.cache.actions.ToggleFloorItemAction;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.messages.outgoing.rooms.items.RemoveFloorItemComposer;
 import com.eu.habbo.messages.outgoing.rooms.pets.PetPackageComposer;
@@ -76,6 +77,7 @@ public class ToggleFloorItemEvent extends MessageHandler {
             }
 
             item.onClick(this.client, room, new Object[]{state});
+            this.client.getHabbo().getUndoRedoManager().saveAction(new ToggleFloorItemAction(this.client.getHabbo(), item, String.valueOf(state), item.getExtradata()));
         } catch (Exception e) {
             LOGGER.error("Caught exception", e);
         }

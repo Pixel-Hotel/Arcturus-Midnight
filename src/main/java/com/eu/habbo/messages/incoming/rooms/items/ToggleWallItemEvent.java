@@ -3,6 +3,7 @@ package com.eu.habbo.messages.incoming.rooms.items;
 import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.users.cache.actions.ToggleWallItemAction;
 import com.eu.habbo.messages.incoming.MessageHandler;
 import com.eu.habbo.plugin.Event;
 import com.eu.habbo.plugin.events.furniture.FurnitureToggleEvent;
@@ -36,5 +37,6 @@ public class ToggleWallItemEvent extends MessageHandler {
         item.onClick(this.client, room, new Object[]{state});
         room.updateItem(item);
         Emulator.getThreading().run(item);
+        this.client.getHabbo().getUndoRedoManager().saveAction(new ToggleWallItemAction(this.client.getHabbo(), item, String.valueOf(state), item.getExtradata()));
     }
 }
