@@ -7,6 +7,7 @@ import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.messenger.Messenger;
 import com.eu.habbo.habbohotel.pets.Pet;
 import com.eu.habbo.habbohotel.rooms.*;
+import com.eu.habbo.habbohotel.users.cache.UndoRedoManager;
 import com.eu.habbo.habbohotel.users.inventory.BadgesComponent;
 import com.eu.habbo.messages.outgoing.generic.alerts.*;
 import com.eu.habbo.messages.outgoing.inventory.*;
@@ -40,10 +41,12 @@ public class Habbo implements Runnable {
     private final HabboInventory habboInventory;
     private GameClient client;
     private RoomUnit roomUnit;
+    private final UndoRedoManager undoRedoManager;
 
     private volatile boolean update;
     private volatile boolean disconnected = false;
     private volatile boolean disconnecting = false;
+
 
     public Habbo(ResultSet set) {
         this.client = null;
@@ -58,6 +61,8 @@ public class Habbo implements Runnable {
         this.roomUnit = new RoomUnit();
         this.roomUnit.setRoomUnitType(RoomUnitType.USER);
         this.update = false;
+
+        this.undoRedoManager = new UndoRedoManager();
     }
 
     public boolean isOnline() {
@@ -114,20 +119,23 @@ public class Habbo implements Runnable {
         this.client = client;
     }
 
+    public UndoRedoManager getUndoRedoManager() {
+        return this.undoRedoManager;
+    }
 
     public boolean connect() {
         String ip = "";
-        String ProxyIP = "";
+        //String ProxyIP = "";
 
         if (!Emulator.getConfig().getBoolean("networking.tcp.proxy") && this.client.getChannel().remoteAddress() != null) {
             SocketAddress address = this.client.getChannel().remoteAddress();
             ip = ((InetSocketAddress) address).getAddress().getHostAddress();
-            ProxyIP = "- no proxy server used";
+            //ProxyIP = "- no proxy server used";
         }
         else
         {
             SocketAddress address = this.client.getChannel().remoteAddress();
-            ProxyIP = ((InetSocketAddress) address).getAddress().getHostAddress();
+            //ProxyIP = ((InetSocketAddress) address).getAddress().getHostAddress();
         }
 
         if (Emulator.getPluginManager().isRegistered(UserGetIPAddressEvent.class, true)) {
