@@ -12,9 +12,9 @@ public class UndoCommand extends Command{
     public boolean handle(GameClient gameClient, String[] params) throws Exception {
         int steps = 1;
 
-        if(params.length > 0){
+        if(params.length > 1){
             try{
-                steps = Integer.parseInt(params[0]);
+                steps = Integer.parseInt(params[1]);
                 if(steps > UndoRedoManager.MAX_STEPS) steps = UndoRedoManager.MAX_STEPS;
                 else if(steps < 1) steps = 1;
             }
