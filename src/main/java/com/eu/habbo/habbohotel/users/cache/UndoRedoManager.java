@@ -1,9 +1,9 @@
 package com.eu.habbo.habbohotel.users.cache;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import com.eu.habbo.habbohotel.users.cache.actions.ItemAction;
+import com.eu.habbo.habbohotel.users.cache.actions.ItemActionKey;
+
+import java.util.*;
 
 public class UndoRedoManager {
 
@@ -29,22 +29,28 @@ public class UndoRedoManager {
 
     public boolean undo(int steps){
         if(!canUndo(steps)) return false;
-        boolean success = true;
-        for(int i = 0; i < steps && !undoStack.isEmpty(); i++) {
-            ItemAction command = undoStack.pop();
-            pushLimited(redoStack, command);
-            if(i == steps - 1) success = command.undo();
-        }
-        return success;
+        return handle(steps, undoStack);
     }
 
     public boolean redo(int steps){
         if(!canRedo(steps)) return false;
+        return handle(steps, redoStack);
+    }
+
+    private boolean handle(int steps, Deque<ItemAction> stack){
+        Map<ItemActionKey, ItemAction> uniqueActions  = new LinkedHashMap<>();
+
+        for(int i = 0; i < steps && !stack.isEmpty(); i++) {
+            ItemAction command = stack.pop();
+
+            ItemActionKey key = new ItemActionKey(command.getItem().getId(), command.getClass());
+            uniqueActions.put(key, command);
+            pushLimited(stack, command);
+        }
+
         boolean success = true;
-        for(int i = 0; i < steps && !redoStack.isEmpty(); i++) {
-            ItemAction command = redoStack.pop();
-            pushLimited(undoStack, command);
-            if(i == steps - 1) success = command.redo();
+        for(ItemAction action : uniqueActions.values()){
+            success &= action.redo();
         }
         return success;
     }

@@ -1,4 +1,4 @@
-package com.eu.habbo.habbohotel.users.cache;
+package com.eu.habbo.habbohotel.users.cache.actions;
 
 import com.eu.habbo.habbohotel.items.FurnitureType;
 import com.eu.habbo.habbohotel.rooms.FurnitureMovementError;
@@ -32,6 +32,10 @@ public class MoveItemAction implements ItemAction {
                 habbo.getHabboInfo().getUsername(), item.getRoomId(), oldPostion, oldZ, newPosition, newZ);
     }
 
+    @Override
+    public HabboItem getItem(){
+        return this.item;
+    }
 
     @Override
     public boolean redo() {
