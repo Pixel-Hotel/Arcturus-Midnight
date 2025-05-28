@@ -40,7 +40,7 @@ public class UndoRedoManager {
     private boolean handle(int steps, Deque<ItemAction> stack, boolean undo){
         Map<ItemActionKey, ItemAction> uniqueActions  = new LinkedHashMap<>();
 
-        for(int i = 0; i < steps && !stack.isEmpty(); i++) {
+        for(int i = 1; i < steps && !stack.isEmpty(); i++) {
             ItemAction command = stack.pop();
 
             ItemActionKey key = new ItemActionKey(command.getItem().getId(), command.getClass());
