@@ -27,20 +27,20 @@ public class RotateItemAction implements ItemAction{
 
     @Override
     public boolean redo() {
-        return handle(oldRotation, newRotation);
+        return handle(newRotation);
     }
 
     @Override
     public boolean undo() {
-        return handle(newRotation, oldRotation);
+        return handle(oldRotation);
     }
 
-    private boolean handle(int fromRotation, int toRotation){
+    private boolean handle(int rotation){
         Room room = habbo.getRoomUnit().getRoom();
         FurnitureMovementError code = FurnitureMovementError.NONE;
 
         if(item.getBaseItem().getType() == FurnitureType.FLOOR) {
-            room.moveFurniTo(this.item, room.getLayout().getTile(item.getX(), item.getY()), item.getRotation(), habbo, true, false, item.getZ(), true);
+            code = room.moveFurniTo(this.item, room.getLayout().getTile(item.getX(), item.getY()), rotation, habbo, true, false, item.getZ(), true);
         }
 
         else if(item.getBaseItem().getType() == FurnitureType.WALL) {

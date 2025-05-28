@@ -52,7 +52,7 @@ public class MoveItemAction implements ItemAction {
         FurnitureMovementError code = FurnitureMovementError.NONE;
 
         if(item.getBaseItem().getType() == FurnitureType.FLOOR) {
-            room.moveFurniTo(this.item, position, item.getRotation(), habbo, true, false, z, true);
+            code = room.moveFurniTo(this.item, position, item.getRotation(), habbo, true, false, z, true);
         }
 
         else if(item.getBaseItem().getType() == FurnitureType.WALL) {
