@@ -25,7 +25,7 @@ public class RedoCommand extends Command{
         }
 
         UndoRedoManager undoRedoManager = gameClient.getHabbo().getUndoRedoManager();
-        if(!undoRedoManager.canRedo(steps)){
+        if(undoRedoManager.canNotRedo(steps)){
             gameClient.getHabbo().whisper("Keine weiteren Redo-Schritte vorhanden, bzw. nicht so viele. Maximal: " + undoRedoManager.getRedoStackSize());
             return true;
         }

@@ -14,12 +14,12 @@ public class UndoRedoManager {
     public int getUndoStackSize() { return undoStack.size(); }
     public int getRedoStackSize() { return redoStack.size(); }
 
-    public boolean canUndo(int steps){
-        return !undoStack.isEmpty() && undoStack.size() >= steps;
+    public boolean canNotUndo(int steps){
+        return undoStack.isEmpty() || undoStack.size() < steps;
     }
 
-    public boolean canRedo(int steps){
-        return !redoStack.isEmpty() && redoStack.size() >= steps;
+    public boolean canNotRedo(int steps){
+        return redoStack.isEmpty() || redoStack.size() < steps;
     }
 
     public void saveAction(ItemAction command){
@@ -28,12 +28,12 @@ public class UndoRedoManager {
     }
 
     public boolean undo(int steps){
-        if(!canUndo(steps)) return false;
+        if(canNotUndo(steps)) return false;
         return handle(steps, undoStack);
     }
 
     public boolean redo(int steps){
-        if(!canRedo(steps)) return false;
+        if(canNotRedo(steps)) return false;
         return handle(steps, redoStack);
     }
 
