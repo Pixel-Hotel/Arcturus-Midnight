@@ -344,9 +344,11 @@ public class WiredHandler {
                 if (rewardReceived.type.equalsIgnoreCase("credits")) {
                     int credits = Integer.parseInt(rewardReceived.value);
                     habbo.giveCredits(credits);
+                    LOGGER.debug("Gave " + credits + " credits to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                 } else if (rewardReceived.type.equalsIgnoreCase("pixels")) {
                     int pixels = Integer.parseInt(rewardReceived.value);
                     habbo.givePixels(pixels);
+                    LOGGER.debug("Gave " + pixels + " pixels to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                 } else if (rewardReceived.type.startsWith("points")) {
                     int points = Integer.parseInt(rewardReceived.value);
                     int type = 5;
