@@ -5,7 +5,7 @@ import com.eu.habbo.habbohotel.users.cache.UndoRedoManager;
 
 public class RedoCommand extends Command{
     public RedoCommand() {
-        super("cmd_shutdown", new String[]{"redo"});
+        super("cmd_undo_redo", new String[]{"redo"});
     }
 
     @Override
