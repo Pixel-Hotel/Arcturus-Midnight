@@ -6,7 +6,7 @@ import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
-import com.eu.habbo.messages.outgoing.rooms.items.AddFloorItemComposer;
+import com.eu.habbo.messages.outgoing.inventory.InventoryUpdateItemComposer;
 
 public class PickUpItemAction implements ItemAction {
 
@@ -68,7 +68,8 @@ public class PickUpItemAction implements ItemAction {
         item.setZ(z);
         item.setExtradata(state);
         updateItem(room);
-        habbo.getClient().sendResponse(new AddFloorItemComposer(item, habbo.getHabboInfo().getUsername()));
+        //habbo.getClient().sendResponse(new AddFloorItemComposer(item, habbo.getHabboInfo().getUsername()));
+        habbo.getClient().sendResponse(new InventoryUpdateItemComposer(item));
         return true;
     }
 
