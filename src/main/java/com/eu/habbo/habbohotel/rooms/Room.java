@@ -37,6 +37,7 @@ import com.eu.habbo.habbohotel.pets.PetManager;
 import com.eu.habbo.habbohotel.pets.RideablePet;
 import com.eu.habbo.habbohotel.users.*;
 import com.eu.habbo.habbohotel.users.cache.actions.MoveItemAction;
+import com.eu.habbo.habbohotel.users.cache.actions.PickUpItemAction;
 import com.eu.habbo.habbohotel.users.cache.actions.RotateItemAction;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
@@ -669,6 +670,14 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 return;
         }
 
+        if(item.getBaseItem().getType() == FurnitureType.FLOOR) {
+            RoomTile tile = this.layout.getTile(item.getX(), item.getY());
+            picker.getUndoRedoManager().saveAction(new PickUpItemAction(picker, item, tile, item.getZ(), item.getRotation(), item.getExtradata(), ""));
+        }
+        else if(item.getBaseItem().getType() == FurnitureType.WALL) {
+            picker.getUndoRedoManager().saveAction(new PickUpItemAction(picker, item, item.getWallPosition()));
+        }
+
         this.removeHabboItem(item.getId());
         item.onPickUp(this);
         item.setRoomId(0);
@@ -697,7 +706,9 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 this.updateHabbosAt(tile.x, tile.y);
                 this.updateBotsAt(tile.x, tile.y);
             }
-        } else if (item.getBaseItem().getType() == FurnitureType.WALL) {
+
+        }
+        else if (item.getBaseItem().getType() == FurnitureType.WALL) {
             this.sendComposer(new RemoveWallItemComposer(item).compose());
         }
 
