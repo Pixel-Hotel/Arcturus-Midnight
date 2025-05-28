@@ -84,13 +84,14 @@ public class InteractionWiredHighscore extends HabboItem {
         if (room == null || !((client != null && room.hasRights(client.getHabbo())) || (objects.length >= 2 && objects[1] instanceof WiredEffectType)))
             return;
 
-        if (this.getExtradata() == null || this.getExtradata().isEmpty() || this.getExtradata().length() == 0) {
+        if (this.getExtradata() == null || this.getExtradata().isEmpty()) {
             this.setExtradata("0");
         }
 
         try {
             int state = Integer.parseInt(this.getExtradata());
             this.setExtradata(Math.abs(state - 1) + "");
+            needsUpdate(true);
             room.updateItem(this);
         } catch (Exception e) {
             LOGGER.error("Caught exception", e);
