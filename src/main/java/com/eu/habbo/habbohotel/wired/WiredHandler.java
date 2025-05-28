@@ -330,7 +330,7 @@ public class WiredHandler {
         }
         else {
             String[] data = reward.data.split("#");
-
+            LOGGER.debug("Giving reward " + reward.data + " to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
             if (data.length == 2) {
                 UserWiredRewardReceived rewardReceived = new UserWiredRewardReceived(habbo, wiredBox, data[0], data[1]);
                 if (Emulator.getPluginManager().fireEvent(rewardReceived).isCancelled()) {
