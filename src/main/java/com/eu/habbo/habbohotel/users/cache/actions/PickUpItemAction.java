@@ -60,6 +60,7 @@ public class PickUpItemAction implements ItemAction {
         Room room = habbo.getRoomUnit().getRoom();
         FurnitureMovementError code = room.placeFloorFurniAt(item, position, rotation, habbo);
         if (code != FurnitureMovementError.NONE) return false;
+        item.setRoomId(room.getId());
         item.setZ(z);
         item.setExtradata(state);
         updateItem(room);
