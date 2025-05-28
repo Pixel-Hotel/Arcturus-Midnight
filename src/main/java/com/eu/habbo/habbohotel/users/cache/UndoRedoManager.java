@@ -29,15 +29,15 @@ public class UndoRedoManager {
 
     public boolean undo(int steps){
         if(canNotUndo(steps)) return false;
-        return handle(steps, undoStack);
+        return handle(steps, undoStack, true);
     }
 
     public boolean redo(int steps){
         if(canNotRedo(steps)) return false;
-        return handle(steps, redoStack);
+        return handle(steps, redoStack, false);
     }
 
-    private boolean handle(int steps, Deque<ItemAction> stack){
+    private boolean handle(int steps, Deque<ItemAction> stack, boolean undo){
         Map<ItemActionKey, ItemAction> uniqueActions  = new LinkedHashMap<>();
 
         for(int i = 0; i < steps && !stack.isEmpty(); i++) {
@@ -50,7 +50,7 @@ public class UndoRedoManager {
 
         boolean success = true;
         for(ItemAction action : uniqueActions.values()){
-            success &= action.redo();
+            success &= undo ? action.undo() : action.redo();
         }
         return success;
     }
