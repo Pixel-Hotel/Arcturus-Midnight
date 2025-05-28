@@ -45,14 +45,12 @@ public class UndoRedoManager {
 
         Deque<ItemAction> fromStack = undo ? undoStack : redoStack;
         Deque<ItemAction> toStack = undo ? redoStack: undoStack;
-        LOGGER.debug("{}: fromStack: {} -> toStack: {}", undo ? "UNDO" : "REDO", fromStack, toStack);
+
         for(int i = 0; i < steps; i++) {
             ItemAction command = fromStack.pollLast();
             if(command == null) break;
             ItemActionKey key = new ItemActionKey(command.getItem().getId(), command.getClass());
-            LOGGER.debug("{} step {}: {} - {}",undo ? "Undoing" : "Redoing", i, command.getItem().getId(), command.getClass().getSimpleName());
             uniqueActions.put(key, command);
-            LOGGER.debug("Unique actions: {}", uniqueActions.size());
             pushLimited(toStack, command);
         }
 
