@@ -41,7 +41,7 @@ public class UndoRedoManager {
         Map<ItemActionKey, ItemAction> uniqueActions  = new LinkedHashMap<>();
 
         Deque<ItemAction> fromStack = undo ? undoStack : redoStack;
-        Deque<ItemAction> toStack = undo ? undoStack : redoStack;
+        Deque<ItemAction> toStack = undo ? redoStack: undoStack;
 
         for(int i = 0; i < steps; i++) {
             ItemAction command = fromStack.pop();
