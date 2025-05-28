@@ -308,7 +308,7 @@ public class WiredHandler {
             statement.setInt(4, Emulator.getIntUnixTimestamp());
             statement.execute();
         } catch (SQLException e) {
-            LOGGER.error("Caught SQL exception", e);
+            //LOGGER.error("Caught SQL exception", e);
         }
 
         if (reward.badge) {
@@ -330,25 +330,25 @@ public class WiredHandler {
         }
         else {
             String[] data = reward.data.split("#");
-            LOGGER.debug("Giving reward " + reward.data + " to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
+            //LOGGER.debug("Giving reward " + reward.data + " to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
             if (data.length == 2) {
                 UserWiredRewardReceived rewardReceived = new UserWiredRewardReceived(habbo, wiredBox, data[0], data[1]);
                 if (Emulator.getPluginManager().fireEvent(rewardReceived).isCancelled()) {
-                    LOGGER.debug("Reward received cancelled for " + rewardReceived.value + " by " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
+                    //.debug("Reward received cancelled for " + rewardReceived.value + " by " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                     return;
                 }
                 if (rewardReceived.value.isEmpty()) {
-                    LOGGER.debug("Reward received empty for " + rewardReceived.value + " by " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
+                    //LOGGER.debug("Reward received empty for " + rewardReceived.value + " by " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                     return;
                 }
                 if (rewardReceived.type.equalsIgnoreCase("credits")) {
                     int credits = Integer.parseInt(rewardReceived.value);
                     habbo.giveCredits(credits);
-                    LOGGER.debug("Gave " + credits + " credits to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
+                    //LOGGER.debug("Gave " + credits + " credits to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                 } else if (rewardReceived.type.equalsIgnoreCase("pixels")) {
                     int pixels = Integer.parseInt(rewardReceived.value);
                     habbo.givePixels(pixels);
-                    LOGGER.debug("Gave " + pixels + " pixels to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
+                    //LOGGER.debug("Gave " + pixels + " pixels to " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                 } else if (rewardReceived.type.startsWith("points")) {
                     int points = Integer.parseInt(rewardReceived.value);
                     int type = 5;
@@ -444,9 +444,9 @@ public class WiredHandler {
                         return tryGiveReward(habbo, wiredBox);
                     }
                 }
-                else{
+                /*else{
                     tryGiveReward(habbo, wiredBox);
-                }
+                }*/
             }
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
