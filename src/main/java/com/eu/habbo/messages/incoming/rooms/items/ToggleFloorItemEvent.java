@@ -75,9 +75,9 @@ public class ToggleFloorItemEvent extends MessageHandler {
                 this.client.sendResponse(new PetPackageComposer(item));
                 return;
             }
-
+            String oldState = item.getExtradata();
             item.onClick(this.client, room, new Object[]{state});
-            this.client.getHabbo().getUndoRedoManager().saveAction(new ToggleFloorItemAction(this.client.getHabbo(), item, String.valueOf(state), item.getExtradata()));
+            this.client.getHabbo().getUndoRedoManager().saveAction(new ToggleFloorItemAction(this.client.getHabbo(), item, oldState, item.getExtradata()));
         } catch (Exception e) {
             LOGGER.error("Caught exception", e);
         }

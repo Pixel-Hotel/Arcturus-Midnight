@@ -33,10 +33,11 @@ public class ToggleWallItemEvent extends MessageHandler {
         if (item.getBaseItem().getName().equalsIgnoreCase("poster"))
             return;
 
+        String oldState = item.getExtradata();
         item.needsUpdate(true);
         item.onClick(this.client, room, new Object[]{state});
         room.updateItem(item);
         Emulator.getThreading().run(item);
-        this.client.getHabbo().getUndoRedoManager().saveAction(new ToggleWallItemAction(this.client.getHabbo(), item, String.valueOf(state), item.getExtradata()));
+        this.client.getHabbo().getUndoRedoManager().saveAction(new ToggleWallItemAction(this.client.getHabbo(), item, oldState, item.getExtradata()));
     }
 }
