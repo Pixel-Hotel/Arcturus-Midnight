@@ -14,7 +14,7 @@ public class RedoCommand extends Command{
 
         if(params.length > 0){
             try{
-                steps = Integer.parseInt(params[1]);
+                steps = Integer.parseInt(params[0]);
                 if(steps > UndoRedoManager.MAX_STEPS) steps = UndoRedoManager.MAX_STEPS;
                 else if(steps < 1) steps = 1;
             }
