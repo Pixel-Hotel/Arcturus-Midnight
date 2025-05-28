@@ -37,6 +37,7 @@ import com.eu.habbo.habbohotel.pets.PetManager;
 import com.eu.habbo.habbohotel.pets.RideablePet;
 import com.eu.habbo.habbohotel.users.*;
 import com.eu.habbo.habbohotel.users.cache.actions.MoveItemAction;
+import com.eu.habbo.habbohotel.users.cache.actions.RotateItemAction;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredTriggerType;
 import com.eu.habbo.messages.ISerialize;
@@ -4947,7 +4948,10 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             }
         }
 
-        if(actor != null) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
+        if(actor != null){
+            if(oldLocation != tile) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
+            if(oldRotation != rotation) actor.getUndoRedoManager().saveAction(new RotateItemAction(actor, item, oldRotation, rotation));
+        }
         return FurnitureMovementError.NONE;
     }
 
