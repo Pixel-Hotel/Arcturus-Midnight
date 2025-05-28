@@ -33,7 +33,7 @@ public class UndoRedoManager {
         for(int i = 0; i < steps && !undoStack.isEmpty(); i++) {
             ItemAction command = undoStack.pop();
             pushLimited(redoStack, command);
-            success = command.undo();
+            if(i == steps - 1) success = command.undo();
         }
         return success;
     }
@@ -44,7 +44,7 @@ public class UndoRedoManager {
         for(int i = 0; i < steps && !redoStack.isEmpty(); i++) {
             ItemAction command = redoStack.pop();
             pushLimited(undoStack, command);
-            success = command.redo();
+            if(i == steps - 1) success = command.redo();
         }
         return success;
     }

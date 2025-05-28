@@ -4951,7 +4951,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         return FurnitureMovementError.NONE;
     }
 
-    public FurnitureMovementError moveFurniTo(HabboItem item, RoomTile tile, int rotation, Habbo actor, boolean sendUpdates, boolean checkForUnits, double height) {
+    public FurnitureMovementError moveFurniTo(HabboItem item, RoomTile tile, int rotation, Habbo actor, boolean sendUpdates, boolean checkForUnits, double height, boolean ignoreUndoRedo) {
         RoomTile oldLocation = this.layout.getTile(item.getX(), item.getY());
         double oldZ = item.getZ();
 
@@ -5123,7 +5123,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 }
             }
         }
-        if(actor != null) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
+        if(!ignoreUndoRedo && actor != null) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
         return FurnitureMovementError.NONE;
     }
 
