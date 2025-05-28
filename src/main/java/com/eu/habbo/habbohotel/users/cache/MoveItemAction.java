@@ -54,6 +54,6 @@ public class MoveItemAction implements ItemAction {
         else if(item.getBaseItem().getType() == FurnitureType.WALL) {
             code = room.placeWallFurniAt(item, "", habbo);
         }
-        return code != FurnitureMovementError.NONE;
+        return code == FurnitureMovementError.NONE;
     }
 }
