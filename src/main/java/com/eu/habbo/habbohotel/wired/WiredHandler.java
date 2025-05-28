@@ -440,13 +440,10 @@ public class WiredHandler {
                             }
                         }
                     }
-                    else {
-                        return tryGiveReward(habbo, wiredBox);
-                    }
                 }
-                /*else{
-                    tryGiveReward(habbo, wiredBox);
-                }*/
+
+                return tryGiveReward(habbo, wiredBox);
+
             }
         } catch (SQLException e) {
             LOGGER.error("Caught SQL exception", e);
