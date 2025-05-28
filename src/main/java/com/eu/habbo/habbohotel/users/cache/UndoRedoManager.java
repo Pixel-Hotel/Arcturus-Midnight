@@ -62,6 +62,6 @@ public class UndoRedoManager {
             stack.clear();
             stack.addAll(temp);
         }
-        stack.push(command);
+        stack.add(command);
     }
 }
