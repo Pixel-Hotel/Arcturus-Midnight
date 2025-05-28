@@ -20,6 +20,7 @@ import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboBadge;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.messages.outgoing.MessageComposer;
 import com.eu.habbo.messages.outgoing.catalog.PurchaseOKComposer;
 import com.eu.habbo.messages.outgoing.inventory.AddHabboItemComposer;
 import com.eu.habbo.messages.outgoing.inventory.InventoryRefreshComposer;
@@ -412,23 +413,8 @@ public class WiredHandler {
                             }
                         }
 
-                        if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_MINUTES) {
-                            if (Emulator.getIntUnixTimestamp() - set.getInt("timestamp") <= 60) {
-                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_MINUTE));
-                                return false;
-                            }
-                        }
-                        if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_HOURS) {
-                            if (!(Emulator.getIntUnixTimestamp() - set.getInt("timestamp") >= (3600 * wiredBox.limitationInterval))) {
-                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_HOUR));
-                                return false;
-                            }
-                        }
-                        if (wiredBox.rewardTime == WiredEffectGiveReward.LIMIT_N_DAY) {
-                            if (!(Emulator.getIntUnixTimestamp() - set.getInt("timestamp") >= (86400 * wiredBox.limitationInterval))) {
-                                habbo.getClient().sendResponse(new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY));
-                                return false;
-                            }
+                        if(!checkRewardTime(wiredBox, set.getInt("timestamp"))){
+                            habbo.getClient().sendResponse(getFailedComposer(wiredBox));
                         }
 
                     }
@@ -448,19 +434,13 @@ public class WiredHandler {
                                 return true;
                             }
                         }
-                    } else {
-                        int randomNumber = Emulator.getRandom().nextInt(101);
-
-                        int count = 0;
-                        for (WiredGiveRewardItem item : wiredBox.rewardItems) {
-                            if (randomNumber >= count && randomNumber <= (count + item.probability)) {
-                                giveReward(habbo, wiredBox, item);
-                                return true;
-                            }
-
-                            count += item.probability;
-                        }
                     }
+                    else {
+                        return tryGiveReward(habbo, wiredBox);
+                    }
+                }
+                else{
+                    tryGiveReward(habbo, wiredBox);
                 }
             }
         } catch (SQLException e) {
@@ -469,6 +449,46 @@ public class WiredHandler {
 
         return false;
 
+    }
+
+    private static MessageComposer getFailedComposer(WiredEffectGiveReward wiredBox){
+        return switch (wiredBox.rewardTime) {
+            case WiredEffectGiveReward.LIMIT_N_MINUTES -> new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_MINUTE);
+            case WiredEffectGiveReward.LIMIT_N_HOURS -> new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_HOUR);
+            case WiredEffectGiveReward.LIMIT_N_DAY -> new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY);
+            case WiredEffectGiveReward.LIMIT_N_WEEKS -> new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY);
+            case WiredEffectGiveReward.LIMIT_N_MONTHS -> new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY);
+            case WiredEffectGiveReward.LIMIT_N_YEARS -> new WiredRewardAlertComposer(WiredRewardAlertComposer.REWARD_ALREADY_RECEIVED_THIS_TODAY);
+            default -> new WiredRewardAlertComposer(WiredRewardAlertComposer.UNLUCKY_NO_REWARD);
+        };
+    }
+
+    private static boolean checkRewardTime(WiredEffectGiveReward wiredBox, int timestamp){
+        int timeDiff = Emulator.getIntUnixTimestamp() - timestamp;
+        return switch (wiredBox.rewardTime) {
+            case WiredEffectGiveReward.LIMIT_N_MINUTES -> timeDiff <= 60 * wiredBox.limitationInterval;
+            case WiredEffectGiveReward.LIMIT_N_HOURS -> timeDiff <= 3600 * wiredBox.limitationInterval;
+            case WiredEffectGiveReward.LIMIT_N_DAY -> timeDiff <= 86400 * wiredBox.limitationInterval;
+            case WiredEffectGiveReward.LIMIT_N_WEEKS -> timeDiff <= 604800 * wiredBox.limitationInterval;
+            case WiredEffectGiveReward.LIMIT_N_MONTHS -> timeDiff <= 2592000 * wiredBox.limitationInterval;
+            case WiredEffectGiveReward.LIMIT_N_YEARS -> timeDiff <= 31536000 * wiredBox.limitationInterval;
+            default -> false;
+        };
+    }
+
+    private static boolean tryGiveReward(Habbo habbo, WiredEffectGiveReward wiredBox){
+        int randomNumber = Emulator.getRandom().nextInt(101);
+
+        int count = 0;
+        for (WiredGiveRewardItem item : wiredBox.rewardItems) {
+            if (randomNumber >= count && randomNumber <= (count + item.probability)) {
+                giveReward(habbo, wiredBox, item);
+                return true;
+            }
+
+            count += item.probability;
+        }
+        return false;
     }
 
     public static void resetTimers(Room room) {
