@@ -1,16 +1,14 @@
 package com.eu.habbo.habbohotel.users.cache;
 
+import com.eu.habbo.Emulator;
 import com.eu.habbo.habbohotel.users.cache.actions.ItemAction;
 import com.eu.habbo.habbohotel.users.cache.actions.ItemActionKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 public class UndoRedoManager {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(UndoRedoManager.class);
-    public static final int MAX_STEPS = 10;
+    public static final int MAX_STEPS = Emulator.getConfig().getInt("hotel.undo.redo.max_steps", 10);
     private final Deque<ItemAction> undoStack = new ArrayDeque<>();
     private final Deque<ItemAction> redoStack = new ArrayDeque<>();
 
