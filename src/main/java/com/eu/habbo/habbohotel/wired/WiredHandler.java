@@ -333,12 +333,14 @@ public class WiredHandler {
 
             if (data.length == 2) {
                 UserWiredRewardReceived rewardReceived = new UserWiredRewardReceived(habbo, wiredBox, data[0], data[1]);
-                if (Emulator.getPluginManager().fireEvent(rewardReceived).isCancelled())
+                if (Emulator.getPluginManager().fireEvent(rewardReceived).isCancelled()) {
+                    LOGGER.debug("Reward received cancelled for " + rewardReceived.value + " by " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                     return;
-
-                if (rewardReceived.value.isEmpty())
+                }
+                if (rewardReceived.value.isEmpty()) {
+                    LOGGER.debug("Reward received empty for " + rewardReceived.value + " by " + habbo.getHabboInfo().getUsername() + " for wired item " + wiredBox.getId());
                     return;
-
+                }
                 if (rewardReceived.type.equalsIgnoreCase("credits")) {
                     int credits = Integer.parseInt(rewardReceived.value);
                     habbo.giveCredits(credits);
