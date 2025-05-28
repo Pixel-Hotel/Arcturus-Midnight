@@ -6,6 +6,7 @@ import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.users.Habbo;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.messages.outgoing.rooms.items.AddFloorItemComposer;
 
 public class PickUpItemAction implements ItemAction {
 
@@ -44,9 +45,12 @@ public class PickUpItemAction implements ItemAction {
 
     @Override
     public boolean redo() {
-        if(item.getRoomId() > 0) return false;
+        //if(item.getRoomId() > 0) return false;
         habbo.getRoomUnit().getRoom().pickUpItem(item, habbo);
+        //ServerMessage composer = item.getBaseItem().getType() == FurnitureType.FLOOR ? new RemoveFloorItemComposer(item).compose() : new RemoveWallItemComposer(item).compose();
+        //habbo.getClient().sendResponse(composer);
         return true;
+
     }
 
     @Override
@@ -64,6 +68,7 @@ public class PickUpItemAction implements ItemAction {
         item.setZ(z);
         item.setExtradata(state);
         updateItem(room);
+        habbo.getClient().sendResponse(new AddFloorItemComposer(item, habbo.getHabboInfo().getUsername()));
         return true;
     }
 
