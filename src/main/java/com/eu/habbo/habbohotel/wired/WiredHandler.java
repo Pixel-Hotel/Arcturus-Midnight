@@ -413,7 +413,7 @@ public class WiredHandler {
                             }
                         }
 
-                        if(!checkRewardTime(wiredBox, set.getInt("timestamp"))){
+                        if(checkRewardTime(wiredBox, set.getInt("timestamp"))){
                             habbo.getClient().sendResponse(getFailedComposer(wiredBox));
                         }
 
