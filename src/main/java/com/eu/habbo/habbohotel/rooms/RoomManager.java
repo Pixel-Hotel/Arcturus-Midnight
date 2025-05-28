@@ -574,6 +574,7 @@ public class RoomManager {
             habbo.getClient().sendResponse(new HotelViewComposer());
             habbo.getHabboInfo().setLoadingRoom(0);
         }
+        habbo.getUndoRedoManager().clear();
     }
 
     void openRoom(Habbo habbo, Room room, RoomTile doorLocation) {

@@ -67,4 +67,9 @@ public class UndoRedoManager {
         }
         stack.addLast(command);
     }
+
+    public void clear(){
+        undoStack.clear();
+        redoStack.clear();
+    }
 }
