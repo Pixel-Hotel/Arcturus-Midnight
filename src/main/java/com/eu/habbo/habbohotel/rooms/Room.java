@@ -4685,7 +4685,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         if (Emulator.getPluginManager().isRegistered(FurnitureBuildheightEvent.class, true)) {
             FurnitureBuildheightEvent event = Emulator.getPluginManager().fireEvent(new FurnitureBuildheightEvent(item, actor, 0.00, height));
             if (event.hasChangedHeight()) {
-                height = this.getLayout().getHeightAtSquare(tile.x, tile.y) + event.getUpdatedHeight();
+                height = event.getUpdatedHeight();
                 pluginHeight = true;
             }
         }
@@ -4865,7 +4865,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         if (Emulator.getPluginManager().isRegistered(FurnitureBuildheightEvent.class, true)) {
             FurnitureBuildheightEvent event = Emulator.getPluginManager().fireEvent(new FurnitureBuildheightEvent(item, actor, 0.00, height));
             if (event.hasChangedHeight()) {
-                height = this.getLayout().getHeightAtSquare(tile.x, tile.y) + event.getUpdatedHeight();
+                height = event.getUpdatedHeight();
                 pluginHeight = true;
             }
         }
