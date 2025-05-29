@@ -6,9 +6,9 @@ import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredEffect;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
 import com.eu.habbo.habbohotel.items.interactions.wired.interfaces.InteractionWiredMatchFurniSettings;
+import com.eu.habbo.habbohotel.rooms.FurnitureMovementError;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
-import com.eu.habbo.habbohotel.rooms.RoomTileState;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
@@ -127,21 +127,15 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         if(item == null) return false;
 
         RoomTile goalTile = room.getLayout().getTile((short) setting.x, (short) setting.y);
+        if(room.furnitureFitsAt(goalTile, item, setting.rotation, true) != FurnitureMovementError.NONE) return false;
 
-        // check if tiles are valid
-        THashSet<RoomTile> targetingTiles = room.getLayout().getTilesAt(goalTile, setting.x, setting.y, setting.rotation);
-        for(RoomTile tile : targetingTiles){
-            LOGGER.debug("Tile: " + tile.x + ", " + tile.y + " " + tile.state);
-            if(tile == null || tile.state == RoomTileState.INVALID || tile.state == RoomTileState.BLOCKED) return false;
-        }
+        THashSet<RoomTile> needUpdateTiles = room.getLayout().getTilesAt(goalTile, item.getBaseItem().getWidth(), item.getBaseItem().getLength(), setting.rotation);
 
         RoomTile currentTile = room.getLayout().getTile(item.getX(), item.getY());
-        THashSet<RoomTile> needUpdateTiles = room.getLayout().getTilesAt(currentTile, item.getX(), item.getY(), item.getRotation());
-        needUpdateTiles.addAll(targetingTiles);
+        needUpdateTiles.addAll(room.getLayout().getTilesAt(currentTile, item.getX(), item.getY(), item.getRotation()));
 
         if(this.direction){
             item.setRotation(setting.rotation);
-            //room.sendComposer(new ItemsDataUpdateComposer(Set.of(item)).compose());
         }
         if(this.position) {
             item.setX((short) setting.x);
