@@ -4960,7 +4960,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         }
 
         if(actor != null){
-            if(oldLocation != tile) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
+            if(oldLocation != tile || oldZ != item.getZ()) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
             if(oldRotation != rotation) actor.getUndoRedoManager().saveAction(new RotateItemAction(actor, item, oldRotation, rotation));
         }
         return FurnitureMovementError.NONE;
