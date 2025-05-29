@@ -131,6 +131,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         // check if tiles are valid
         THashSet<RoomTile> targetingTiles = room.getLayout().getTilesAt(goalTile, setting.x, setting.y, setting.rotation);
         for(RoomTile tile : targetingTiles){
+            LOGGER.debug("Tile: " + tile.x + ", " + tile.y + " " + tile.state);
             if(tile == null || tile.state == RoomTileState.INVALID || tile.state == RoomTileState.BLOCKED) return false;
         }
 
