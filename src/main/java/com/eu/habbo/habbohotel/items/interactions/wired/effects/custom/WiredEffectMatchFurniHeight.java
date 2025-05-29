@@ -16,6 +16,7 @@ import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredMatchFurniSetting;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
+import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
 import com.eu.habbo.messages.outgoing.rooms.items.FloorItemUpdateComposer;
 import gnu.trove.set.hash.THashSet;
 import org.slf4j.Logger;
@@ -61,16 +62,16 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             if(this.direction || this.position) needUpdate = this.handlePositionAndRotation(setting, item, room) || needUpdate;
             if(this.height) needUpdate = this.handleHeight(setting, item) || needUpdate;
 
-            updateItem(item, room, needUpdate);
-            room.sendComposer(new FloorItemUpdateComposer(item).compose());
-            /*if(!animation){
 
+            if(!animation){
+                updateItem(item, room, needUpdate);
+                room.sendComposer(new FloorItemUpdateComposer(item).compose());
             }
             else {
-                //RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
-
-                //room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
-            }*/
+                RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
+                room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
+                room.sendComposer(new FloorItemUpdateComposer(item).compose());
+            }
 
             /*if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
                 if (!setting.state.equals(" ") && !item.getExtradata().equals(setting.state)) {
