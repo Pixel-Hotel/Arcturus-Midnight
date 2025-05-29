@@ -16,8 +16,7 @@ import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.habbohotel.wired.WiredMatchFurniSetting;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
-import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
-import com.eu.habbo.messages.outgoing.rooms.items.ItemsDataUpdateComposer;
+import com.eu.habbo.messages.outgoing.rooms.items.FloorItemUpdateComposer;
 import gnu.trove.set.hash.THashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implements InteractionWiredMatchFurniSettings {
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredEffectMatchFurniHeight.class);
@@ -63,16 +61,16 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             if(this.direction || this.position) needUpdate = this.handlePositionAndRotation(setting, item, room) || needUpdate;
             if(this.height) needUpdate = this.handleHeight(setting, item) || needUpdate;
 
+            updateItem(item, room, needUpdate);
+            room.sendComposer(new FloorItemUpdateComposer(item).compose());
+            /*if(!animation){
 
-            if(!animation){
-                item.needsUpdate(needUpdate);
-                room.updateItem(item);
-                Emulator.getThreading().run(item);
             }
             else {
-                RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
-                room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
-            }
+                //RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
+
+                //room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
+            }*/
 
             /*if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
                 if (!setting.state.equals(" ") && !item.getExtradata().equals(setting.state)) {
@@ -118,6 +116,12 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         return true;
     }
 
+    private void updateItem(HabboItem item, Room room, boolean needUpdate){
+        item.needsUpdate(needUpdate);
+        room.updateItem(item);
+        Emulator.getThreading().run(item);
+    }
+
     private boolean handlePositionAndRotation(WiredMatchFurniSetting setting, HabboItem item, Room room){
         if(item == null) return false;
 
@@ -135,7 +139,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
 
         if(this.direction){
             item.setRotation(setting.rotation);
-            room.sendComposer(new ItemsDataUpdateComposer(Set.of(item)).compose());
+            //room.sendComposer(new ItemsDataUpdateComposer(Set.of(item)).compose());
         }
         if(this.position) {
             item.setX((short) setting.x);
