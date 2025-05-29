@@ -201,7 +201,6 @@ public abstract class HabboItem implements Runnable, IEventTriggers {
 
     public void setZ(double z) {
         if (z > 9999 || z < -9999) return;
-        if(z > Room.MAXIMUM_FURNI_HEIGHT) z = Room.MAXIMUM_FURNI_HEIGHT;
         this.z = z;
     }
 
