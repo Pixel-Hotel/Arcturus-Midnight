@@ -174,8 +174,6 @@ public class RoomSpecialTypes {
         }
     }
 
-
-
     public SpecialItemSet<InteractionInvisibleItem> getInvisibleItems() {
         return invisibleItems;
     }
