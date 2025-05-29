@@ -17,6 +17,7 @@ import com.eu.habbo.habbohotel.wired.WiredMatchFurniSetting;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
 import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
+import com.eu.habbo.messages.outgoing.rooms.items.ItemsDataUpdateComposer;
 import gnu.trove.set.hash.THashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implements InteractionWiredMatchFurniSettings {
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredEffectMatchFurniHeight.class);
@@ -132,7 +133,10 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         THashSet<RoomTile> needUpdateTiles = room.getLayout().getTilesAt(currentTile, item.getX(), item.getY(), item.getRotation());
         needUpdateTiles.addAll(targetingTiles);
 
-        if(this.direction) item.setRotation(setting.rotation);
+        if(this.direction){
+            item.setRotation(setting.rotation);
+            room.sendComposer(new ItemsDataUpdateComposer(Set.of(item)).compose());
+        }
         if(this.position) {
             item.setX((short) setting.x);
             item.setY((short) setting.y);
@@ -175,34 +179,6 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             this.settings.clear();
             this.settings.addAll(data.items);
         }
-        else {
-            String[] data = set.getString("wired_data").split(":");
-
-            int itemCount = Integer.parseInt(data[0]);
-
-            String[] items = data[1].split(Pattern.quote(";"));
-
-            for (String item : items) {
-                try {
-
-                    String[] stuff = item.split(Pattern.quote("-"));
-
-                    if (stuff.length >= 5) {
-                        this.settings.add(new WiredMatchFurniSetting(stuff));
-                    }
-
-                } catch (Exception e) {
-                    LOGGER.error("Caught exception", e);
-                }
-            }
-
-            this.state = data[2].equals("1");
-            this.direction = data[3].equals("1");
-            this.position = data[4].equals("1");
-            this.height = true;
-            this.setDelay(Integer.parseInt(data[5]));
-            this.needsUpdate(true);
-        }
     }
 
     @Override
@@ -234,11 +210,11 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getId());
         message.appendString("");
-        message.appendInt(3); //TODO change to 4 if package is ready
+        message.appendInt(4);
         message.appendInt(this.state ? 1 : 0);
         message.appendInt(this.direction ? 1 : 0);
         message.appendInt(this.position ? 1 : 0);
-        //TODO: message.appenInt(this.height ? 1 : 0); //if the package is ready
+        message.appendInt(this.height ? 1 : 0);
         message.appendInt(0);
         message.appendInt(this.getType().code);
         message.appendInt(this.getDelay());
@@ -247,7 +223,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
 
     @Override
     public boolean saveData(WiredSettings settings, GameClient gameClient) throws WiredSaveException {
-        if(settings.getIntParams().length < 3) throw new WiredSaveException("Invalid data");
+        if(settings.getIntParams().length < 4) throw new WiredSaveException("Invalid data");
 
         Room room = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId());
 
@@ -280,7 +256,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         this.state = settings.getIntParams()[0] == 1;
         this.direction = settings.getIntParams()[1] == 1;
         this.position = settings.getIntParams()[2] == 1;
-        this.height = true; //TODO when package is ready change it to: settings.getIntParams()[3] == 1;
+        this.height = settings.getIntParams()[3] == 1;
         this.settings.clear();
         this.settings.addAll(newSettings);
         this.setDelay(delay);
