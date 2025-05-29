@@ -113,10 +113,10 @@ public class RoomLayout {
                 short height = 0;
                 if (square.equalsIgnoreCase("x")) {
                     state = RoomTileState.INVALID;
-                } else {
+                } else if(!square.isEmpty()){
                     if (Emulator.isNumeric(square)) {
                         height = Short.parseShort(square);
-                    } else {
+                    } else{
                         height = (short) (10 + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(square.toUpperCase()));
                     }
                 }
