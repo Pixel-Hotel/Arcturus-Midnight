@@ -4786,6 +4786,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     public FurnitureMovementError moveFurniTo(HabboItem item, RoomTile tile, int rotation, Habbo actor, boolean sendUpdates, boolean checkForUnits) {
         RoomTile oldLocation = this.layout.getTile(item.getX(), item.getY());
         double oldZ = item.getZ();
+        String oldWallPosition = item.getWallPosition();
 
         boolean pluginHelper = false;
         if (Emulator.getPluginManager().isRegistered(FurnitureMovedEvent.class, true)) {
@@ -4960,7 +4961,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
         }
 
         if(actor != null){
-            if(oldLocation != tile || oldZ != item.getZ()) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
+            if(oldLocation != tile || oldZ != item.getZ()) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ,oldWallPosition, item.getWallPosition()));
             if(oldRotation != rotation) actor.getUndoRedoManager().saveAction(new RotateItemAction(actor, item, oldRotation, rotation));
         }
         return FurnitureMovementError.NONE;
@@ -4969,6 +4970,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
     public FurnitureMovementError moveFurniTo(HabboItem item, RoomTile tile, int rotation, Habbo actor, boolean sendUpdates, boolean checkForUnits, double height, boolean ignoreUndoRedo) {
         RoomTile oldLocation = this.layout.getTile(item.getX(), item.getY());
         double oldZ = item.getZ();
+        String oldWallPosition = item.getWallPosition();
 
         boolean pluginHelper = false;
         if (Emulator.getPluginManager().isRegistered(FurnitureMovedEvent.class, true)) {
@@ -5097,10 +5099,6 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
             item.setZ(tile.z);
             item.setExtradata("" + item.getZ() * 100);
         }
-        if (item.getZ() > MAXIMUM_FURNI_HEIGHT) {
-            item.setZ(MAXIMUM_FURNI_HEIGHT);
-        }
-
 
         //Update Furniture
         item.onMove(this, oldLocation, tile);
@@ -5138,7 +5136,7 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 }
             }
         }
-        if(!ignoreUndoRedo && actor != null) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ));
+        if(!ignoreUndoRedo && actor != null) actor.getUndoRedoManager().saveAction(new MoveItemAction(actor, item, oldLocation, tile, oldZ, oldWallPosition, item.getWallPosition()));
         return FurnitureMovementError.NONE;
     }
 

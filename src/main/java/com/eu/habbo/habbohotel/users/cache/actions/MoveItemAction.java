@@ -19,14 +19,18 @@ public class MoveItemAction implements ItemAction {
     private final RoomTile newPosition;
     private final double oldZ;
     private final double newZ;
+    private final String oldWallPosition;
+    private final String newWallPosition;
 
-    public MoveItemAction(Habbo habbo, HabboItem item, RoomTile oldPostion, RoomTile newPosition, double z) {
+    public MoveItemAction(Habbo habbo, HabboItem item, RoomTile oldPostion, RoomTile newPosition, double z, String oldWallPosition, String newWallPosition) {
         this.habbo = habbo;
         this.item = item;
         this.oldPostion = oldPostion;
         this.newPosition = newPosition;
         oldZ = z;
         newZ = item.getZ();
+        this.oldWallPosition = oldWallPosition;
+        this.newWallPosition = newWallPosition;
 
         LOGGER.debug("User: {} moved item: {} from position: {} z: {} to position: {} z: {}",
                 habbo.getHabboInfo().getUsername(), item.getRoomId(), oldPostion, oldZ, newPosition, newZ);
@@ -39,15 +43,15 @@ public class MoveItemAction implements ItemAction {
 
     @Override
     public boolean redo() {
-        return handle(newPosition, newZ);
+        return handle(newPosition, newZ, newWallPosition);
     }
 
     @Override
     public boolean undo() {
-        return handle(oldPostion, oldZ);
+        return handle(oldPostion, oldZ, oldWallPosition);
     }
 
-    private boolean handle(RoomTile position, double z){
+    private boolean handle(RoomTile position, double z, String wallPosition){
         Room room = habbo.getRoomUnit().getRoom();
         FurnitureMovementError code = FurnitureMovementError.NONE;
 
@@ -56,7 +60,7 @@ public class MoveItemAction implements ItemAction {
         }
 
         else if(item.getBaseItem().getType() == FurnitureType.WALL) {
-            code = room.placeWallFurniAt(item, "", habbo);
+            code = room.placeWallFurniAt(item, wallPosition, habbo);
         }
         return code == FurnitureMovementError.NONE;
     }
