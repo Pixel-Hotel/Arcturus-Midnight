@@ -6,7 +6,10 @@ import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredEffect;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
 import com.eu.habbo.habbohotel.items.interactions.wired.interfaces.InteractionWiredMatchFurniSettings;
-import com.eu.habbo.habbohotel.rooms.*;
+import com.eu.habbo.habbohotel.rooms.Room;
+import com.eu.habbo.habbohotel.rooms.RoomTile;
+import com.eu.habbo.habbohotel.rooms.RoomTileState;
+import com.eu.habbo.habbohotel.rooms.RoomUnit;
 import com.eu.habbo.habbohotel.users.HabboItem;
 import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
@@ -34,6 +37,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
     private boolean direction = false;
     private boolean position = false;
     private boolean height = false;
+    private final boolean animation = false;
 
     public WiredEffectMatchFurniHeight(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -48,14 +52,28 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
     @Override
     public boolean execute(RoomUnit roomUnit, Room room, Object[] stuff) {
 
-        if(this.settings.isEmpty())
-            return true;
-
         for (WiredMatchFurniSetting setting : this.settings) {
             HabboItem item = room.getHabboItem(setting.item_id);
             if (item == null) continue;
 
-            if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
+            RoomTile oldLocation = room.getLayout().getTile(item.getX(), item.getY());
+            boolean needUpdate = false;
+            if(this.state) needUpdate = this.handleState(setting, item);
+            if(this.direction || this.position) needUpdate = this.handlePositionAndRotation(setting, item, room) || needUpdate;
+            if(this.height) needUpdate = this.handleHeight(setting, item) || needUpdate;
+
+
+            if(!animation){
+                item.needsUpdate(needUpdate);
+                room.updateItem(item);
+                Emulator.getThreading().run(item);
+            }
+            else {
+                RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
+                room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
+            }
+
+            /*if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
                 if (!setting.state.equals(" ") && !item.getExtradata().equals(setting.state)) {
                     item.setExtradata(setting.state);
                     room.updateItemState(item);
@@ -66,9 +84,12 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
 
             if(this.direction && !this.position) {
                 if(item.getRotation() != setting.rotation && room.furnitureFitsAt(currentLocation, item, setting.rotation, false) == FurnitureMovementError.NONE) {
-                    room.moveFurniTo(item, currentLocation, setting.rotation, null, true);
+                    item.setRotation(setting.rotation);
+                    //room.moveFurniTo(item, currentLocation, setting.rotation, null, true);
                 }
             }
+
+            if(!this.directio)
             else if(this.position) {
                 RoomTile newLocation = room.getLayout().getTile((short) setting.x, (short) setting.y);
                 // valid tile
@@ -90,9 +111,47 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
                     item.setZ(setting.z);
                     item.needsUpdate(true);
                 }
-            }
+            }*/
         }
 
+        return true;
+    }
+
+    private boolean handlePositionAndRotation(WiredMatchFurniSetting setting, HabboItem item, Room room){
+        if(item == null) return false;
+
+        RoomTile goalTile = room.getLayout().getTile((short) setting.x, (short) setting.y);
+
+        // check if tiles are valid
+        THashSet<RoomTile> targetingTiles = room.getLayout().getTilesAt(goalTile, setting.x, setting.y, setting.rotation);
+        for(RoomTile tile : targetingTiles){
+            if(tile == null || tile.state == RoomTileState.INVALID) return false;
+        }
+
+        RoomTile currentTile = room.getLayout().getTile(item.getX(), item.getY());
+        THashSet<RoomTile> needUpdateTiles = room.getLayout().getTilesAt(currentTile, item.getX(), item.getY(), item.getRotation());
+        needUpdateTiles.addAll(targetingTiles);
+
+        if(this.direction) item.setRotation(setting.rotation);
+        if(this.position) {
+            item.setX((short) setting.x);
+            item.setY((short) setting.y);
+        }
+
+        room.updateTiles(needUpdateTiles);
+
+        return this.direction || this.position;
+    }
+
+    private boolean handleState(WiredMatchFurniSetting setting, HabboItem item){
+        if(item == null || !item.allowWiredResetState()) return false;
+        item.setExtradata(setting.state);
+        return true;
+    }
+
+    private boolean handleHeight(WiredMatchFurniSetting setting, HabboItem item){
+        if(item == null) return false;
+        item.setZ(setting.z);
         return true;
     }
 
