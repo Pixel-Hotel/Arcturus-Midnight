@@ -70,7 +70,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             else {
                 RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
                 room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
-                Emulator.getThreading().run(() -> room.sendComposer(new FloorItemUpdateComposer(item).compose()), 500);
+                Emulator.getThreading().run(() -> room.sendComposer(new FloorItemUpdateComposer(item).compose()), 1500);
             }
 
             /*if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
@@ -131,7 +131,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         // check if tiles are valid
         THashSet<RoomTile> targetingTiles = room.getLayout().getTilesAt(goalTile, setting.x, setting.y, setting.rotation);
         for(RoomTile tile : targetingTiles){
-            if(tile == null || tile.state == RoomTileState.INVALID) return false;
+            if(tile == null || tile.state == RoomTileState.INVALID || tile.state == RoomTileState.BLOCKED) return false;
         }
 
         RoomTile currentTile = room.getLayout().getTile(item.getX(), item.getY());
