@@ -113,7 +113,7 @@ public class RoomLayout {
                 short height = 0;
                 if (square.equalsIgnoreCase("x")) {
                     state = RoomTileState.INVALID;
-                } else if(!square.isEmpty()){
+                } else {
                     if (Emulator.isNumeric(square)) {
                         height = Short.parseShort(square);
                     } else{
