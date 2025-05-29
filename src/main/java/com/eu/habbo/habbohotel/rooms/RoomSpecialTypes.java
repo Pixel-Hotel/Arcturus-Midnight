@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 
 public class RoomSpecialTypes {
@@ -172,6 +173,111 @@ public class RoomSpecialTypes {
         } else if (item instanceof InteractionRollerSpeedController speedController){
             this.setRollerSpeedController(speedController);
         }
+    }
+    public void handleRemoveItem(HabboItem item){
+        if (item instanceof ICycleable) {
+            this.removeCycleTask((ICycleable) item);
+        }
+
+        if (item instanceof InteractionBattleBanzaiTeleporter) {
+            this.removeBanzaiTeleporter((InteractionBattleBanzaiTeleporter) item);
+        } else if (item instanceof InteractionWiredTrigger) {
+            this.removeTrigger((InteractionWiredTrigger) item);
+        } else if (item instanceof InteractionWiredEffect) {
+            this.removeEffect((InteractionWiredEffect) item);
+        } else if (item instanceof InteractionWiredCondition) {
+            this.removeCondition((InteractionWiredCondition) item);
+        } else if (item instanceof InteractionWiredExtra) {
+            this.removeExtra((InteractionWiredExtra) item);
+        } else if (item instanceof InteractionRoller) {
+            this.removeRoller((InteractionRoller) item);
+        } else if (item instanceof InteractionGameScoreboard) {
+            this.removeScoreboard((InteractionGameScoreboard) item);
+        } else if (item instanceof InteractionGameGate) {
+            this.removeGameGate((InteractionGameGate) item);
+        } else if (item instanceof InteractionGameTimer) {
+            this.removeGameTimer((InteractionGameTimer) item);
+        } else if (item instanceof InteractionFreezeExitTile) {
+            this.removeFreezeExitTile((InteractionFreezeExitTile) item);
+        } else if (item instanceof InteractionNest) {
+            this.removeNest((InteractionNest) item);
+        } else if (item instanceof InteractionPetDrink) {
+            this.removePetDrink((InteractionPetDrink) item);
+        } else if (item instanceof InteractionPetFood) {
+            this.removePetFood((InteractionPetFood) item);
+        } else if (item instanceof InteractionMoodLight) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionPyramid) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionMusicDisc) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionBattleBanzaiSphere) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionTalkingFurniture) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionWaterItem) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionWater) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionMuteArea) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionTagPole) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionTagField) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionJukeBox) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionPetBreedingNest) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionBlackHole) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionWiredHighscore) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionStickyPole) {
+            this.removeUndefined(item);
+        } else if (item instanceof WiredBlob) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionTent) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionSnowboardSlope) {
+            this.removeUndefined(item);
+        } else if (item instanceof InteractionInvisibleItem specialItem) {
+            this.getInvisibleItems().remove(specialItem);
+        } else if (item instanceof InteractionInvisibleItemController) {
+            this.removeInvisibleItemController();
+        } else if (item instanceof InteractionWiredDisabler) {
+            this.removeWiredDisabler();
+        } else if (item instanceof InteractionHanditemBlocker) {
+            this.removeHanditemBlocker();
+        } else if (item instanceof InteractionRollerSpeedController) {
+            this.removeRollerSpeedController();
+        }
+    }
+    public HabboItem getItem(int id){
+        List<Supplier<HabboItem>> suppliers = List.of(
+                () -> getBanzaiTeleporter(id),
+                () -> getTrigger(id),
+                () -> getEffect(id),
+                () -> getCondition(id),
+                () -> getGameGate(id),
+                () -> getGameScorebord(id),
+                () -> getGameTimer(id),
+                () -> getFreezeExitTiles().get(id),
+                () -> getRoller(id),
+                () -> getNest(id),
+                () -> getPetDrink(id),
+                () -> getInvisibleItems().get(id),
+                this::getInvisibleItemController,
+                this::getWiredDisabler,
+                this::getHanditemBlocker,
+                this::getRollerSpeedController
+        );
+
+        for(Supplier<HabboItem> supplier : suppliers){
+            HabboItem result = supplier.get();
+            if(result != null) return result;
+        }
+        return null;
     }
 
     public SpecialItemSet<InteractionInvisibleItem> getInvisibleItems() {
