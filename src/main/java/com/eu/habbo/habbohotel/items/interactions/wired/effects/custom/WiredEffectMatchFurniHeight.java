@@ -37,7 +37,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
     private boolean direction = false;
     private boolean position = false;
     private boolean height = false;
-    private final boolean animation = false;
+    private final boolean animation = true;
 
     public WiredEffectMatchFurniHeight(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
