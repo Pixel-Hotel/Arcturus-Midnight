@@ -1,6 +1,7 @@
 package com.eu.habbo.habbohotel.rooms;
 
 import com.eu.habbo.Emulator;
+import com.eu.habbo.habbohotel.users.HabboItem;
 import gnu.trove.set.hash.THashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,9 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class RoomLayout {
@@ -31,7 +30,7 @@ public class RoomLayout {
     private int mapSizeY;
     private RoomTile[][] roomTiles;
     private RoomTile doorTile;
-    private Room room;
+    private final Room room;
 
     public RoomLayout(ResultSet set, Room room) throws SQLException {
         this.room = room;
@@ -115,9 +114,7 @@ public class RoomLayout {
                 if (square.equalsIgnoreCase("x")) {
                     state = RoomTileState.INVALID;
                 } else {
-                    if (square.isEmpty()) {
-                        height = 0;
-                    } else if (Emulator.isNumeric(square)) {
+                    if (Emulator.isNumeric(square)) {
                         height = Short.parseShort(square);
                     } else {
                         height = (short) (10 + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(square.toUpperCase()));
@@ -293,7 +290,7 @@ public class RoomLayout {
 
                 if (roomUnit.canOverrideTile(currentAdj)) {
                     currentAdj.setPrevious(current);
-                    currentAdj.sethCosts(this.findTile(openList, newTile.x, newTile.y));
+                    currentAdj.sethCosts(Objects.requireNonNull(this.findTile(openList, newTile.x, newTile.y)));
                     currentAdj.setgCosts(current);
                     openList.add(currentAdj);
                     continue;
@@ -321,7 +318,7 @@ public class RoomLayout {
 
                 if (!openList.contains(currentAdj)) {
                     currentAdj.setPrevious(current);
-                    currentAdj.sethCosts(this.findTile(openList, newTile.x, newTile.y));
+                    currentAdj.sethCosts(Objects.requireNonNull(this.findTile(openList, newTile.x, newTile.y)));
                     currentAdj.setgCosts(current);
                     openList.add(currentAdj);
                 } else if (currentAdj.getgCosts() > currentAdj.calculategCosts(current)) {
@@ -391,8 +388,7 @@ public class RoomLayout {
             if (this.canWalkOn(temp, unit)) {
                 if (temp.state != RoomTileState.SIT || nextTile.getStackHeight() - node.getStackHeight() <= 2.0) {
                     temp.isDiagonally(false);
-                    if (!adj.contains(temp))
-                        adj.add(temp);
+                    adj.add(temp);
                 }
             }
         }
@@ -539,8 +535,8 @@ public class RoomLayout {
         short y = tile.y;
 
         for (int i = 0; i <= offset; i++) {
-            x += offsetX;
-            y += offsetY;
+            x += (short) offsetX;
+            y += (short) offsetY;
         }
 
         return this.getTile(x, y);
@@ -548,9 +544,8 @@ public class RoomLayout {
 
     public List<RoomTile> getTilesInFront(RoomTile tile, int rotation, int amount) {
         List<RoomTile> tiles = new ArrayList<>(amount);
-        RoomTile previous = tile;
         for (int i = 0; i < amount; i++) {
-            RoomTile t = this.getTileInFront(previous, rotation, i);
+            RoomTile t = this.getTileInFront(tile, rotation, i);
 
             if (t != null) {
                 tiles.add(t);
@@ -631,13 +626,21 @@ public class RoomLayout {
                 }
             } else if (rotation == 1 || rotation == 3 || rotation == 5 || rotation == 7) {
                 RoomTile t = this.getTile(tile.x, tile.y);
-                if (t == null || t.getState() == RoomTileState.INVALID) {
-                    return false;
-                }
+                return t != null && t.getState() != RoomTileState.INVALID;
             }
         }
 
         return true;
+    }
+
+    public THashSet<RoomTile> getTilesAt(RoomTile tile, HabboItem item) {
+        if(item == null) return new THashSet<>(0);
+        return getTilesAt(tile, item.getBaseItem().getWidth(), item.getBaseItem().getLength(), item.getRotation());
+
+    }
+    public THashSet<RoomTile> getTilesAt(RoomTile tile, HabboItem item, int rotation) {
+        if(item == null) return new THashSet<>(0);
+        return getTilesAt(tile, item.getBaseItem().getWidth(), item.getBaseItem().getLength(), rotation);
     }
 
     public THashSet<RoomTile> getTilesAt(RoomTile tile, int width, int length, int rotation) {
