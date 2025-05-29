@@ -69,49 +69,14 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             }
             else {
                 RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
-                room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
-                Emulator.getThreading().run(() -> room.sendComposer(new FloorItemUpdateComposer(item).compose()), 1500);
+                if(this.position) {
+                    room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
+                    Emulator.getThreading().run(item);
+                }
+                if(this.direction)
+                    Emulator.getThreading().run(() -> room.sendComposer(new FloorItemUpdateComposer(item).compose()), 1100);
             }
 
-            /*if (this.state && (this.checkForWiredResetPermission && item.allowWiredResetState())) {
-                if (!setting.state.equals(" ") && !item.getExtradata().equals(setting.state)) {
-                    item.setExtradata(setting.state);
-                    room.updateItemState(item);
-                }
-            }
-
-            RoomTile currentLocation = room.getLayout().getTile(item.getX(), item.getY());
-
-            if(this.direction && !this.position) {
-                if(item.getRotation() != setting.rotation && room.furnitureFitsAt(currentLocation, item, setting.rotation, false) == FurnitureMovementError.NONE) {
-                    item.setRotation(setting.rotation);
-                    //room.moveFurniTo(item, currentLocation, setting.rotation, null, true);
-                }
-            }
-
-            if(!this.directio)
-            else if(this.position) {
-                RoomTile newLocation = room.getLayout().getTile((short) setting.x, (short) setting.y);
-                // valid tile
-                if(newLocation == null || newLocation.state == RoomTileState.INVALID) continue;
-
-                int newRotation = this.direction ? setting.rotation : item.getRotation();
-
-                // item doesn't need to be rotated or moved
-                if(newRotation == item.getRotation() && ((!height && newLocation == currentLocation) ||(height && item.getZ() == setting.z))) continue;
-
-                //item can fit at location
-                if(room.furnitureFitsAt(newLocation, item, newRotation, true) != FurnitureMovementError.NONE) continue;
-
-                boolean slideAnimation = !this.direction || item.getRotation() == setting.rotation;
-                if(room.moveFurniTo(item, newLocation, newRotation, null, !slideAnimation) != FurnitureMovementError.NONE) continue;
-                if(slideAnimation) {
-                    room.sendComposer(new FloorItemOnRollerComposer(item, null, currentLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
-                } else if(this.height) {
-                    item.setZ(setting.z);
-                    item.needsUpdate(true);
-                }
-            }*/
         }
 
         return true;
