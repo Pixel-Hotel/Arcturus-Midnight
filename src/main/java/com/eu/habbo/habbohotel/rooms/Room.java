@@ -1567,8 +1567,6 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
 
                             if (newRoller == null || topItem == newRoller) {
                                 List<HabboItem> sortedItems = new ArrayList<>(itemsOnRoller);
-                                //sortedItems.sort(Comparator.comparingDouble(HabboItem::getZ).reversed());
-
                                 sortedItems.sort((o1, o2) -> o1.getZ() > o2.getZ() ? -1 : 1);
 
                                 for (HabboItem item : sortedItems) {
