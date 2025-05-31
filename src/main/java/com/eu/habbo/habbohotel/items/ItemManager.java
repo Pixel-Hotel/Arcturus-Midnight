@@ -54,6 +54,7 @@ import com.eu.habbo.habbohotel.items.interactions.totems.InteractionTotemPlanet;
 import com.eu.habbo.habbohotel.items.interactions.wired.conditions.*;
 import com.eu.habbo.habbohotel.items.interactions.wired.effects.*;
 import com.eu.habbo.habbohotel.items.interactions.wired.effects.custom.WiredEffectMatchFurniHeight;
+import com.eu.habbo.habbohotel.items.interactions.wired.effects.custom.WiredEffectRelativeFurniMovement;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredBlob;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraOrEval;
 import com.eu.habbo.habbohotel.items.interactions.wired.extra.WiredExtraRandom;
@@ -235,6 +236,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_act_reset_timers", WiredEffectResetTimers.class));
         this.interactionsList.add(new ItemInteraction("wf_act_match_to_sshot", WiredEffectMatchFurni.class));
         addInteraction("wf_act_match_to_sshot_pixel", WiredEffectMatchFurniHeight.class);
+        addInteraction("wf_act_rel_mov", WiredEffectRelativeFurniMovement.class);
         this.interactionsList.add(new ItemInteraction("wf_act_move_rotate", WiredEffectMoveRotateFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_give_score", WiredEffectGiveScore.class));
         this.interactionsList.add(new ItemInteraction("wf_act_show_message", WiredEffectWhisper.class));

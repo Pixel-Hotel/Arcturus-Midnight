@@ -31,7 +31,7 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
     private final THashSet<HabboItem> items = new THashSet<>(WiredHandler.MAXIMUM_FURNI_SELECTION / 2);
     private int direction;
     private int rotation;
-    private THashSet<HabboItem> itemCooldowns;
+    private final THashSet<HabboItem> itemCooldowns;
 
     public WiredEffectMoveRotateFurni(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
@@ -198,7 +198,7 @@ public class WiredEffectMoveRotateFurni extends InteractionWiredEffect implement
         this.rotation = settings.getIntParams()[1];
 
         int count = settings.getFurniIds().length;
-        if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count", 5)) return false;
+        if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count", WiredHandler.MAXIMUM_FURNI_SELECTION)) return false;
 
         this.items.clear();
         for (int i = 0; i < count; i++) {
