@@ -13,6 +13,7 @@ import com.eu.habbo.habbohotel.wired.WiredEffectType;
 import com.eu.habbo.habbohotel.wired.WiredHandler;
 import com.eu.habbo.messages.ServerMessage;
 import com.eu.habbo.messages.incoming.wired.WiredSaveException;
+import com.eu.habbo.messages.outgoing.rooms.items.FloorItemOnRollerComposer;
 import gnu.trove.set.hash.THashSet;
 
 import java.sql.ResultSet;
@@ -78,7 +79,8 @@ public class WiredEffectRelativeFurniMovement extends InteractionWiredEffect {
             short positionY = (short) (item.getY() + (directionY ? -distanceY : distanceY));
 
             RoomTile tile = room.getLayout().getTile(positionX, positionY);
-            room.moveFurniTo(item, tile, item.getRotation(), null, true, true);
+            room.sendComposer(new FloorItemOnRollerComposer(item, null, tile, tile.getStackHeight() - item.getZ(), room).compose());
+            //room.moveFurniTo(item, tile, item.getRotation(), null, true, true);
         }
         return false;
     }
