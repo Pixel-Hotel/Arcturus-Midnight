@@ -74,8 +74,8 @@ public class WiredEffectRelativeFurniMovement extends InteractionWiredEffect {
     public boolean execute(RoomUnit roomUnit, Room room, Object[] stuff) {
 
         for(HabboItem item : this.items){
-            short positionX = (short) (item.getX() + (directionX ? distanceX : -distanceX));
-            short positionY = (short) (item.getY() + (directionY ? distanceY : -distanceY));
+            short positionX = (short) (item.getX() + (directionX ? -distanceX : distanceX));
+            short positionY = (short) (item.getY() + (directionY ? -distanceY : distanceY));
 
             RoomTile tile = room.getLayout().getTile(positionX, positionY);
             room.moveFurniTo(item, tile, item.getRotation(), null, true, true);
