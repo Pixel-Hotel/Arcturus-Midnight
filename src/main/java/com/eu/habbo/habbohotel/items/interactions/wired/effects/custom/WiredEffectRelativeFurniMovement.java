@@ -172,6 +172,7 @@ public class WiredEffectRelativeFurniMovement extends InteractionWiredEffect {
         short distanceX = 0;
         boolean directionY = false;
         short distanceY = 0;
+        setDelay(0);
     }
 
     static class JsonData {

@@ -62,9 +62,9 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             if(this.direction || this.position) needUpdate = this.handlePositionAndRotation(setting, item, room) || needUpdate;
             if(this.height) needUpdate = this.handleHeight(setting, item) || needUpdate;
 
-
+            if(!needUpdate) continue;
             if(!animation){
-                updateItem(item, room, needUpdate);
+                updateItem(item, room);
                 room.sendComposer(new FloorItemUpdateComposer(item).compose());
             }
             else {
@@ -82,8 +82,8 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
         return true;
     }
 
-    private void updateItem(HabboItem item, Room room, boolean needUpdate){
-        item.needsUpdate(needUpdate);
+    private void updateItem(HabboItem item, Room room){
+        item.needsUpdate(true);
         room.updateItem(item);
         Emulator.getThreading().run(item);
     }
