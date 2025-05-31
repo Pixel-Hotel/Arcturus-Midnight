@@ -5,6 +5,7 @@ import com.eu.habbo.habbohotel.gameclients.GameClient;
 import com.eu.habbo.habbohotel.items.Item;
 import com.eu.habbo.habbohotel.items.interactions.InteractionWiredEffect;
 import com.eu.habbo.habbohotel.items.interactions.wired.WiredSettings;
+import com.eu.habbo.habbohotel.rooms.FurnitureMovementError;
 import com.eu.habbo.habbohotel.rooms.Room;
 import com.eu.habbo.habbohotel.rooms.RoomTile;
 import com.eu.habbo.habbohotel.rooms.RoomUnit;
@@ -79,6 +80,7 @@ public class WiredEffectRelativeFurniMovement extends InteractionWiredEffect {
             short positionY = (short) (item.getY() + (directionY ? -distanceY : distanceY));
 
             RoomTile tile = room.getLayout().getTile(positionX, positionY);
+            if(room.furnitureFitsAt(tile, item, item.getRotation(), true) != FurnitureMovementError.NONE) continue;
             room.sendComposer(new FloorItemOnRollerComposer(item, null, tile, tile.getStackHeight() - item.getZ(), room).compose());
             //room.moveFurniTo(item, tile, item.getRotation(), null, true, true);
         }
