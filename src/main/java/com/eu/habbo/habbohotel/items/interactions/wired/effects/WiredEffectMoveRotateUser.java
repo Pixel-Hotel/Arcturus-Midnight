@@ -89,6 +89,7 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
 
         message.appendBoolean(false);
         message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
+        message.appendInt(0);
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getId());
         message.appendString("");
