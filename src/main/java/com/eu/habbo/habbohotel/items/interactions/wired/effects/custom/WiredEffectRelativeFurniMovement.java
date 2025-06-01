@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class WiredEffectRelativeFurniMovement extends InteractionWiredEffect {
 
-    private static final WiredEffectType type = WiredEffectType.Relative_FURNI_MOVE;
+    private static final WiredEffectType type = WiredEffectType.RELATIVE_FURNI_MOVE;
 
     private final THashSet<HabboItem> items = new THashSet<>();
     private boolean directionX = false;

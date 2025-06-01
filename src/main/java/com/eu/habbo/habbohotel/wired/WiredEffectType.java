@@ -27,7 +27,8 @@ public enum WiredEffectType {
     BOT_FOLLOW_AVATAR(25),
     BOT_CLOTHES(26),
     BOT_TALK_TO_AVATAR(27),
-    Relative_FURNI_MOVE(28);
+    RELATIVE_FURNI_MOVE(28),
+    MOVE_ROTATE_USER(29);
 
     public final int code;
 
