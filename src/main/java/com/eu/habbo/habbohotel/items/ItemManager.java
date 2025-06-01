@@ -237,7 +237,7 @@ public class ItemManager {
         this.interactionsList.add(new ItemInteraction("wf_act_match_to_sshot", WiredEffectMatchFurni.class));
         addInteraction("wf_act_match_to_sshot_pixel", WiredEffectMatchFurniHeight.class);
         addInteraction("wf_act_rel_mov", WiredEffectRelativeFurniMovement.class);
-        addInteraction("wf_act_move_rotate_user", WiredEffectMoveFurniTo.class);
+        addInteraction("wf_act_move_rotate_user", WiredEffectMoveRotateUser.class);
         this.interactionsList.add(new ItemInteraction("wf_act_move_rotate", WiredEffectMoveRotateFurni.class));
         this.interactionsList.add(new ItemInteraction("wf_act_give_score", WiredEffectGiveScore.class));
         this.interactionsList.add(new ItemInteraction("wf_act_show_message", WiredEffectWhisper.class));
