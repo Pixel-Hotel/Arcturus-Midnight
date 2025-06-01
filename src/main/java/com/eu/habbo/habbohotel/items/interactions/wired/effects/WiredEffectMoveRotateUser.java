@@ -22,27 +22,21 @@ import org.slf4j.LoggerFactory;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements ICycleable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WiredEffectMoveRotateUser.class);
 
     public static final WiredEffectType type = WiredEffectType.MOVE_ROTATE_USER;
-    private final THashSet<HabboItem> items = new THashSet<>(WiredHandler.MAXIMUM_FURNI_SELECTION / 2);
     private int direction;
     private int rotation;
-    private final THashSet<HabboItem> itemCooldowns;
 
     public WiredEffectMoveRotateUser(ResultSet set, Item baseItem) throws SQLException {
         super(set, baseItem);
-        this.itemCooldowns = new THashSet<>();
     }
 
     public WiredEffectMoveRotateUser(int id, int userId, Item item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
-        this.itemCooldowns = new THashSet<>();
     }
 
     @Override
@@ -58,30 +52,15 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
 
     @Override
     public String getWiredData() {
-        THashSet<HabboItem> itemsToRemove = new THashSet<>(this.items.size() / 2);
-
-        Room room = Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId());
-
-        for (HabboItem item : this.items) {
-            if (item.getRoomId() != this.getRoomId() || (room != null && room.getHabboItem(item.getId()) == null))
-                itemsToRemove.add(item);
-        }
-
-        for (HabboItem item : itemsToRemove) {
-            this.items.remove(item);
-        }
-
         return WiredHandler.getGsonBuilder().create().toJson(new JsonData(
                 this.direction,
                 this.rotation,
-                this.getDelay(),
-                this.items.stream().map(HabboItem::getId).collect(Collectors.toList())
-        ));
+                this.getDelay())
+        );
     }
 
     @Override
     public void loadWiredData(ResultSet set, Room room) throws SQLException {
-        this.items.clear();
         String wiredData = set.getString("wired_data");
 
         if (wiredData.startsWith("{")) {
@@ -89,31 +68,6 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
             this.setDelay(data.delay);
             this.direction = data.direction;
             this.rotation = data.rotation;
-            for (Integer id: data.itemIds) {
-                HabboItem item = room.getHabboItem(id);
-                if (item != null) {
-                    this.items.add(item);
-                }
-            }
-        } else {
-            String[] data = wiredData.split("\t");
-
-            if (data.length == 4) {
-                try {
-                    this.direction = Integer.parseInt(data[0]);
-                    this.rotation = Integer.parseInt(data[1]);
-                    this.setDelay(Integer.parseInt(data[2]));
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-
-                for (String s : data[3].split("\r")) {
-                    HabboItem item = room.getHabboItem(Integer.parseInt(s));
-
-                    if (item != null)
-                        this.items.add(item);
-                }
-            }
         }
     }
 
@@ -121,7 +75,6 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
     public void onPickUp() {
         this.direction = 0;
         this.rotation = 0;
-        this.items.clear();
         this.setDelay(0);
     }
 
@@ -134,20 +87,8 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
     public void serializeWiredData(ServerMessage message, Room room) {
         THashSet<HabboItem> items = new THashSet<>();
 
-        for (HabboItem item : this.items) {
-            if (item.getRoomId() != this.getRoomId() || Emulator.getGameEnvironment().getRoomManager().getRoom(this.getRoomId()).getHabboItem(item.getId()) == null)
-                items.add(item);
-        }
-
-        for (HabboItem item : items) {
-            this.items.remove(item);
-        }
-
         message.appendBoolean(false);
         message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
-        message.appendInt(this.items.size());
-        for (HabboItem item : this.items)
-            message.appendInt(item.getId());
         message.appendInt(this.getBaseItem().getSpriteId());
         message.appendInt(this.getId());
         message.appendString("");
@@ -171,15 +112,6 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
 
         this.direction = settings.getIntParams()[0];
         this.rotation = settings.getIntParams()[1];
-
-        int count = settings.getFurniIds().length;
-        if (count > Emulator.getConfig().getInt("hotel.wired.furni.selection.count", WiredHandler.MAXIMUM_FURNI_SELECTION)) return false;
-
-        this.items.clear();
-        for (int i = 0; i < count; i++) {
-            this.items.add(room.getHabboItem(settings.getFurniIds()[i]));
-        }
-
         this.setDelay(settings.getDelay());
 
         return true;
@@ -215,7 +147,7 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
 
                 possibleRotations.remove(item.getRotation());
 
-                if(possibleRotations.size() > 0) {
+                if(!possibleRotations.isEmpty()) {
                     int index = Emulator.getRandom().nextInt(possibleRotations.size());
                     Iterator<Integer> iter = possibleRotations.iterator();
                     for (int i = 0; i < index; i++) {
@@ -243,7 +175,7 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
 
                 possibleRotations.remove(item.getRotation());
 
-                if(possibleRotations.size() > 0) {
+                if(!possibleRotations.isEmpty()) {
                     int index = Emulator.getRandom().nextInt(possibleRotations.size());
                     Iterator<Integer> iter = possibleRotations.iterator();
                     for (int i = 0; i < index; i++) {
@@ -287,21 +219,17 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
     }
 
     @Override
-    public void cycle(Room room) {
-        this.itemCooldowns.clear();
-    }
+    public void cycle(Room room) {}
 
     static class JsonData {
         int direction;
         int rotation;
         int delay;
-        List<Integer> itemIds;
 
-        public JsonData(int direction, int rotation, int delay, List<Integer> itemIds) {
+        public JsonData(int direction, int rotation, int delay) {
             this.direction = direction;
             this.rotation = rotation;
             this.delay = delay;
-            this.itemIds = itemIds;
         }
     }
 }
