@@ -85,8 +85,6 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
 
     @Override
     public void serializeWiredData(ServerMessage message, Room room) {
-        THashSet<HabboItem> items = new THashSet<>();
-
         message.appendBoolean(false);
         message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
         message.appendInt(0);
