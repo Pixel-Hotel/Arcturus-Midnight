@@ -181,6 +181,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             this.state = data[2].equals("1");
             this.direction = data[3].equals("1");
             this.position = data[4].equals("1");
+            this.height = true;
             this.setDelay(Integer.parseInt(data[5]));
 
         }
