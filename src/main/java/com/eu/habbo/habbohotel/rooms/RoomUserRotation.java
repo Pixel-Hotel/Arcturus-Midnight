@@ -39,25 +39,29 @@ public enum RoomUserRotation {
         return this.direction;
     }
 
+    public static RoomUserRotation getRotation(int rotation){
+        return switch(rotation){
+            case 1 -> NORTH_EAST;
+            case 2 -> EAST;
+            case 3 -> SOUTH_EAST;
+            case 4 -> SOUTH;
+            case 5 -> SOUTH_WEST;
+            case 6 -> WEST;
+            case 7 -> NORTH_WEST;
+            default -> NORTH;
+        };
+    }
+
     public RoomUserRotation getOpposite() {
-        switch (this) {
-            case NORTH:
-                return RoomUserRotation.SOUTH;
-            case NORTH_EAST:
-                return RoomUserRotation.SOUTH_WEST;
-            case EAST:
-                return RoomUserRotation.WEST;
-            case SOUTH_EAST:
-                return RoomUserRotation.NORTH_WEST;
-            case SOUTH:
-                return RoomUserRotation.NORTH;
-            case SOUTH_WEST:
-                return RoomUserRotation.NORTH_EAST;
-            case WEST:
-                return RoomUserRotation.EAST;
-            case NORTH_WEST:
-                return RoomUserRotation.SOUTH_EAST;
-        }
-        return null;
+        return switch (this) {
+            case NORTH -> RoomUserRotation.SOUTH;
+            case NORTH_EAST -> RoomUserRotation.SOUTH_WEST;
+            case EAST -> RoomUserRotation.WEST;
+            case SOUTH_EAST -> RoomUserRotation.NORTH_WEST;
+            case SOUTH -> RoomUserRotation.NORTH;
+            case SOUTH_WEST -> RoomUserRotation.NORTH_EAST;
+            case WEST -> RoomUserRotation.EAST;
+            case NORTH_WEST -> RoomUserRotation.SOUTH_EAST;
+        };
     }
 }

@@ -144,6 +144,46 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             this.settings.clear();
             this.settings.addAll(data.items);
         }
+        else{
+            String[] data = set.getString("wired_data").split(":");
+
+            int itemCount = Integer.parseInt(data[0]);
+
+            String[] items = data[1].split(";");
+
+            for(int i = 0; i < items.length; i++)
+            {
+                try
+                {
+
+                    String[] stuff = items[i].split("-");
+
+                    if (stuff.length >= 7)
+                    {
+                        this.settings.add(new WiredMatchFurniSetting(Integer.parseInt(stuff[0]), stuff[1], Integer.parseInt(stuff[2]), Integer.parseInt(stuff[3]), Integer.parseInt(stuff[4]), Double.parseDouble(stuff[5] +"-"+ stuff[6])));
+                    }
+                    else if (stuff.length == 6)
+                    {
+                        this.settings.add(new WiredMatchFurniSetting(Integer.parseInt(stuff[0]), stuff[1], Integer.parseInt(stuff[2]), Integer.parseInt(stuff[3]), Integer.parseInt(stuff[4]), Double.parseDouble(stuff[5])));
+                    }
+                    else if (stuff.length == 5)
+                    {
+                        this.settings.add(new WiredMatchFurniSetting(Integer.parseInt(stuff[0]), stuff[1], Integer.parseInt(stuff[2]), Integer.parseInt(stuff[3]), Integer.parseInt(stuff[4])));
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Emulator.getLogging().logErrorLine(e);
+                }
+            }
+
+            this.state = data[2].equals("1");
+            this.direction = data[3].equals("1");
+            this.position = data[4].equals("1");
+            this.setDelay(Integer.parseInt(data[5]));
+
+        }
     }
 
     @Override

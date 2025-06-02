@@ -46,7 +46,10 @@ public class WiredEffectMoveRotateUser extends InteractionWiredEffect implements
                                                         roomUnit.getBodyRotation().getValue());
 
         roomUnit.setGoalLocation(tile);
-        roomUnit.setBodyRotation(this.getMovementDirection());
+
+        RoomUserRotation rotation = RoomUserRotation.getRotation(this.rotation);
+        roomUnit.setHeadRotation(rotation);
+        roomUnit.setBodyRotation(rotation);
         return true;
     }
 
