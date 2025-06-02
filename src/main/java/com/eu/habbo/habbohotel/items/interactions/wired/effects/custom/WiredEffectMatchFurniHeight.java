@@ -69,12 +69,12 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
             }
             else {
                 RoomTile newLocation = room.getLayout().getTile(item.getX(), item.getY());
-                if(this.position) {
+                if(this.position && !direction) {
                     room.sendComposer(new FloorItemOnRollerComposer(item, null, oldLocation, item.getZ(), newLocation, height ? setting.z : item.getZ(), 0, room).compose());
                     Emulator.getThreading().run(item);
                 }
-                if(this.direction)
-                    Emulator.getThreading().run(() -> room.sendComposer(new FloorItemUpdateComposer(item).compose()), 1000);
+                else if(this.direction)
+                    Emulator.getThreading().run(() -> room.sendComposer(new FloorItemUpdateComposer(item).compose()));
             }
 
         }
