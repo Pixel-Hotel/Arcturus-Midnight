@@ -74,7 +74,7 @@ public class WiredEffectMatchFurniHeight extends InteractionWiredEffect implemen
                     Emulator.getThreading().run(item);
                 }
                 else if(this.direction)
-                    Emulator.getThreading().run(() -> room.sendComposer(new FloorItemUpdateComposer(item).compose()));
+                    room.sendComposer(new FloorItemUpdateComposer(item).compose());
             }
 
         }
