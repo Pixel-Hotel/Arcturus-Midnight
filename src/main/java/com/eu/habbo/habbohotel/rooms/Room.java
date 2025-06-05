@@ -654,12 +654,13 @@ public class Room implements Comparable<Room>, ISerialize, Runnable {
                 return;
         }
 
-        if(item.getBaseItem().getType() == FurnitureType.FLOOR) {
-            RoomTile tile = this.layout.getTile(item.getX(), item.getY());
-            picker.getUndoRedoManager().saveAction(new PickUpItemAction(picker, item, tile, item.getZ(), item.getRotation(), item.getExtradata(), ""));
-        }
-        else if(item.getBaseItem().getType() == FurnitureType.WALL) {
-            picker.getUndoRedoManager().saveAction(new PickUpItemAction(picker, item, item.getWallPosition()));
+        if(picker!= null) {
+            if (item.getBaseItem().getType() == FurnitureType.FLOOR) {
+                RoomTile tile = this.layout.getTile(item.getX(), item.getY());
+                picker.getUndoRedoManager().saveAction(new PickUpItemAction(picker, item, tile, item.getZ(), item.getRotation(), item.getExtradata(), ""));
+            } else if (item.getBaseItem().getType() == FurnitureType.WALL) {
+                picker.getUndoRedoManager().saveAction(new PickUpItemAction(picker, item, item.getWallPosition()));
+            }
         }
 
         this.removeHabboItem(item.getId());
