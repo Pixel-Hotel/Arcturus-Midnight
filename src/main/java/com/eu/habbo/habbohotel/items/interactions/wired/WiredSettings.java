@@ -1,6 +1,12 @@
 package com.eu.habbo.habbohotel.items.interactions.wired;
 
+import com.eu.habbo.habbohotel.items.interactions.InteractionWired;
+import com.eu.habbo.habbohotel.items.interactions.InteractionWiredCondition;
+import com.eu.habbo.habbohotel.items.interactions.InteractionWiredEffect;
+import com.eu.habbo.habbohotel.items.interactions.InteractionWiredTrigger;
 import com.eu.habbo.habbohotel.users.HabboItem;
+import com.eu.habbo.habbohotel.wired.WiredHandler;
+import com.eu.habbo.messages.ServerMessage;
 import gnu.trove.set.hash.THashSet;
 
 
@@ -80,5 +86,52 @@ public class WiredSettings {
             }
             return true; // Entfernen, wenn kein Typ gepasst hat
         });
+    }
+
+    public static void serializeWiredData(ServerMessage message, InteractionWired wired, int[] intParams, int[] itemIds, String stringParam){
+        if(stringParam == null) stringParam = "";
+
+        message.appendBoolean(false); // I think this is for: has advanced settings
+
+        message.appendInt(WiredHandler.MAXIMUM_FURNI_SELECTION);
+
+        serializeWiredDataIntParams(message, itemIds); // handle item selection
+
+        message.appendInt(wired.getBaseItem().getSpriteId());
+        message.appendInt(wired.getId());
+
+        message.appendString(stringParam);
+
+        serializeWiredDataIntParams(message, intParams);
+
+        message.appendInt(0); // I don't know what this is for.
+        message.appendInt(getWiredType(wired));
+
+        if (wired instanceof InteractionWiredEffect effect) {
+            message.appendInt(effect.getDelay());
+        } else {
+            message.appendInt(0);
+        }
+
+        message.appendInt(0); // I don't know what this is for.
+    }
+
+    private static void serializeWiredDataIntParams(ServerMessage message, int[] params){
+        if(params == null) params = new int[0];
+
+        message.appendInt(params.length);
+        for(int i : params){
+            message.appendInt(i);
+        }
+    }
+
+    private static int getWiredType(InteractionWired wired){
+        if(wired instanceof InteractionWiredEffect effect){
+            return effect.getType().code;
+        }else if (wired instanceof InteractionWiredTrigger trigger){
+            return trigger.getType().code;
+        } else if(wired instanceof InteractionWiredCondition condition){
+            return condition.getType().code;
+        } else return -1;
     }
 }
